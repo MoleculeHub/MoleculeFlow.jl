@@ -525,9 +525,17 @@ has_functional_group(mol, :ketone)   # false
 ```
 
 # Available Functional Groups
-- `:alcohol`, `:carboxylic_acid`, `:ester`, `:ether`
-- `:aldehyde`, `:ketone`, `:amine_primary`, `:amine_secondary`, `:amine_tertiary`
-- `:amide`, `:nitrile`, `:benzene`, `:pyridine`, `:furan`, `:thiophene`, `:imidazole`, `:pyrrole`
+See `FUNCTIONAL_GROUPS` constant for the complete list of 100+ available functional groups including:
+- `:alcohol`, `:carboxylic_acid`, `:ester`, `:ether`, `:aldehyde`, `:ketone`
+- `:amine_primary`, `:amine_secondary`, `:amine_tertiary`, `:amide`, `:nitrile`
+- `:benzene`, `:pyridine`, `:furan`, `:thiophene`, `:imidazole`, `:pyrrole`
+- `:thiol`, `:sulfide`, `:disulfide`, `:sulfoxide`, `:sulfone`, `:sulfonamide`
+- `:phosphate`, `:phosphonate`, `:phosphine`, `:phosphine_oxide`
+- `:fluoride`, `:chloride`, `:bromide`, `:iodide`, `:trifluoromethyl`
+- `:nitro`, `:nitroso`, `:azide`, `:epoxide`, `:steroid_core`, `:beta_lactam`
+- `:morpholine`, `:piperidine`, `:pyrrolidine`, `:tetrahydrofuran`
+- `:peptide_bond`, `:alpha_amino_acid`, `:glucose_like`, `:fatty_acid`
+- `:benzodiazepine_core`, `:barbiturate_core`, `:sulfonamide_drug`
 """
 function has_functional_group(mol::Molecule, group::Symbol)
     if haskey(FUNCTIONAL_GROUPS, group)
