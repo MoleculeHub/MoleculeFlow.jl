@@ -6,33 +6,68 @@ CurrentModule = MoleculeFlow
 
 Functions for finding substructures and patterns in molecules.
 
-## Basic Substructure Matching
+## Has Substructure Match
 
 ```@docs
 has_substructure_match
+```
+
+## Get Substructure Matches
+
+```@docs
 get_substructure_matches
+```
+
+## Get Substructure Match
+
+```@docs
 get_substructure_match
 ```
 
-## Advanced Searches
+## Maximum Common Substructure
 
 ```@docs
 maximum_common_substructure
+```
+
+## Has Substructure Matches
+
+```@docs
 has_substructure_matches
+```
+
+## Filter by Substructure
+
+```@docs
 filter_by_substructure
 ```
 
-## Functional Group Analysis
+## Has Functional Group
 
 ```@docs
 has_functional_group
+```
+
+## Get Functional Groups
+
+```@docs
 get_functional_groups
+```
+
+## Functional Groups
+
+```@docs
 FUNCTIONAL_GROUPS
 ```
 
-## Ring Analysis
+## Get Ring Info
 
 ```@docs
 get_ring_info
+```
+
+## Is Ring Aromatic
+
+```@docs
 is_ring_aromatic
 ```

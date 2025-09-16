@@ -6,29 +6,49 @@ CurrentModule = MoleculeFlow
 
 Functions for visualizing and drawing molecular structures in various formats.
 
-## Basic Visualization
+## Molecule to Image
 
 ```@docs
 mol_to_image
+```
+
+## Molecule to SVG
+
+```@docs
 mol_to_svg
 ```
 
-## Grid Visualization
+## Molecules to Grid Image
 
 ```@docs
 mols_to_grid_image
 ```
 
-## Advanced Drawing
+## Highlight Substructure
 
 ```@docs
 highlight_substructure
+```
+
+## Draw Molecule with Atom Labels
+
+```@docs
 draw_molecule_with_atom_labels
+```
+
+## Draw Similarity Map
+
+```@docs
 draw_similarity_map
+```
+
+## Draw Functional Groups
+
+```@docs
 draw_functional_groups
 ```
 
-## File Operations
+## Save Molecule Image
 
 ```@docs
 save_molecule_image

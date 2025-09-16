@@ -6,18 +6,38 @@ CurrentModule = MoleculeFlow
 
 Functions for calculating molecular similarity using various metrics.
 
-## Similarity Metrics
+## Tanimoto Similarity
 
 ```@docs
 tanimoto_similarity
+```
+
+## Dice Similarity
+
+```@docs
 dice_similarity
+```
+
+## Cosine Similarity
+
+```@docs
 cosine_similarity
+```
+
+## Sokal Similarity
+
+```@docs
 sokal_similarity
 ```
 
-## Bulk Operations
+## Bulk Similarity
 
 ```@docs
 bulk_similarity
+```
+
+## Similarity Matrix
+
+```@docs
 similarity_matrix
 ```

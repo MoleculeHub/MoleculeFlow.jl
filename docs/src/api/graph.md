@@ -6,10 +6,15 @@ CurrentModule = MoleculeFlow
 
 Functions for converting molecules to graph representations and analyzing molecular graphs.
 
-## Graph Conversion
+## Molecule to Graph
 
 ```@docs
 mol_to_graph
+```
+
+## Molecule to Directed Graph
+
+```@docs
 mol_to_digraph
 ```
 

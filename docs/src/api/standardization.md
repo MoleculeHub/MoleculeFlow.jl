@@ -6,32 +6,37 @@ CurrentModule = MoleculeFlow
 
 Functions for cleaning and standardizing molecular structures.
 
-## Salt Removal
+## Strip Salts
 
 ```@docs
 strip_salts
 ```
 
-## Tautomer Handling
+## Enumerate Tautomers
 
 ```@docs
 enumerate_tautomers
+```
+
+## Canonical Tautomer
+
+```@docs
 canonical_tautomer
 ```
 
-## Charge Neutralization
+## Neutralize Charges
 
 ```@docs
 neutralize_charges
 ```
 
-## Normalization
+## Normalize Molecule
 
 ```@docs
 normalize_molecule
 ```
 
-## Comprehensive Standardization
+## Standardize Molecule
 
 ```@docs
 standardize_molecule
