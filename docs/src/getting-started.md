@@ -26,5 +26,3 @@ has_oh = has_substructure_match(mol, "[OH]")  # true
 # Convert back to SMILES
 smiles = mol_to_smiles(mol)    # "CCO"
 ```
-
-More detailed tutorials coming soon!
