@@ -238,7 +238,7 @@ molecule = mol_from_smiles("CC=C(C)C#N")
 
 println("Bond analysis for CC=C(C)C#N:")
 atoms = get_atoms(molecule)
-for i in 1:length(atoms)
+for i in eachindex(atoms)
     bonds = get_bonds_from_atom(molecule, i)
     if !isempty(bonds)
         atom_symbol = get_symbol(get_atom(molecule, i))
@@ -275,7 +275,7 @@ ring_bonds = 0
 atoms = get_atoms(complex_mol)
 processed_bonds = Set()  # To avoid counting bonds twice
 
-for i in 1:length(atoms)
+for i in eachindex(atoms)
     bonds = get_bonds_from_atom(complex_mol, i)
     for bond in bonds
         begin_idx = get_begin_atom_idx(bond)

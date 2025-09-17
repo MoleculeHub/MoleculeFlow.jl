@@ -13,13 +13,13 @@ ConformerResult
 ConformerMolecule
 ```
 
-## 3D Conformer Generation
+## Generate 3D Conformers
 
 ```@docs
 generate_3d_conformers
 ```
 
-## 2D Conformer Generation
+## Generate 2D Conformers
 
 ```@docs
 generate_2d_conformers

@@ -399,6 +399,26 @@ function get_atom(mol::Molecule, idx::Int)
 end
 
 # Atom environment descriptors
+"""
+    get_neighbors(mol::Molecule, atom_idx::Int) -> Union{Vector{Int}, Missing}
+
+Get the indices of neighboring atoms for a given atom.
+
+# Arguments
+- `mol::Molecule`: The molecule containing the atom
+- `atom_idx::Int`: 1-based index of the atom
+
+# Returns
+- `Vector{Int}`: Vector of 1-based atom indices that are neighbors to the specified atom
+- `missing`: If the molecule is invalid
+
+# Examples
+```julia
+mol = mol_from_smiles("CCO")  # Ethanol
+neighbors = get_neighbors(mol, 1)  # Neighbors of first carbon: [2]
+neighbors = get_neighbors(mol, 2)  # Neighbors of second carbon: [1, 3]
+```
+"""
 function get_neighbors(mol::Molecule, atom_idx::Int)
     !mol.valid && return missing
     atom = mol._rdkit_mol.GetAtomWithIdx(atom_idx - 1)  # Convert to 0-based
@@ -406,6 +426,29 @@ function get_neighbors(mol::Molecule, atom_idx::Int)
     return [pyconvert(Int, neighbor.GetIdx()) + 1 for neighbor in neighbors]  # Convert back to 1-based
 end
 
+"""
+    get_bonds_from_atom(mol::Molecule, atom_idx::Int) -> Union{Vector{Bond}, Missing}
+
+Get all bonds connected to a specific atom.
+
+# Arguments
+- `mol::Molecule`: The molecule containing the atom
+- `atom_idx::Int`: 1-based index of the atom
+
+# Returns
+- `Vector{Bond}`: Vector of Bond objects connected to the specified atom
+- `missing`: If the molecule is invalid
+
+# Examples
+```julia
+mol = mol_from_smiles("CCO")  # Ethanol
+bonds = get_bonds_from_atom(mol, 2)  # Bonds from second carbon
+for bond in bonds
+    bond_type = get_bond_type(bond)
+    println("Bond type: ", bond_type)
+end
+```
+"""
 function get_bonds_from_atom(mol::Molecule, atom_idx::Int)
     !mol.valid && return missing
     atom = mol._rdkit_mol.GetAtomWithIdx(atom_idx - 1)  # Convert to 0-based
@@ -414,6 +457,27 @@ function get_bonds_from_atom(mol::Molecule, atom_idx::Int)
 end
 
 # Gasteiger partial charges (if available)
+"""
+    compute_gasteiger_charges!(mol::Molecule) -> Nothing
+
+Compute Gasteiger partial charges for all atoms in a molecule.
+
+# Arguments
+- `mol::Molecule`: The molecule to compute charges for (modified in-place)
+
+# Returns
+- `Nothing`
+
+# Examples
+```julia
+mol = mol_from_smiles("CCO")  # Ethanol
+compute_gasteiger_charges!(mol)
+
+# Now can access charges for individual atoms
+atoms = get_atoms(mol)
+charge = get_gasteiger_charge(atoms[1])  # Charge on first carbon
+```
+"""
 function compute_gasteiger_charges!(mol::Molecule)
     !mol.valid && return nothing
     @pyconst(pyimport("rdkit.Chem.rdPartialCharges").ComputeGasteigerCharges)(
@@ -422,6 +486,27 @@ function compute_gasteiger_charges!(mol::Molecule)
     return nothing
 end
 
+"""
+    get_gasteiger_charge(atom::Atom) -> Float64
+
+Get the Gasteiger partial charge for a specific atom.
+
+# Arguments
+- `atom::Atom`: The atom to get the charge for
+
+# Returns
+- `Float64`: The Gasteiger partial charge
+
+# Examples
+```julia
+mol = mol_from_smiles("CCO")  # Ethanol
+compute_gasteiger_charges!(mol)  # Must compute charges first
+
+atoms = get_atoms(mol)
+charge_carbon = get_gasteiger_charge(atoms[1])
+charge_oxygen = get_gasteiger_charge(atoms[3])
+```
+"""
 function get_gasteiger_charge(atom::Atom)
     return pyconvert(Float64, atom._rdkit_atom.GetDoubleProp("_GasteigerCharge"))
 end

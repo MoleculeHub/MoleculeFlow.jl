@@ -6,24 +6,44 @@ CurrentModule = MoleculeFlow
 
 Functions for generating molecular fingerprints for similarity analysis and machine learning.
 
-## Morgan Fingerprints (ECFP)
+## Morgan Fingerprint
 
 ```@docs
 morgan_fingerprint
 ```
 
-## Structural Keys
+## MACCS Fingerprint
 
 ```@docs
 maccs_fingerprint
+```
+
+## RDK Fingerprint
+
+```@docs
 rdk_fingerprint
 ```
 
-## Advanced Fingerprints
+## Atom Pair Fingerprint
 
 ```@docs
 atom_pair_fingerprint
+```
+
+## Topological Torsion Fingerprint
+
+```@docs
 topological_torsion_fingerprint
+```
+
+## FCFP Fingerprint
+
+```@docs
 fcfp_fingerprint
+```
+
+## Pattern Fingerprint
+
+```@docs
 pattern_fingerprint
 ```

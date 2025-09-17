@@ -8,35 +8,45 @@ Functions for reading and writing molecular structures.
 
 ## Reading Molecules
 
-### From SMILES
+## Molecule from SMILES
 
 ```@docs
 mol_from_smiles
 ```
 
-### From MOL Blocks
+## Molecule from MOL Block
 
 ```@docs
 mol_from_molblock
 ```
 
-### From InChI
+## Molecule from InChI
 
 ```@docs
 mol_from_inchi
 ```
 
-### From SDF Files
+## Read SDF
 
 ```@docs
 read_sdf
+```
+
+## Read SDF Lazy
+
+```@docs
 read_sdf_lazy
 ```
 
-## Writing Molecules
+## Molecule to SMILES
 
 ```@docs
 mol_to_smiles
+```
+
+## Molecule to InChI
+
+```@docs
 mol_to_inchi
 ```
 

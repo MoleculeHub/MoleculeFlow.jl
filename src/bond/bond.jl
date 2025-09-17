@@ -1,6 +1,28 @@
 #######################################################
 # Bond structs and properties
 #######################################################
+"""
+    Bond
+
+A structure representing a chemical bond between two atoms in a molecule.
+
+# Fields
+- `_rdkit_bond::Py`: The underlying RDKit bond object
+- `props::Dict{Symbol, Any}`: Dictionary for storing additional bond properties
+
+# Examples
+```julia
+mol = mol_from_smiles("CCO")
+atoms = get_atoms(mol)
+bonds = get_bonds_from_atom(mol, 1)  # Bonds from first atom
+bond = bonds[1]
+
+# Access bond properties
+bond_type = get_bond_type(bond)
+begin_idx = get_begin_atom_idx(bond)
+end_idx = get_end_atom_idx(bond)
+```
+"""
 @kwdef struct Bond
     _rdkit_bond::Py
     props::Dict{Symbol, Any} = Dict()

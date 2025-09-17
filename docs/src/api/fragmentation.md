@@ -10,6 +10,8 @@ Functions for fragmenting molecules using various computational approaches.
 
 BRICS (Breaking of Retrosynthetically Interesting Chemical Substructures) uses retrosynthetic rules to identify breakable bonds in molecules.
 
+## BRICS Decompose
+
 ```@docs
 brics_decompose
 ```
@@ -17,6 +19,8 @@ brics_decompose
 ## RECAP Fragmentation
 
 RECAP (Retrosynthetic Combinatorial Analysis Procedure) uses different fragmentation rules focused on bonds commonly formed in synthetic chemistry.
+
+## RECAP Decompose
 
 ```@docs
 recap_decompose
@@ -26,8 +30,15 @@ recap_decompose
 
 Scaffold extraction methods for identifying core molecular frameworks.
 
+## Get Murcko Scaffold
+
 ```@docs
 get_murcko_scaffold
+```
+
+## Get Generic Scaffold
+
+```@docs
 get_generic_scaffold
 ```
 
@@ -35,10 +46,27 @@ get_generic_scaffold
 
 Tools for custom fragmentation strategies and fragment manipulation.
 
+## Fragment by Bonds
+
 ```@docs
 fragment_by_bonds
+```
+
+## Get Fragment Count
+
+```@docs
 get_fragment_count
+```
+
+## Split Fragments
+
+```@docs
 split_fragments
+```
+
+## Get Largest Fragment
+
+```@docs
 get_largest_fragment
 ```
 
@@ -120,11 +148,3 @@ for (i, scaffold) in enumerate(all_scaffolds)
     println("Molecule $i scaffold: ", scaffold)
 end
 ```
-
-## Notes
-
-- **BRICS vs RECAP**: BRICS focuses on retrosynthetically interesting bonds while RECAP emphasizes bonds commonly formed in synthesis
-- **Scaffold Types**: Murcko scaffolds preserve heteroatoms while generic scaffolds normalize all atoms to carbon
-- **Fragment Validation**: All fragmentation functions handle invalid molecules gracefully by returning `missing`
-- **Performance**: Vectorized operations are optimized for processing large molecular datasets
-- **Bond Indexing**: Custom fragmentation uses 0-based indexing (RDKit convention) for bond indices
