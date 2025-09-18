@@ -28,3 +28,4 @@ Manifest.toml
 .CondaPkg
 test.jl
 zinc_smiles.csv
+plan.md
