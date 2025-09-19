@@ -181,7 +181,7 @@ for i in eachindex(atoms)
             other_atom_idx = begin_idx == i ? end_idx : begin_idx
             other_symbol = get_symbol(get_atom(molecule, other_atom_idx))
 
-            println(&quot; to Atom $other_atom_idx ($other_symbol): $bond_type&quot; *
+            println(&quot;to Atom $other_atom_idx ($other_symbol): $bond_type&quot; *
                    (is_aromatic_bond ? &quot; (aromatic)&quot; : &quot;&quot;) *
                    (is_in_ring_bond ? &quot; (in ring)&quot; : &quot;&quot;))
         end
@@ -314,7 +314,7 @@ for (name, pattern) in custom_patterns
     if !isempty(matches)
         println(&quot;$name: Found $(length(matches)) match(es)&quot;)
         for (i, match) in enumerate(matches)
-            println(&quot;  Match $i: atoms $(join(match, &quot;, &quot;))&quot;)
+            println(&quot;Match $i: atoms $(join(match, &quot;, &quot;))&quot;)
         end
     else
         println(&quot;$name: Not found&quot;)
@@ -344,10 +344,10 @@ for fp_type in fingerprint_types
             dice = dice_similarity(mol_i, mol_j, fingerprint_type=fp_type)
             cosine = cosine_similarity(mol_i, mol_j, fingerprint_type=fp_type)
 
-            println(&quot;  $name1 vs $name2:&quot;)
-            println(&quot;    Tanimoto: $(round(tanimoto, digits=3))&quot;)
-            println(&quot;    Dice: $(round(dice, digits=3))&quot;)
-            println(&quot;    Cosine: $(round(cosine, digits=3))&quot;)
+            println(&quot;$name1 vs $name2:&quot;)
+            println(&quot;Tanimoto: $(round(tanimoto, digits=3))&quot;)
+            println(&quot;Dice: $(round(dice, digits=3))&quot;)
+            println(&quot;Cosine: $(round(cosine, digits=3))&quot;)
         end
     end
 end</code></pre><h3 id="Bulk-Similarity-and-Matrix-Calculations"><a class="docs-heading-anchor" href="#Bulk-Similarity-and-Matrix-Calculations">Bulk Similarity and Matrix Calculations</a><a id="Bulk-Similarity-and-Matrix-Calculations-1"></a><a class="docs-heading-anchor-permalink" href="#Bulk-Similarity-and-Matrix-Calculations" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Create a dataset of similar molecules
@@ -363,7 +363,7 @@ similarities = bulk_similarity(query, valid_alcohols)
 println(&quot;Similarities to ethanol:&quot;)
 for (i, sim) in enumerate(similarities)
     smiles = mol_to_smiles(valid_alcohols[i])
-    println(&quot;  $smiles: $(round(sim, digits=3))&quot;)
+    println(&quot;$smiles: $(round(sim, digits=3))&quot;)
 end
 
 # Similarity matrix
@@ -371,7 +371,7 @@ sim_matrix = similarity_matrix(valid_alcohols[1:4])  # First 4 molecules
 println(&quot;\nSimilarity Matrix (4x4):&quot;)
 for i in 1:4
     row = [round(sim_matrix[i, j], digits=3) for j in 1:4]
-    println(&quot;  $(join(row, &quot;  &quot;))&quot;)
+    println(&quot;$(join(row, &quot;  &quot;))&quot;)
 end</code></pre><h2 id="Molecular-Visualization"><a class="docs-heading-anchor" href="#Molecular-Visualization">Molecular Visualization</a><a id="Molecular-Visualization-1"></a><a class="docs-heading-anchor-permalink" href="#Molecular-Visualization" title="Permalink"></a></h2><h3 id="Basic-Visualization-Examples"><a class="docs-heading-anchor" href="#Basic-Visualization-Examples">Basic Visualization Examples</a><a id="Basic-Visualization-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Visualization-Examples" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Create various molecular images
 molecules_to_draw = [
     (&quot;Caffeine&quot;, &quot;CN1C=NC2=C1C(=O)N(C(=O)N2C)C&quot;),
@@ -531,7 +531,7 @@ standardized_mols = [standardize_molecule(mol) for mol in batch_mols]
 
 println(&quot;\nBatch Standardization:&quot;)
 for (i, (orig, std)) in enumerate(zip(batch_mols, standardized_mols))
-    println(&quot;  $i: $(mol_to_smiles(orig)) → $(mol_to_smiles(std))&quot;)
+    println(&quot;$i: $(mol_to_smiles(orig)) → $(mol_to_smiles(std))&quot;)
 end</code></pre><h2 id="3D-Conformer-Generation"><a class="docs-heading-anchor" href="#3D-Conformer-Generation">3D Conformer Generation</a><a id="3D-Conformer-Generation-1"></a><a class="docs-heading-anchor-permalink" href="#3D-Conformer-Generation" title="Permalink"></a></h2><h3 id="Generating-and-Analyzing-Conformers"><a class="docs-heading-anchor" href="#Generating-and-Analyzing-Conformers">Generating and Analyzing Conformers</a><a id="Generating-and-Analyzing-Conformers-1"></a><a class="docs-heading-anchor-permalink" href="#Generating-and-Analyzing-Conformers" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate conformers for a flexible molecule
 flexible_mol = mol_from_smiles(&quot;CCCCCCCC&quot;)  # Octane
 
@@ -546,11 +546,11 @@ if !isempty(conformers)
         energy = conf_result.energy
         converged = conf_result.converged ? &quot;✓&quot; : &quot;✗&quot;
 
-        println(&quot;  Conformer $i: $(round(energy, digits=2)) kcal/mol (converged: $converged)&quot;)
+        println(&quot;Conformer $i: $(round(energy, digits=2)) kcal/mol (converged: $converged)&quot;)
 
         # Access 3D coordinates
         coords = conf_mol.molecule.props[:coordinates_3d]
-        println(&quot;    Coordinates shape: $(size(coords))&quot;)
+        println(&quot;Coordinates shape: $(size(coords))&quot;)
     end
 
     # Find lowest energy conformer
@@ -570,15 +570,15 @@ if !isempty(conformers)
     energies = [conf.conformer_result.energy for conf in conformers]
 
     println(&quot;\nConformer Energy Analysis:&quot;)
-    println(&quot;  Number of conformers: $(length(energies))&quot;)
-    println(&quot;  Energy range: $(round(minimum(energies), digits=2)) - $(round(maximum(energies), digits=2)) kcal/mol&quot;)
-    println(&quot;  Energy span: $(round(maximum(energies) - minimum(energies), digits=2)) kcal/mol&quot;)
+    println(&quot;Number of conformers: $(length(energies))&quot;)
+    println(&quot;Energy range: $(round(minimum(energies), digits=2)) - $(round(maximum(energies), digits=2)) kcal/mol&quot;)
+    println(&quot;Energy span: $(round(maximum(energies) - minimum(energies), digits=2)) kcal/mol&quot;)
 
     # Count converged conformers
     converged_count = sum(conf.conformer_result.converged for conf in conformers)
-    println(&quot;  Converged conformers: $converged_count/$(length(conformers))&quot;)
+    println(&quot;Converged conformers: $converged_count/$(length(conformers))&quot;)
 
     # Energy distribution
     low_energy = sum(e &lt; (minimum(energies) + 2.0) for e in energies)
-    println(&quot;  Low energy conformers (&lt; 2 kcal/mol above minimum): $low_energy&quot;)
-end</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../getting-started/">« Getting Started</a><a class="docs-footer-nextpage" href="../api/io/">Basic I/O »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Friday 19 September 2025 07:17">Friday 19 September 2025</span>. Using Julia version 1.11.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+    println(&quot;Low energy conformers (&lt; 2 kcal/mol above minimum): $low_energy&quot;)
+end</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../getting-started/">« Getting Started</a><a class="docs-footer-nextpage" href="../api/io/">Basic I/O »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Friday 19 September 2025 07:26">Friday 19 September 2025</span>. Using Julia version 1.11.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
