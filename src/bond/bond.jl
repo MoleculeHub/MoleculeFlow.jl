@@ -7,10 +7,12 @@
 A structure representing a chemical bond between two atoms in a molecule.
 
 # Fields
-- `_rdkit_bond::Py`: The underlying RDKit bond object
-- `props::Dict{Symbol, Any}`: Dictionary for storing additional bond properties
+
+  - `_rdkit_bond::Py`: The underlying RDKit bond object
+  - `props::Dict{Symbol, Any}`: Dictionary for storing additional bond properties
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 atoms = get_atoms(mol)
@@ -55,12 +57,15 @@ end
 Get the bond type as a string.
 
 # Arguments
-- `bond`: A Bond object
+
+  - `bond`: A Bond object
 
 # Returns
-- `String`: The bond type ("SINGLE", "DOUBLE", "TRIPLE", "AROMATIC", etc.)
+
+  - `String`: The bond type ("SINGLE", "DOUBLE", "TRIPLE", "AROMATIC", etc.)
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C=C")
 bonds = get_bonds(mol)
@@ -77,17 +82,20 @@ end
 Get the index of the first atom in the bond (1-based indexing).
 
 # Arguments
-- `bond`: A Bond object
+
+  - `bond`: A Bond object
 
 # Returns
-- `Int`: The 1-based index of the beginning atom
+
+  - `Int`: The 1-based index of the beginning atom
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 bonds = get_bonds(mol)
 begin_idx = get_begin_atom_idx(bonds[1])  # Returns 1
-```
+```  # Convert to 1-based indexing
 """
 function get_begin_atom_idx(bond::Bond)
     return pyconvert(Int, bond._rdkit_bond.GetBeginAtomIdx()) + 1  # Convert to 1-based indexing
@@ -99,17 +107,20 @@ end
 Get the index of the second atom in the bond (1-based indexing).
 
 # Arguments
-- `bond`: A Bond object
+
+  - `bond`: A Bond object
 
 # Returns
-- `Int`: The 1-based index of the ending atom
+
+  - `Int`: The 1-based index of the ending atom
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 bonds = get_bonds(mol)
 end_idx = get_end_atom_idx(bonds[1])  # Returns 2
-```
+```  # Convert to 1-based indexing
 """
 function get_end_atom_idx(bond::Bond)
     return pyconvert(Int, bond._rdkit_bond.GetEndAtomIdx()) + 1  # Convert to 1-based indexing
@@ -121,12 +132,15 @@ end
 Check if a bond is aromatic.
 
 # Arguments
-- `bond`: A Bond object
+
+  - `bond`: A Bond object
 
 # Returns
-- `Bool`: true if the bond is aromatic, false otherwise
+
+  - `Bool`: true if the bond is aromatic, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")  # Benzene
 bonds = get_bonds(mol)
@@ -143,12 +157,15 @@ end
 Check if a bond is conjugated (part of a conjugated system).
 
 # Arguments
-- `bond`: A Bond object
+
+  - `bond`: A Bond object
 
 # Returns
-- `Bool`: true if the bond is conjugated, false otherwise
+
+  - `Bool`: true if the bond is conjugated, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C=C-C=C")  # Conjugated diene
 bonds = get_bonds(mol)
@@ -165,12 +182,15 @@ end
 Check if a bond is part of a ring.
 
 # Arguments
-- `bond`: A Bond object
+
+  - `bond`: A Bond object
 
 # Returns
-- `Bool`: true if the bond is in a ring, false otherwise
+
+  - `Bool`: true if the bond is in a ring, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")  # Benzene
 bonds = get_bonds(mol)

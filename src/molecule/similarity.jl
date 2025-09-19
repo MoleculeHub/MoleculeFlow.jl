@@ -12,21 +12,24 @@ The Tanimoto coefficient is defined as the size of the intersection divided by t
 For fingerprints, this translates to the number of bits set in both fingerprints divided by the number of bits set in either fingerprint.
 
 # Arguments
-- `fp1`, `fp2`: Boolean vectors representing molecular fingerprints
-- `mol1`, `mol2`: Molecule objects to compare
-- `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`, `:atom_pair`, `:topological_torsion`)
-- `kwargs...`: Additional arguments passed to fingerprint generation functions
+
+  - `fp1`, `fp2`: Boolean vectors representing molecular fingerprints
+  - `mol1`, `mol2`: Molecule objects to compare
+  - `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`, `:atom_pair`, `:topological_torsion`)
+  - `kwargs...`: Additional arguments passed to fingerprint generation functions
 
 # Returns
-- `Float64`: Similarity score between 0.0 (no similarity) and 1.0 (identical)
-- `missing`: If either molecule is invalid
+
+  - `Float64`: Similarity score between 0.0 (no similarity) and 1.0 (identical)
+  - `missing`: If either molecule is invalid
 
 # Examples
+
 ```julia
 mol1 = mol_from_smiles("CCO")
 mol2 = mol_from_smiles("CCC")
 similarity = tanimoto_similarity(mol1, mol2)  # Using Morgan fingerprints by default
-similarity_rdk = tanimoto_similarity(mol1, mol2, fingerprint_type=:rdk)
+similarity_rdk = tanimoto_similarity(mol1, mol2; fingerprint_type = :rdk)
 ```
 """
 function tanimoto_similarity(fp1::Vector{Bool}, fp2::Vector{Bool})
@@ -41,7 +44,7 @@ function tanimoto_similarity(fp1::Vector{Bool}, fp2::Vector{Bool})
 end
 
 function tanimoto_similarity(
-    mol1::Molecule, mol2::Molecule; fingerprint_type=:morgan, kwargs...
+    mol1::Molecule, mol2::Molecule; fingerprint_type = :morgan, kwargs...
 )
     if !mol1.valid || !mol2.valid
         return missing
@@ -79,16 +82,19 @@ The Dice coefficient is defined as twice the size of the intersection divided by
 For fingerprints, this translates to 2 × (number of bits set in both) / (total bits set in both fingerprints).
 
 # Arguments
-- `fp1`, `fp2`: Boolean vectors representing molecular fingerprints
-- `mol1`, `mol2`: Molecule objects to compare
-- `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`, `:atom_pair`, `:topological_torsion`)
-- `kwargs...`: Additional arguments passed to fingerprint generation functions
+
+  - `fp1`, `fp2`: Boolean vectors representing molecular fingerprints
+  - `mol1`, `mol2`: Molecule objects to compare
+  - `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`, `:atom_pair`, `:topological_torsion`)
+  - `kwargs...`: Additional arguments passed to fingerprint generation functions
 
 # Returns
-- `Float64`: Similarity score between 0.0 (no similarity) and 1.0 (identical)
-- `missing`: If either molecule is invalid
+
+  - `Float64`: Similarity score between 0.0 (no similarity) and 1.0 (identical)
+  - `missing`: If either molecule is invalid
 
 # Examples
+
 ```julia
 mol1 = mol_from_smiles("CCO")
 mol2 = mol_from_smiles("CCC")
@@ -107,7 +113,7 @@ function dice_similarity(fp1::Vector{Bool}, fp2::Vector{Bool})
 end
 
 function dice_similarity(
-    mol1::Molecule, mol2::Molecule; fingerprint_type=:morgan, kwargs...
+    mol1::Molecule, mol2::Molecule; fingerprint_type = :morgan, kwargs...
 )
     if !mol1.valid || !mol2.valid
         return missing
@@ -139,16 +145,19 @@ The cosine similarity measures the cosine of the angle between two vectors in a 
 For binary fingerprints, this is computed as the dot product divided by the product of the magnitudes.
 
 # Arguments
-- `fp1`, `fp2`: Boolean vectors representing molecular fingerprints
-- `mol1`, `mol2`: Molecule objects to compare
-- `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`)
-- `kwargs...`: Additional arguments passed to fingerprint generation functions
+
+  - `fp1`, `fp2`: Boolean vectors representing molecular fingerprints
+  - `mol1`, `mol2`: Molecule objects to compare
+  - `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`)
+  - `kwargs...`: Additional arguments passed to fingerprint generation functions
 
 # Returns
-- `Float64`: Similarity score between 0.0 (orthogonal) and 1.0 (identical direction)
-- `missing`: If either molecule is invalid
+
+  - `Float64`: Similarity score between 0.0 (orthogonal) and 1.0 (identical direction)
+  - `missing`: If either molecule is invalid
 
 # Examples
+
 ```julia
 mol1 = mol_from_smiles("CCO")
 mol2 = mol_from_smiles("CCC")
@@ -168,7 +177,7 @@ function cosine_similarity(fp1::Vector{Bool}, fp2::Vector{Bool})
 end
 
 function cosine_similarity(
-    mol1::Molecule, mol2::Molecule; fingerprint_type=:morgan, kwargs...
+    mol1::Molecule, mol2::Molecule; fingerprint_type = :morgan, kwargs...
 )
     if !mol1.valid || !mol2.valid
         return missing
@@ -200,16 +209,19 @@ The Sokal similarity is defined as intersection / (2 × union - intersection).
 This metric gives less weight to shared features compared to Tanimoto similarity.
 
 # Arguments
-- `fp1`, `fp2`: Boolean vectors representing molecular fingerprints
-- `mol1`, `mol2`: Molecule objects to compare
-- `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`)
-- `kwargs...`: Additional arguments passed to fingerprint generation functions
+
+  - `fp1`, `fp2`: Boolean vectors representing molecular fingerprints
+  - `mol1`, `mol2`: Molecule objects to compare
+  - `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`)
+  - `kwargs...`: Additional arguments passed to fingerprint generation functions
 
 # Returns
-- `Float64`: Similarity score between 0.0 (no similarity) and 1.0 (identical)
-- `missing`: If either molecule is invalid
+
+  - `Float64`: Similarity score between 0.0 (no similarity) and 1.0 (identical)
+  - `missing`: If either molecule is invalid
 
 # Examples
+
 ```julia
 mol1 = mol_from_smiles("CCO")
 mol2 = mol_from_smiles("CCC")
@@ -228,7 +240,7 @@ function sokal_similarity(fp1::Vector{Bool}, fp2::Vector{Bool})
 end
 
 function sokal_similarity(
-    mol1::Molecule, mol2::Molecule; fingerprint_type=:morgan, kwargs...
+    mol1::Molecule, mol2::Molecule; fingerprint_type = :morgan, kwargs...
 )
     if !mol1.valid || !mol2.valid
         return missing
@@ -260,16 +272,19 @@ This function efficiently computes pairwise similarities between a single query 
 and multiple target molecules, useful for similarity searches and ranking.
 
 # Arguments
-- `query_mol`: The reference molecule to compare against
-- `target_mols`: Vector of molecules to compare with the query
-- `similarity_function`: Function to use for similarity calculation (default: `tanimoto_similarity`)
-- `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`)
-- `kwargs...`: Additional arguments passed to fingerprint generation functions
+
+  - `query_mol`: The reference molecule to compare against
+  - `target_mols`: Vector of molecules to compare with the query
+  - `similarity_function`: Function to use for similarity calculation (default: `tanimoto_similarity`)
+  - `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`)
+  - `kwargs...`: Additional arguments passed to fingerprint generation functions
 
 # Returns
-- `Vector{Union{Float64,Missing}}`: Vector of similarity scores, `missing` for invalid molecules
+
+  - `Vector{Union{Float64,Missing}}`: Vector of similarity scores, `missing` for invalid molecules
 
 # Examples
+
 ```julia
 query = mol_from_smiles("CCO")
 targets = [mol_from_smiles("CCC"), mol_from_smiles("CC"), mol_from_smiles("CCCO")]
@@ -280,12 +295,12 @@ most_similar_idx = argmax(similarities)
 function bulk_similarity(
     query_mol::Molecule,
     target_mols::Vector{Union{Molecule, Missing}};
-    similarity_function=tanimoto_similarity,
-    fingerprint_type=:morgan,
+    similarity_function = tanimoto_similarity,
+    fingerprint_type = :morgan,
     kwargs...,
 )
     return [
-        similarity_function(query_mol, mol; fingerprint_type=fingerprint_type, kwargs...)
+        similarity_function(query_mol, mol; fingerprint_type = fingerprint_type, kwargs...)
         for mol in target_mols
     ]
 end
@@ -293,12 +308,12 @@ end
 function bulk_similarity(
     query_mol::Molecule,
     target_mols::Vector{Molecule};
-    similarity_function=tanimoto_similarity,
-    fingerprint_type=:morgan,
+    similarity_function = tanimoto_similarity,
+    fingerprint_type = :morgan,
     kwargs...,
 )
     return [
-        similarity_function(query_mol, mol; fingerprint_type=fingerprint_type, kwargs...)
+        similarity_function(query_mol, mol; fingerprint_type = fingerprint_type, kwargs...)
         for mol in target_mols
     ]
 end
@@ -313,15 +328,18 @@ This function creates an n×n symmetric matrix where element (i,j) represents th
 similarity between molecules i and j. The diagonal elements are always 1.0 (self-similarity).
 
 # Arguments
-- `mols`: Vector of molecules to compare
-- `similarity_function`: Function to use for similarity calculation (default: `tanimoto_similarity`)
-- `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`)
-- `kwargs...`: Additional arguments passed to fingerprint generation functions
+
+  - `mols`: Vector of molecules to compare
+  - `similarity_function`: Function to use for similarity calculation (default: `tanimoto_similarity`)
+  - `fingerprint_type`: Type of fingerprint to use (`:morgan`, `:rdk`, `:maccs`)
+  - `kwargs...`: Additional arguments passed to fingerprint generation functions
 
 # Returns
-- `Matrix{Union{Float64,Missing}}`: Symmetric similarity matrix, `missing` for invalid molecules
+
+  - `Matrix{Union{Float64,Missing}}`: Symmetric similarity matrix, `missing` for invalid molecules
 
 # Examples
+
 ```julia
 mols = [mol_from_smiles("CCO"), mol_from_smiles("CCC"), mol_from_smiles("CCCO")]
 sim_matrix = similarity_matrix(mols)
@@ -331,8 +349,8 @@ sim_1_3 = sim_matrix[1, 3]
 """
 function similarity_matrix(
     mols::Vector{Union{Molecule, Missing}};
-    similarity_function=tanimoto_similarity,
-    fingerprint_type=:morgan,
+    similarity_function = tanimoto_similarity,
+    fingerprint_type = :morgan,
     kwargs...,
 )
     n = length(mols)
@@ -344,7 +362,7 @@ function similarity_matrix(
                 sim_matrix[i, j] = 1.0
             elseif i < j
                 sim = similarity_function(
-                    mols[i], mols[j]; fingerprint_type=fingerprint_type, kwargs...
+                    mols[i], mols[j]; fingerprint_type = fingerprint_type, kwargs...
                 )
                 sim_matrix[i, j] = sim
                 sim_matrix[j, i] = sim  # Symmetric matrix
@@ -357,8 +375,8 @@ end
 
 function similarity_matrix(
     mols::Vector{Molecule};
-    similarity_function=tanimoto_similarity,
-    fingerprint_type=:morgan,
+    similarity_function = tanimoto_similarity,
+    fingerprint_type = :morgan,
     kwargs...,
 )
     n = length(mols)
@@ -370,7 +388,7 @@ function similarity_matrix(
                 sim_matrix[i, j] = 1.0
             elseif i < j
                 sim = similarity_function(
-                    mols[i], mols[j]; fingerprint_type=fingerprint_type, kwargs...
+                    mols[i], mols[j]; fingerprint_type = fingerprint_type, kwargs...
                 )
                 sim_matrix[i, j] = sim
                 sim_matrix[j, i] = sim  # Symmetric matrix

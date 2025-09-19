@@ -36,7 +36,7 @@ using MoleculeFlow
         acetylacetone = mol_from_smiles("CC(=O)CC(=O)C")
         @test acetylacetone.valid == true
 
-        tautomers = enumerate_tautomers(acetylacetone; max_tautomers=5)
+        tautomers = enumerate_tautomers(acetylacetone; max_tautomers = 5)
         @test length(tautomers) >= 1
         @test all(t -> t.valid, tautomers)
 
@@ -145,11 +145,11 @@ using MoleculeFlow
         test_mol = mol_from_smiles("CCO.Cl")
         if test_mol.valid
             # With salt stripping
-            std_with_salt = standardize_molecule(test_mol; strip_salts_flag=true)
+            std_with_salt = standardize_molecule(test_mol; strip_salts_flag = true)
             @test std_with_salt.valid == true
 
             # Without salt stripping
-            std_no_salt = standardize_molecule(test_mol; strip_salts_flag=false)
+            std_no_salt = standardize_molecule(test_mol; strip_salts_flag = false)
             @test std_no_salt.valid == true
 
             # The salt-stripped version should be different
@@ -160,11 +160,13 @@ using MoleculeFlow
         chiral_mol = mol_from_smiles("C[C@H](O)C")  # Chiral center
         if chiral_mol.valid
             # Keep stereochemistry
-            std_keep_stereo = standardize_molecule(chiral_mol; remove_stereochemistry=false)
+            std_keep_stereo = standardize_molecule(
+                chiral_mol; remove_stereochemistry = false
+            )
             @test std_keep_stereo.valid == true
 
             # Remove stereochemistry
-            std_no_stereo = standardize_molecule(chiral_mol; remove_stereochemistry=true)
+            std_no_stereo = standardize_molecule(chiral_mol; remove_stereochemistry = true)
             @test std_no_stereo.valid == true
 
             # Check if stereochemistry markers are removed

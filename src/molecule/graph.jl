@@ -10,15 +10,18 @@ using Graphs
 Convert a molecule to a Graph object from Graphs.jl.
 
 # Arguments
-- `mol::Molecule`: The molecule to convert
-- `atom_features::Bool`: Whether to include atom features in metadata (default: false)
-- `bond_features::Bool`: Whether to include bond features in metadata (default: false)
+
+  - `mol::Molecule`: The molecule to convert
+  - `atom_features::Bool`: Whether to include atom features in metadata (default: false)
+  - `bond_features::Bool`: Whether to include bond features in metadata (default: false)
 
 # Returns
-- A SimpleGraph or SimpleDiGraph representing the molecular structure
-- If atom_features or bond_features are true, returns a MetaGraph with features
+
+  - A SimpleGraph or SimpleDiGraph representing the molecular structure
+  - If atom_features or bond_features are true, returns a MetaGraph with features
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 g = mol_to_graph(mol)
@@ -26,7 +29,7 @@ nv(g)  # number of atoms (vertices)
 ne(g)  # number of bonds (edges)
 ```
 """
-function mol_to_graph(mol::Molecule; atom_features=false, bond_features=false)
+function mol_to_graph(mol::Molecule; atom_features = false, bond_features = false)
     if !mol.valid
         return missing
     end
@@ -68,14 +71,17 @@ Convert a molecule to a directed Graph object from Graphs.jl.
 Each bond creates two directed edges (one in each direction).
 
 # Arguments
-- `mol::Molecule`: The molecule to convert
-- `atom_features::Bool`: Whether to include atom features in metadata (default: false)
-- `bond_features::Bool`: Whether to include bond features in metadata (default: false)
+
+  - `mol::Molecule`: The molecule to convert
+  - `atom_features::Bool`: Whether to include atom features in metadata (default: false)
+  - `bond_features::Bool`: Whether to include bond features in metadata (default: false)
 
 # Returns
-- A SimpleDiGraph representing the molecular structure
+
+  - A SimpleDiGraph representing the molecular structure
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 dg = mol_to_digraph(mol)
@@ -83,7 +89,7 @@ nv(dg)  # number of atoms (vertices)
 ne(dg)  # number of directed bonds (edges)
 ```
 """
-function mol_to_digraph(mol::Molecule; atom_features=false, bond_features=false)
+function mol_to_digraph(mol::Molecule; atom_features = false, bond_features = false)
     if !mol.valid
         return missing
     end

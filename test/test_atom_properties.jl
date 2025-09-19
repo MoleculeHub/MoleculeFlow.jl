@@ -2,7 +2,6 @@ using Test
 using MoleculeFlow
 
 @testset "Extended Atom Properties" begin
-
     @testset "Basic Extended Properties" begin
         mol = mol_from_smiles("CCO")
         atom_o = get_atom(mol, 3)  # Oxygen
@@ -72,18 +71,32 @@ using MoleculeFlow
 
     @testset "All Atom Properties" begin
         mol = mol_from_smiles("CCO")
-        compute_gasteiger_charges!(mol) 
+        compute_gasteiger_charges!(mol)
 
         carbon_props = get_all_atom_properties(mol, 1)
         @test isa(carbon_props, Dict{Symbol, Any})
 
         required_props = [
-            :symbol, :hybridization, :formal_charge, :total_num_hs,
-            :total_valence, :num_radical_electrons, :degree, :aromatic,
-            :hetero, :hydrogen_donor, :hydrogen_acceptor, :ring,
-            :ring_size, :chiral_center, :cip_code,
-            :crippen_log_p_contribution, :crippen_molar_refractivity_contribution,
-            :tpsa_contribution, :labute_asa_contribution, :gasteiger_charge
+            :symbol,
+            :hybridization,
+            :formal_charge,
+            :total_num_hs,
+            :total_valence,
+            :num_radical_electrons,
+            :degree,
+            :aromatic,
+            :hetero,
+            :hydrogen_donor,
+            :hydrogen_acceptor,
+            :ring,
+            :ring_size,
+            :chiral_center,
+            :cip_code,
+            :crippen_log_p_contribution,
+            :crippen_molar_refractivity_contribution,
+            :tpsa_contribution,
+            :labute_asa_contribution,
+            :gasteiger_charge,
         ]
 
         for prop in required_props
@@ -103,7 +116,7 @@ using MoleculeFlow
         @test oxygen_props[:hydrogen_acceptor] == true
 
         @test get_all_atom_properties(mol_from_smiles("invalid"), 1) === missing
-        @test get_all_atom_properties(mol, 999) === missing 
+        @test get_all_atom_properties(mol, 999) === missing
     end
 
     @testset "Hydrogen Bonding Logic" begin
@@ -128,7 +141,7 @@ using MoleculeFlow
         mol4 = mol_from_smiles("CCS")
         s_atom = get_atom(mol4, 3)
         # CCS has implicit H on sulfur, so it can be a donor
-        @test is_hydrogen_donor(s_atom) || !is_hydrogen_donor(s_atom) 
+        @test is_hydrogen_donor(s_atom) || !is_hydrogen_donor(s_atom)
         @test is_hydrogen_acceptor(s_atom) # S can accept
     end
 

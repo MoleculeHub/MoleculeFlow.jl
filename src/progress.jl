@@ -11,12 +11,13 @@ using Printf
 Tracks progress of array processing operations with timing, throughput, and ETA calculations.
 
 # Fields
-- `total_items::Int`: Total number of items to process
-- `processed_items::Ref{Int}`: Number of items processed so far
-- `start_time::Float64`: Start time of the operation
-- `last_update_time::Ref{Float64}`: Last time progress was updated
-- `update_interval::Float64`: Minimum seconds between progress updates
-- `show_progress::Bool`: Whether to display progress information
+
+  - `total_items::Int`: Total number of items to process
+  - `processed_items::Ref{Int}`: Number of items processed so far
+  - `start_time::Float64`: Start time of the operation
+  - `last_update_time::Ref{Float64}`: Last time progress was updated
+  - `update_interval::Float64`: Minimum seconds between progress updates
+  - `show_progress::Bool`: Whether to display progress information
 """
 mutable struct ProgressTracker
     total_items::Int
@@ -27,7 +28,7 @@ mutable struct ProgressTracker
     show_progress::Bool
 
     function ProgressTracker(
-        total_items::Int; update_interval::Float64=1.0, show_progress::Bool=true
+        total_items::Int; update_interval::Float64 = 1.0, show_progress::Bool = true
     )
         @assert total_items > 0 "total_items must be positive"
         @assert update_interval > 0 "update_interval must be positive"
@@ -45,11 +46,12 @@ end
 Update the progress tracker with the current number of processed items.
 
 # Arguments
-- `tracker::ProgressTracker`: The progress tracker to update
-- `processed::Int`: Current number of processed items
-- `force::Bool`: Force update even if within update interval
+
+  - `tracker::ProgressTracker`: The progress tracker to update
+  - `processed::Int`: Current number of processed items
+  - `force::Bool`: Force update even if within update interval
 """
-function update_progress!(tracker::ProgressTracker, processed::Int; force::Bool=false)
+function update_progress!(tracker::ProgressTracker, processed::Int; force::Bool = false)
     tracker.processed_items[] = processed
     current_time = time()
 
@@ -136,21 +138,23 @@ end
 Execute a function on array items with progress tracking.
 
 # Arguments
-- `func`: Function to apply to each item
-- `items`: Array of items to process
-- `show_progress::Bool`: Whether to show progress bar
-- `desc::String`: Description for the progress bar
+
+  - `func`: Function to apply to each item
+  - `items`: Array of items to process
+  - `show_progress::Bool`: Whether to show progress bar
+  - `desc::String`: Description for the progress bar
 
 # Returns
-- Array of results from applying func to each item
+
+  - Array of results from applying func to each item
 """
-function with_progress(func, items; show_progress=true, desc="Processing")
+function with_progress(func, items; show_progress = true, desc = "Processing")
     n = length(items)
     if n == 0
         return []
     end
 
-    tracker = ProgressTracker(n; show_progress=show_progress)
+    tracker = ProgressTracker(n; show_progress = show_progress)
     results = Vector{Any}(undef, n)
 
     show_progress && println("$desc $(n) items...")
@@ -160,7 +164,7 @@ function with_progress(func, items; show_progress=true, desc="Processing")
         update_progress!(tracker, i)
     end
 
-    show_progress && update_progress!(tracker, n; force=true)
+    show_progress && update_progress!(tracker, n; force = true)
 
     return results
 end
@@ -171,15 +175,17 @@ end
 Map function over arrays with progress tracking (similar to Base.map).
 
 # Arguments
-- `func`: Function to apply
-- `items...`: Arrays to map over
-- `show_progress::Bool`: Whether to show progress bar
-- `desc::String`: Description for the progress bar
+
+  - `func`: Function to apply
+  - `items...`: Arrays to map over
+  - `show_progress::Bool`: Whether to show progress bar
+  - `desc::String`: Description for the progress bar
 
 # Returns
-- Array of results from applying func to items
+
+  - Array of results from applying func to items
 """
-function map_with_progress(func, items...; show_progress=true, desc="Processing")
+function map_with_progress(func, items...; show_progress = true, desc = "Processing")
     if isempty(items)
         return []
     end
@@ -191,7 +197,7 @@ function map_with_progress(func, items...; show_progress=true, desc="Processing"
         return []
     end
 
-    tracker = ProgressTracker(n; show_progress=show_progress)
+    tracker = ProgressTracker(n; show_progress = show_progress)
     results = Vector{Any}(undef, n)
 
     show_progress && println("$desc $(n) items...")
@@ -202,7 +208,7 @@ function map_with_progress(func, items...; show_progress=true, desc="Processing"
         update_progress!(tracker, i)
     end
 
-    show_progress && update_progress!(tracker, n; force=true)
+    show_progress && update_progress!(tracker, n; force = true)
 
     return results
 end

@@ -2,7 +2,6 @@ using Test
 using MoleculeFlow
 
 @testset "Molecular Fragmentation" begin
-
     @testset "BRICS Decomposition" begin
         mol = mol_from_smiles("CCCOCCc1ccccc1")
         fragments = brics_decompose(mol)
@@ -10,7 +9,9 @@ using MoleculeFlow
         @test isa(fragments, Vector{String})
         @test length(fragments) > 0
 
-        fragments_limited = brics_decompose(mol, min_fragment_size=2, max_fragment_size=6)
+        fragments_limited = brics_decompose(
+            mol, min_fragment_size = 2, max_fragment_size = 6
+        )
         @test isa(fragments_limited, Vector{String})
 
         bad_mol = mol_from_smiles("invalid_smiles")
@@ -23,7 +24,7 @@ using MoleculeFlow
 
         @test isa(fragments, Vector{String})
 
-        fragments_limited = recap_decompose(mol, min_fragment_size=3)
+        fragments_limited = recap_decompose(mol, min_fragment_size = 3)
         @test isa(fragments_limited, Vector{String})
 
         bad_mol = mol_from_smiles("invalid_smiles")
@@ -39,7 +40,7 @@ using MoleculeFlow
 
         generic_scaffold = get_generic_scaffold(mol)
         @test isa(generic_scaffold, String)
-        @test generic_scaffold == "C1CCCCC1" 
+        @test generic_scaffold == "C1CCCCC1"
 
         acyclic_mol = mol_from_smiles("CCCCCC")
         acyclic_scaffold = get_murcko_scaffold(acyclic_mol)
@@ -76,7 +77,8 @@ using MoleculeFlow
         connected_mol = mol_from_smiles("CCCc1ccccc1")
         @test get_fragment_count(connected_mol) == 1
         @test length(split_fragments(connected_mol)) == 1
-        @test mol_to_smiles(get_largest_fragment(connected_mol)) == mol_to_smiles(connected_mol)
+        @test mol_to_smiles(get_largest_fragment(connected_mol)) ==
+            mol_to_smiles(connected_mol)
 
         bad_mol = mol_from_smiles("invalid_smiles")
         @test get_fragment_count(bad_mol) === missing

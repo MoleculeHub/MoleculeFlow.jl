@@ -1,9 +1,6 @@
 #######################################################
 # Writing Mols
 #######################################################
-_mol_to_smiles(mol::Py) = @pyconst(pyimport("rdkit.Chem").MolToSmiles)(mol)
-_mol_to_inchi(mol::Py) = @pyconst(pyimport("rdkit.Chem").MolToInchi)(mol)
-#######################################################
 
 """
     mol_to_smiles(mol::Union{Molecule,Missing}) -> Union{String,Missing}
@@ -11,12 +8,15 @@ _mol_to_inchi(mol::Py) = @pyconst(pyimport("rdkit.Chem").MolToInchi)(mol)
 Convert a Molecule object to a SMILES string.
 
 # Arguments
-- `mol::Union{Molecule,Missing}`: A Molecule object or missing
+
+  - `mol::Union{Molecule,Missing}`: A Molecule object or missing
 
 # Returns
-- `Union{String,Missing}`: SMILES string, or missing if the molecule is invalid or missing
+
+  - `Union{String,Missing}`: SMILES string, or missing if the molecule is invalid or missing
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 smiles = mol_to_smiles(mol)  # "CCO"
@@ -59,20 +59,24 @@ end
 Convert a Molecule object to an InChI (International Chemical Identifier) string.
 
 # Arguments
-- `mol::Union{Molecule,Missing}`: A Molecule object or missing
+
+  - `mol::Union{Molecule,Missing}`: A Molecule object or missing
 
 # Returns
-- `Union{String,Missing}`: InChI string, or missing if the molecule is invalid or missing
+
+  - `Union{String,Missing}`: InChI string, or missing if the molecule is invalid or missing
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 inchi = mol_to_inchi(mol)  # "InChI=1S/C2H6O/c1-2-3/h3H,2H2,1H3"
 ```
 
 # Notes
-- InChI provides a unique identifier for chemical structures
-- More verbose than SMILES but provides standardized representation
+
+  - InChI provides a unique identifier for chemical structures
+  - More verbose than SMILES but provides standardized representation
 """
 function mol_to_inchi(mol::Union{Molecule, Missing})
     isa(mol, Missing) && return missing

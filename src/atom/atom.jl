@@ -4,10 +4,12 @@
 A structure representing an individual atom within a molecule.
 
 # Fields
-- `_rdkit_atom::Py`: The underlying RDKit atom object
-- `props::Dict{Symbol, Any}`: Dictionary for storing additional atom properties
+
+  - `_rdkit_atom::Py`: The underlying RDKit atom object
+  - `props::Dict{Symbol, Any}`: Dictionary for storing additional atom properties
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 atoms = get_atoms(mol)

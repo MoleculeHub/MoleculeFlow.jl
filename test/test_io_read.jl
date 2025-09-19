@@ -3,14 +3,15 @@ using MoleculeFlow
 using PythonCall
 
 @testset "IO Read Functions" begin
-
     @testset "mol_from_molblock" begin
         # Create a valid MOL block using RDKit to ensure correct format
         test_mol = mol_from_smiles("CCO")  # ethanol
         if test_mol.valid
             # Get MOL block from a valid molecule using RDKit's Chem module
             rdkit_chem = @pyconst(pyimport("rdkit.Chem"))
-            valid_molblock = pyconvert(String, rdkit_chem.MolToMolBlock(test_mol._rdkit_mol))
+            valid_molblock = pyconvert(
+                String, rdkit_chem.MolToMolBlock(test_mol._rdkit_mol)
+            )
 
             parsed_mol = mol_from_molblock(valid_molblock)
             @test parsed_mol.valid == true
@@ -41,8 +42,11 @@ using PythonCall
             mol1_block = pyconvert(String, rdkit_chem.MolToMolBlock(mol1._rdkit_mol))
             mol2_block = pyconvert(String, rdkit_chem.MolToMolBlock(mol2._rdkit_mol))
 
-            test_sdf_content = mol1_block * ">  <ID>\nmol1\n\n>  <Name>\nEthanol\n\n\$\$\$\$\n" *
-                             mol2_block * ">  <ID>\nmol2\n\n>  <Name>\nPropane\n\n\$\$\$\$\n"
+            test_sdf_content =
+                mol1_block *
+                ">  <ID>\nmol1\n\n>  <Name>\nEthanol\n\n\$\$\$\$\n" *
+                mol2_block *
+                ">  <ID>\nmol2\n\n>  <Name>\nPropane\n\n\$\$\$\$\n"
 
             test_sdf_file = tempname() * ".sdf"
             write(test_sdf_file, test_sdf_content)
@@ -58,12 +62,12 @@ using PythonCall
                     @test molecules[2].source == "sdf_mol_2"
 
                     # Test max_mols parameter
-                    molecules_limited = read_sdf(test_sdf_file, max_mols=1)
+                    molecules_limited = read_sdf(test_sdf_file, max_mols = 1)
                     @test length(molecules_limited) == 1
                 end
 
             finally
-                rm(test_sdf_file, force=true)
+                rm(test_sdf_file, force = true)
             end
         end
 
@@ -78,8 +82,11 @@ using PythonCall
         if mol1.valid
             rdkit_chem = @pyconst(pyimport("rdkit.Chem"))
             mol1_block = pyconvert(String, rdkit_chem.MolToMolBlock(mol1._rdkit_mol))
-            test_sdf_content = mol1_block * ">  <ID>\nmol1\n\n\$\$\$\$\n" *
-                             mol1_block * ">  <ID>\nmol2\n\n\$\$\$\$\n"
+            test_sdf_content =
+                mol1_block *
+                ">  <ID>\nmol1\n\n\$\$\$\$\n" *
+                mol1_block *
+                ">  <ID>\nmol2\n\n\$\$\$\$\n"
 
             test_sdf_file = tempname() * ".sdf"
             write(test_sdf_file, test_sdf_content)
@@ -106,7 +113,7 @@ using PythonCall
                 @test mol4 === nothing
 
             finally
-                rm(test_sdf_file, force=true)
+                rm(test_sdf_file, force = true)
             end
         end
 
@@ -132,7 +139,7 @@ using PythonCall
                 # Just test that we can read something without requiring specific validity
 
             finally
-                rm(test_sdf_file, force=true)
+                rm(test_sdf_file, force = true)
             end
         end
     end
@@ -172,7 +179,7 @@ using PythonCall
             "InChI=1S/C2H6/c1-2/h1-2H3",         # Ethane - valid
             "InChI=1S/C3H8/c1-3-2/h3H2,1-2H3",   # Propane - valid
             "invalid_inchi",                      # Invalid
-            "InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H" # Benzene - valid
+            "InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H", # Benzene - valid
         ]
 
         mols = mol_from_inchi(inchi_list)

@@ -100,7 +100,6 @@ end
     good_mol = mol_from_smiles("CCO")
     good_g = mol_to_graph(good_mol)
     @test !ismissing(good_g)
-
 end
 
 @testset "Graph Operations - Disconnected Molecules" begin

@@ -1,18 +1,6 @@
 #######################################################
 # Reading Mols
 #######################################################
-_mol_from_smiles(smiles::String) = @pyconst(pyimport("rdkit.Chem").MolFromSmiles)(smiles)
-_mol_from_inchi(inchi::String) = @pyconst(pyimport("rdkit.Chem").MolFromInchi)(inchi)
-function _mol_from_molfile(molfile::String)
-    @pyconst(pyimport("rdkit.Chem").MolFromMolFile)(molfile)
-end
-function _mol_from_molblock(molblock::String)
-    @pyconst(pyimport("rdkit.Chem").MolFromMolBlock)(molblock)
-end
-function _sdf_supplier(filename::String)
-    @pyconst(pyimport("rdkit.Chem").SDMolSupplier)(filename)
-end
-#######################################################
 
 """
     mol_from_smiles(smiles::String) -> Molecule

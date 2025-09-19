@@ -2,7 +2,6 @@
 # Substructure search functionality
 #######################################################
 
-# Basic substructure matching
 """
     has_substructure_match(mol::Molecule, pattern::Molecule) -> Union{Bool,Missing}
     has_substructure_match(mol::Molecule, pattern_smarts::String) -> Union{Bool,Missing}
@@ -10,13 +9,16 @@
 Check if a molecule contains a substructure pattern.
 
 # Arguments
-- `mol::Molecule`: The molecule to search in
-- `pattern::Molecule` or `pattern_smarts::String`: The substructure pattern as a Molecule or SMARTS string
+
+  - `mol::Molecule`: The molecule to search in
+  - `pattern::Molecule` or `pattern_smarts::String`: The substructure pattern as a Molecule or SMARTS string
 
 # Returns
-- `Union{Bool,Missing}`: true if pattern is found, false otherwise, missing if molecules are invalid
+
+  - `Union{Bool,Missing}`: true if pattern is found, false otherwise, missing if molecules are invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")  # Ethanol
 has_oh = has_substructure_match(mol, "[OH]")
@@ -24,8 +26,9 @@ has_benzene = has_substructure_match(mol, "c1ccccc1")  # false
 ```
 
 # Notes
-- SMARTS patterns are more flexible than SMILES for substructure searching
-- Case-sensitive: 'c' = aromatic carbon, 'C' = aliphatic carbon
+
+  - SMARTS patterns are more flexible than SMILES for substructure searching
+  - Case-sensitive: 'c' = aromatic carbon, 'C' = aliphatic carbon
 """
 function has_substructure_match(mol::Molecule, pattern::Molecule)
     !mol.valid && return missing
@@ -37,7 +40,7 @@ end
 function has_substructure_match(mol::Molecule, pattern_smarts::String)
     !mol.valid && return missing
 
-    pattern_mol = @pyconst(pyimport("rdkit.Chem").MolFromSmarts)(pattern_smarts)
+    pattern_mol = _mol_from_smarts(pattern_smarts)
     if pynot(pattern_mol)
         throw(ArgumentError("Invalid SMARTS pattern: $pattern_smarts"))
     end
@@ -52,14 +55,17 @@ end
 Find all substructure matches and return atom indices for each match.
 
 # Arguments
-- `mol::Molecule`: The molecule to search in
-- `pattern::Union{Molecule,String}`: The substructure pattern
-- `unique_matches::Bool=true`: Whether to return only unique matches
+
+  - `mol::Molecule`: The molecule to search in
+  - `pattern::Union{Molecule,String}`: The substructure pattern
+  - `unique_matches::Bool=true`: Whether to return only unique matches
 
 # Returns
-- `Union{Vector{Vector{Int}},Missing}`: Vector of vectors containing 1-based atom indices for each match
+
+  - `Union{Vector{Vector{Int}},Missing}`: Vector of vectors containing 1-based atom indices for each match
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("c1ccc(O)cc1")  # Phenol
 matches = get_substructure_matches(mol, "[OH]")
@@ -67,34 +73,35 @@ matches = get_substructure_matches(mol, "[OH]")
 ```
 
 # Notes
-- Returns 1-based atom indices (Julia convention)
-- Each inner vector contains atom indices for one match
-- Empty vector if no matches found
+
+  - Returns 1-based atom indices (Julia convention)
+  - Each inner vector contains atom indices for one match
+  - Empty vector if no matches found
 """
 function get_substructure_matches(
-    mol::Molecule, pattern::Molecule; unique_matches::Bool=true
+    mol::Molecule, pattern::Molecule; unique_matches::Bool = true
 )
     !mol.valid && return missing
     !pattern.valid && return missing
 
     matches = mol._rdkit_mol.GetSubstructMatches(
-        pattern._rdkit_mol; uniquify=unique_matches
+        pattern._rdkit_mol; uniquify = unique_matches
     )
     # Convert to Julia arrays and 1-based indexing
     return [pyconvert(Vector{Int}, match) .+ 1 for match in matches]
 end
 
 function get_substructure_matches(
-    mol::Molecule, pattern_smarts::String; unique_matches::Bool=true
+    mol::Molecule, pattern_smarts::String; unique_matches::Bool = true
 )
     !mol.valid && return missing
 
-    pattern_mol = @pyconst(pyimport("rdkit.Chem").MolFromSmarts)(pattern_smarts)
+    pattern_mol = _mol_from_smarts(pattern_smarts)
     if pynot(pattern_mol)
         throw(ArgumentError("Invalid SMARTS pattern: $pattern_smarts"))
     end
 
-    matches = mol._rdkit_mol.GetSubstructMatches(pattern_mol; uniquify=unique_matches)
+    matches = mol._rdkit_mol.GetSubstructMatches(pattern_mol; uniquify = unique_matches)
     # Convert to Julia arrays and 1-based indexing
     return [pyconvert(Vector{Int}, match) .+ 1 for match in matches]
 end
@@ -105,22 +112,26 @@ end
 Get the first substructure match of a pattern in a molecule.
 
 # Arguments
-- `mol::Molecule`: The molecule to search in
-- `pattern::Union{Molecule,String}`: The substructure pattern as a Molecule or SMARTS string
+
+  - `mol::Molecule`: The molecule to search in
+  - `pattern::Union{Molecule,String}`: The substructure pattern as a Molecule or SMARTS string
 
 # Returns
-- `Vector{Int}`: 1-based atom indices of the first match
-- `missing`: If no match is found or molecules are invalid
+
+  - `Vector{Int}`: 1-based atom indices of the first match
+  - `missing`: If no match is found or molecules are invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 match = get_substructure_match(mol, "[OH]")  # Returns [3] (oxygen index)
 ```
 
 # Notes
-- Returns only the first match found
-- Use `get_substructure_matches` to get all matches
+
+  - Returns only the first match found
+  - Use `get_substructure_matches` to get all matches
 """
 function get_substructure_match(mol::Molecule, pattern::Molecule)
     !mol.valid && return missing
@@ -137,7 +148,7 @@ end
 function get_substructure_match(mol::Molecule, pattern_smarts::String)
     !mol.valid && return missing
 
-    pattern_mol = @pyconst(pyimport("rdkit.Chem").MolFromSmarts)(pattern_smarts)
+    pattern_mol = _mol_from_smarts(pattern_smarts)
     if pynot(pattern_mol)
         throw(ArgumentError("Invalid SMARTS pattern: $pattern_smarts"))
     end
@@ -156,14 +167,17 @@ end
 Find the maximum common substructure (MCS) between two molecules.
 
 # Arguments
-- `mol1::Molecule`: First molecule
-- `mol2::Molecule`: Second molecule
+
+  - `mol1::Molecule`: First molecule
+  - `mol2::Molecule`: Second molecule
 
 # Returns
-- `Molecule`: The maximum common substructure as a new Molecule object
-- `missing`: If no common substructure is found or molecules are invalid
+
+  - `Molecule`: The maximum common substructure as a new Molecule object
+  - `missing`: If no common substructure is found or molecules are invalid
 
 # Examples
+
 ```julia
 mol1 = mol_from_smiles("CCO")
 mol2 = mol_from_smiles("CCC")
@@ -171,32 +185,29 @@ mcs = maximum_common_substructure(mol1, mol2)  # Common C-C substructure
 ```
 
 # Notes
-- Uses RDKit's FindMCS algorithm
-- Returns the largest substructure common to both molecules
-- Useful for scaffold analysis and lead optimization
+
+  - Uses RDKit's FindMCS algorithm
+  - Returns the largest substructure common to both molecules
+  - Useful for scaffold analysis and lead optimization
 """
 function maximum_common_substructure(mol1::Molecule, mol2::Molecule)
     !mol1.valid && return missing
     !mol2.valid && return missing
 
-    # Import FindMCS
-    mcs = @pyconst(pyimport("rdkit.Chem.rdFMCS").FindMCS)([
-        mol1._rdkit_mol, mol2._rdkit_mol
-    ])
+    # Find MCS
+    mcs = _find_mcs([mol1._rdkit_mol, mol2._rdkit_mol])
 
     if pyconvert(Int, mcs.numAtoms) == 0
         return missing
     end
 
-    mcs_mol = @pyconst(pyimport("rdkit.Chem").MolFromSmarts)(
-        pyconvert(String, mcs.smartsString)
-    )
+    mcs_mol = _mol_from_smarts(pyconvert(String, mcs.smartsString))
     if pynot(mcs_mol)
         return missing
     end
 
     return Molecule(;
-        _rdkit_mol=mcs_mol, valid=true, source=pyconvert(String, mcs.smartsString)
+        _rdkit_mol = mcs_mol, valid = true, source = pyconvert(String, mcs.smartsString)
     )
 end
 
@@ -206,21 +217,25 @@ end
 Check for substructure matches across a vector of molecules.
 
 # Arguments
-- `mols::Vector{Union{Molecule,Missing}}`: Vector of molecules to search
-- `pattern::Union{Molecule,String}`: The substructure pattern to search for
+
+  - `mols::Vector{Union{Molecule,Missing}}`: Vector of molecules to search
+  - `pattern::Union{Molecule,String}`: The substructure pattern to search for
 
 # Returns
-- `Vector{Union{Bool,Missing}}`: Boolean vector indicating matches for each molecule
+
+  - `Vector{Union{Bool,Missing}}`: Boolean vector indicating matches for each molecule
 
 # Examples
+
 ```julia
 mols = [mol_from_smiles("CCO"), mol_from_smiles("CCC"), mol_from_smiles("CC(O)C")]
 matches = has_substructure_matches(mols, "[OH]")  # [true, false, true]
 ```
 
 # Notes
-- Vectorized version of `has_substructure_match`
-- Useful for filtering large molecular datasets
+
+  - Vectorized version of `has_substructure_match`
+  - Useful for filtering large molecular datasets
 """
 function has_substructure_matches(
     mols::Vector{Union{Molecule, Missing}}, pattern::Union{Molecule, String}
@@ -234,21 +249,25 @@ end
 Filter molecules that contain a specific substructure pattern.
 
 # Arguments
-- `mols::Vector{Union{Molecule,Missing}}`: Vector of molecules to filter
-- `pattern::Union{Molecule,String}`: The substructure pattern to filter by
+
+  - `mols::Vector{Union{Molecule,Missing}}`: Vector of molecules to filter
+  - `pattern::Union{Molecule,String}`: The substructure pattern to filter by
 
 # Returns
-- `Vector{Union{Molecule,Missing}}`: Filtered vector containing only molecules with the pattern
+
+  - `Vector{Union{Molecule,Missing}}`: Filtered vector containing only molecules with the pattern
 
 # Examples
+
 ```julia
 mols = [mol_from_smiles("CCO"), mol_from_smiles("CCC"), mol_from_smiles("CC(O)C")]
 alcohols = filter_by_substructure(mols, "[OH]")  # Returns [CCO, CC(O)C]
 ```
 
 # Notes
-- Convenient wrapper around `has_substructure_matches`
-- Useful for creating focused molecular libraries
+
+  - Convenient wrapper around `has_substructure_matches`
+  - Useful for creating focused molecular libraries
 """
 function filter_by_substructure(
     mols::Vector{Union{Molecule, Missing}}, pattern::Union{Molecule, String}
@@ -263,71 +282,88 @@ end
 A comprehensive dictionary containing 100+ predefined functional group SMARTS patterns organized by category.
 
 # Basic Functional Groups
-- `:alcohol`, `:phenol`, `:carboxylic_acid`, `:ester`, `:ether`, `:aldehyde`, `:ketone`
-- `:amine_primary`, `:amine_secondary`, `:amine_tertiary`, `:amide`, `:nitrile`
+
+  - `:alcohol`, `:phenol`, `:carboxylic_acid`, `:ester`, `:ether`, `:aldehyde`, `:ketone`
+  - `:amine_primary`, `:amine_secondary`, `:amine_tertiary`, `:amide`, `:nitrile`
 
 # Sulfur-Containing Groups
-- `:thiol`, `:sulfide`, `:disulfide`, `:sulfoxide`, `:sulfone`
-- `:sulfonamide`, `:sulfonate`, `:sulfonic_acid`, `:sulfonyl_chloride`
+
+  - `:thiol`, `:sulfide`, `:disulfide`, `:sulfoxide`, `:sulfone`
+  - `:sulfonamide`, `:sulfonate`, `:sulfonic_acid`, `:sulfonyl_chloride`
 
 # Phosphorus-Containing Groups
-- `:phosphate`, `:phosphonate`, `:phosphine`, `:phosphine_oxide`
+
+  - `:phosphate`, `:phosphonate`, `:phosphine`, `:phosphine_oxide`
 
 # Halogen-Containing Groups
-- `:fluoride`, `:chloride`, `:bromide`, `:iodide`, `:trifluoromethyl`, `:trichloromethyl`
+
+  - `:fluoride`, `:chloride`, `:bromide`, `:iodide`, `:trifluoromethyl`, `:trichloromethyl`
 
 # Advanced Nitrogen Groups
-- `:nitro`, `:nitroso`, `:azide`, `:diazo`, `:hydrazine`, `:hydroxylamine`
-- `:imine`, `:oxime`, `:enamine`, `:guanidine`, `:urea`, `:carbamate`
-- `:isocyanate`, `:isothiocyanate`
+
+  - `:nitro`, `:nitroso`, `:azide`, `:diazo`, `:hydrazine`, `:hydroxylamine`
+  - `:imine`, `:oxime`, `:enamine`, `:guanidine`, `:urea`, `:carbamate`
+  - `:isocyanate`, `:isothiocyanate`
 
 # Advanced Oxygen Groups
-- `:peroxide`, `:acetal`, `:ketal`, `:hemiacetal`, `:hemiketal`
-- `:anhydride`, `:carbonate`, `:carbamate_ester`
+
+  - `:peroxide`, `:acetal`, `:ketal`, `:hemiacetal`, `:hemiketal`
+  - `:anhydride`, `:carbonate`, `:carbamate_ester`
 
 # Carbon-Carbon Multiple Bonds
-- `:alkene`, `:alkyne`, `:allene`, `:conjugated_diene`
+
+  - `:alkene`, `:alkyne`, `:allene`, `:conjugated_diene`
 
 # 5-Membered Aromatic Heterocycles
-- `:furan`, `:thiophene`, `:pyrrole`, `:imidazole`, `:pyrazole`
-- `:oxazole`, `:isoxazole`, `:thiazole`, `:isothiazole`
-- `:triazole_1_2_3`, `:triazole_1_2_4`, `:tetrazole`
+
+  - `:furan`, `:thiophene`, `:pyrrole`, `:imidazole`, `:pyrazole`
+  - `:oxazole`, `:isoxazole`, `:thiazole`, `:isothiazole`
+  - `:triazole_1_2_3`, `:triazole_1_2_4`, `:tetrazole`
 
 # 6-Membered Aromatic Heterocycles
-- `:benzene`, `:pyridine`, `:pyrimidine`, `:pyrazine`, `:pyridazine`, `:triazine`
+
+  - `:benzene`, `:pyridine`, `:pyrimidine`, `:pyrazine`, `:pyridazine`, `:triazine`
 
 # Fused Aromatic Systems
-- `:naphthalene`, `:anthracene`, `:phenanthrene`, `:quinoline`, `:isoquinoline`
-- `:indole`, `:benzofuran`, `:benzothiophene`, `:purine`
+
+  - `:naphthalene`, `:anthracene`, `:phenanthrene`, `:quinoline`, `:isoquinoline`
+  - `:indole`, `:benzofuran`, `:benzothiophene`, `:purine`
 
 # Saturated Heterocycles
-- `:tetrahydrofuran`, `:tetrahydropyran`, `:pyrrolidine`, `:piperidine`
-- `:morpholine`, `:piperazine`, `:azetidine`, `:oxetane`, `:thietane`
+
+  - `:tetrahydrofuran`, `:tetrahydropyran`, `:pyrrolidine`, `:piperidine`
+  - `:morpholine`, `:piperazine`, `:azetidine`, `:oxetane`, `:thietane`
 
 # Biomolecule Patterns
-- `:glucose_like`, `:anomeric_carbon`, `:glycosidic_bond` (sugars)
-- `:peptide_bond`, `:alpha_amino_acid`, `:proline_like` (proteins)
-- `:fatty_acid`, `:fatty_acid_long`, `:triglyceride_like` (lipids)
+
+  - `:glucose_like`, `:anomeric_carbon`, `:glycosidic_bond` (sugars)
+  - `:peptide_bond`, `:alpha_amino_acid`, `:proline_like` (proteins)
+  - `:fatty_acid`, `:fatty_acid_long`, `:triglyceride_like` (lipids)
 
 # Pharmaceutical Patterns
-- `:benzodiazepine_core`, `:beta_lactam`, `:sulfonamide_drug`, `:barbiturate_core`
+
+  - `:benzodiazepine_core`, `:beta_lactam`, `:sulfonamide_drug`, `:barbiturate_core`
 
 # Natural Product Patterns
-- `:steroid_core`, `:flavonoid_core`, `:coumarin`, `:chromone`
+
+  - `:steroid_core`, `:flavonoid_core`, `:coumarin`, `:chromone`
 
 # Reactive Groups and Electrophiles
-- `:epoxide`, `:aziridine`, `:cyclopropane`, `:michael_acceptor`
-- `:alpha_beta_unsaturated_carbonyl`
+
+  - `:epoxide`, `:aziridine`, `:cyclopropane`, `:michael_acceptor`
+  - `:alpha_beta_unsaturated_carbonyl`
 
 # Protecting Groups (Synthetic Chemistry)
-- `:tert_butyl`, `:benzyl`, `:acetyl`, `:benzoyl`, `:tosyl`
-- `:boc`, `:cbz`, `:fmoc`
+
+  - `:tert_butyl`, `:benzyl`, `:acetyl`, `:benzoyl`, `:tosyl`
+  - `:boc`, `:cbz`, `:fmoc`
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 has_functional_group(mol, :alcohol)  # true
-
+# Basic functional groups
 drug = mol_from_smiles("CC(=O)Nc1ccc(O)cc1")  # Acetaminophen
 has_functional_group(drug, :phenol)     # true
 has_functional_group(drug, :amide)      # true
@@ -338,10 +374,11 @@ all_groups = get_functional_groups(drug)
 ```
 
 # Notes
-- Contains 100+ functional group patterns covering basic to advanced organic chemistry
-- SMARTS patterns are carefully designed for specificity and broad applicability
-- Useful for drug discovery, natural product analysis, and chemical library filtering
-- Patterns organized by chemical similarity and complexity
+
+  - Contains 100+ functional group patterns covering basic to advanced organic chemistry
+  - SMARTS patterns are carefully designed for specificity and broad applicability
+  - Useful for drug discovery, natural product analysis, and chemical library filtering    # Sulfur-containing groups
+  - Patterns organized by chemical similarity and complexity
 """
 const FUNCTIONAL_GROUPS = Dict{Symbol, String}(
     # Basic functional groups
@@ -511,13 +548,16 @@ const FUNCTIONAL_GROUPS = Dict{Symbol, String}(
 Check if a molecule contains a specific functional group.
 
 # Arguments
-- `mol::Molecule`: The molecule to analyze
-- `group::Symbol`: The functional group to search for (see `FUNCTIONAL_GROUPS` for available groups)
+
+  - `mol::Molecule`: The molecule to analyze
+  - `group::Symbol`: The functional group to search for (see `FUNCTIONAL_GROUPS` for available groups)
 
 # Returns
-- `Union{Bool, Missing}`: true if the functional group is present, false otherwise, missing if molecule is invalid
+
+  - `Union{Bool, Missing}`: true if the functional group is present, false otherwise, missing if molecule is invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 has_functional_group(mol, :alcohol)  # true
@@ -525,17 +565,19 @@ has_functional_group(mol, :ketone)   # false
 ```
 
 # Available Functional Groups
+
 See `FUNCTIONAL_GROUPS` constant for the complete list of 100+ available functional groups including:
-- `:alcohol`, `:carboxylic_acid`, `:ester`, `:ether`, `:aldehyde`, `:ketone`
-- `:amine_primary`, `:amine_secondary`, `:amine_tertiary`, `:amide`, `:nitrile`
-- `:benzene`, `:pyridine`, `:furan`, `:thiophene`, `:imidazole`, `:pyrrole`
-- `:thiol`, `:sulfide`, `:disulfide`, `:sulfoxide`, `:sulfone`, `:sulfonamide`
-- `:phosphate`, `:phosphonate`, `:phosphine`, `:phosphine_oxide`
-- `:fluoride`, `:chloride`, `:bromide`, `:iodide`, `:trifluoromethyl`
-- `:nitro`, `:nitroso`, `:azide`, `:epoxide`, `:steroid_core`, `:beta_lactam`
-- `:morpholine`, `:piperidine`, `:pyrrolidine`, `:tetrahydrofuran`
-- `:peptide_bond`, `:alpha_amino_acid`, `:glucose_like`, `:fatty_acid`
-- `:benzodiazepine_core`, `:barbiturate_core`, `:sulfonamide_drug`
+
+  - `:alcohol`, `:carboxylic_acid`, `:ester`, `:ether`, `:aldehyde`, `:ketone`
+  - `:amine_primary`, `:amine_secondary`, `:amine_tertiary`, `:amide`, `:nitrile`
+  - `:benzene`, `:pyridine`, `:furan`, `:thiophene`, `:imidazole`, `:pyrrole`
+  - `:thiol`, `:sulfide`, `:disulfide`, `:sulfoxide`, `:sulfone`, `:sulfonamide`
+  - `:phosphate`, `:phosphonate`, `:phosphine`, `:phosphine_oxide`
+  - `:fluoride`, `:chloride`, `:bromide`, `:iodide`, `:trifluoromethyl`
+  - `:nitro`, `:nitroso`, `:azide`, `:epoxide`, `:steroid_core`, `:beta_lactam`
+  - `:morpholine`, `:piperidine`, `:pyrrolidine`, `:tetrahydrofuran`
+  - `:peptide_bond`, `:alpha_amino_acid`, `:glucose_like`, `:fatty_acid`
+  - `:benzodiazepine_core`, `:barbiturate_core`, `:sulfonamide_drug`
 """
 function has_functional_group(mol::Molecule, group::Symbol)
     if haskey(FUNCTIONAL_GROUPS, group)
@@ -555,13 +597,16 @@ end
 Get a dictionary of all functional groups present in a molecule.
 
 # Arguments
-- `mol::Molecule`: The molecule to analyze
+
+  - `mol::Molecule`: The molecule to analyze
 
 # Returns
-- `Dict{Symbol, Bool}`: Dictionary mapping functional group symbols to their presence (true/false)
-- `missing`: If molecule is invalid
+
+  - `Dict{Symbol, Bool}`: Dictionary mapping functional group symbols to their presence (true/false)
+  - `missing`: If molecule is invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CC(=O)O")  # Acetic acid
 groups = get_functional_groups(mol)
@@ -569,8 +614,9 @@ groups = get_functional_groups(mol)
 ```
 
 # Notes
-- Checks for all functional groups defined in `FUNCTIONAL_GROUPS`
-- Useful for quick functional group profiling
+
+  - Checks for all functional groups defined in `FUNCTIONAL_GROUPS`
+  - Useful for quick functional group profiling
 """
 function get_functional_groups(mol::Molecule)
     results = Dict{Symbol, Bool}()
@@ -586,16 +632,21 @@ end
 Get detailed information about rings in a molecule.
 
 # Arguments
-- `mol::Molecule`: The molecule to analyze
+
+  - `mol::Molecule`: The molecule to analyze
 
 # Returns
-- `Dict`: Dictionary containing ring information with keys:
-  - `:num_rings`: Total number of rings
-  - `:atom_rings`: Vector of vectors containing 1-based atom indices for each ring
-  - `:bond_rings`: Vector of vectors containing 1-based bond indices for each ring
-- `missing`: If molecule is invalid
+
+  - `Dict`: Dictionary containing ring information with keys:
+
+      + `:num_rings`: Total number of rings
+      + `:atom_rings`: Vector of vectors containing 1-based atom indices for each ring
+      + `:bond_rings`: Vector of vectors containing 1-based bond indices for each ring
+
+  - `missing`: If molecule is invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")  # Benzene
 ring_info = get_ring_info(mol)
@@ -603,8 +654,9 @@ ring_info = get_ring_info(mol)
 ```
 
 # Notes
-- Provides comprehensive ring analysis
-- Useful for understanding molecular topology
+
+  - Provides comprehensive ring analysis
+  - Useful for understanding molecular topology
 """
 function get_ring_info(mol::Molecule)
     !mol.valid && return missing
@@ -626,14 +678,17 @@ end
 Check if a specific ring in a molecule is aromatic.
 
 # Arguments
-- `mol::Molecule`: The molecule containing the ring
-- `ring_atoms::Vector{Int}`: 1-based indices of atoms forming the ring
+
+  - `mol::Molecule`: The molecule containing the ring
+  - `ring_atoms::Vector{Int}`: 1-based indices of atoms forming the ring
 
 # Returns
-- `Bool`: true if the ring is aromatic, false otherwise
-- `missing`: If molecule is invalid
+
+  - `Bool`: true if the ring is aromatic, false otherwise
+  - `missing`: If molecule is invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")  # Benzene
 ring_info = get_ring_info(mol)
@@ -641,8 +696,9 @@ is_aromatic = is_ring_aromatic(mol, ring_info[:atom_rings][1])  # true
 ```
 
 # Notes
-- Checks if all atoms in the ring have aromatic character
-- Useful for distinguishing aromatic from aliphatic rings
+
+  - Checks if all atoms in the ring have aromatic character
+  - Useful for distinguishing aromatic from aliphatic rings
 """
 function is_ring_aromatic(mol::Molecule, ring_atoms::Vector{Int})
     !mol.valid && return missing

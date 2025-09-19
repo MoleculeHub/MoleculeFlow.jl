@@ -1,7 +1,7 @@
 module MoleculeFlow
 
 using PythonCall
-using Images
+using Images: RGB, N0f8
 using Graphs
 
 # Basic molecule operations
@@ -73,6 +73,7 @@ export fragment_by_bonds, get_fragment_count, split_fragments, get_largest_fragm
 
 include("./config.jl")
 include("./utils.jl")
+include("./rdkit.jl")
 include("./molecule/molecule.jl")
 include("./molecule/descriptors.jl")
 include("./molecule/fingerprints.jl")
@@ -89,9 +90,5 @@ include("./draw/draw.jl")
 include("./standardization/standardization.jl")
 include("./fragmentation/fragmentation.jl")
 include("./progress.jl")
-
-function __init__()
-    _rdkit_draw[] = @pyconst(pyimport("rdkit.Chem.Draw"))
-end
 
 end

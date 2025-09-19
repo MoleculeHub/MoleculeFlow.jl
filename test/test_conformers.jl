@@ -6,7 +6,7 @@ using MoleculeFlow
         mol = mol_from_smiles("CCO")  # ethanol
         @test mol.valid == true
 
-        conformers = generate_3d_conformers(mol, 1; optimize=true, force_field=:mmff)
+        conformers = generate_3d_conformers(mol, 1; optimize = true, force_field = :mmff)
         @test !isempty(conformers)
         @test length(conformers) == 1
         @test conformers[1] isa ConformerMolecule
@@ -16,7 +16,7 @@ using MoleculeFlow
 
         mol2 = mol_from_smiles("CCO")
         conformers_unopt = generate_3d_conformers(
-            mol2, 1; optimize=false, force_field=:mmff
+            mol2, 1; optimize = false, force_field = :mmff
         )
         @test !isempty(conformers_unopt)
         @test conformers_unopt[1].conformer_result.optimized == false
@@ -24,11 +24,11 @@ using MoleculeFlow
     end
 
     @testset "Multiple 3D Conformer Generation" begin
-        mol = mol_from_smiles("CCCCCCCC") 
+        mol = mol_from_smiles("CCCCCCCC")
         @test mol.valid == true
 
         conformers = generate_3d_conformers(
-            mol, 5; optimize=true, force_field=:mmff, random_seed=42
+            mol, 5; optimize = true, force_field = :mmff, random_seed = 42
         )
         @test !isempty(conformers)
         @test length(conformers) <= 5  # May be fewer due to pruning
@@ -53,12 +53,16 @@ using MoleculeFlow
         mol = mol_from_smiles("c1ccccc1")
         @test mol.valid == true
 
-        conformers_mmff = generate_3d_conformers(mol, 1; optimize=true, force_field=:mmff)
+        conformers_mmff = generate_3d_conformers(
+            mol, 1; optimize = true, force_field = :mmff
+        )
         @test !isempty(conformers_mmff)
         @test conformers_mmff[1].conformer_result.energy < Inf
 
         mol2 = mol_from_smiles("c1ccccc1")
-        conformers_uff = generate_3d_conformers(mol2, 1; optimize=true, force_field=:uff)
+        conformers_uff = generate_3d_conformers(
+            mol2, 1; optimize = true, force_field = :uff
+        )
         @test !isempty(conformers_uff)
         @test conformers_uff[1].conformer_result.energy < Inf
     end

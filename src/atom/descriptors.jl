@@ -8,12 +8,15 @@
 Get the atomic number of an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Int`: The atomic number (number of protons)
+
+  - `Int`: The atomic number (number of protons)
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 atom = get_atom(mol, 1)
@@ -30,12 +33,15 @@ end
 Get the atomic symbol of an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `String`: The atomic symbol (e.g., "C", "N", "O")
+
+  - `String`: The atomic symbol (e.g., "C", "N", "O")
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 atom = get_atom(mol, 3)
@@ -52,12 +58,15 @@ end
 Get the degree (number of bonds) of an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Int`: The number of bonds connected to this atom
+
+  - `Int`: The number of bonds connected to this atom
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 atom = get_atom(mol, 1)  # First carbon
@@ -74,12 +83,15 @@ end
 Get the total valence of an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Int`: The total valence (sum of bond orders)
+
+  - `Int`: The total valence (sum of bond orders)
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C=O")
 atom = get_atom(mol, 1)  # Carbon
@@ -104,12 +116,15 @@ end
 Get the formal charge of an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Int`: The formal charge (-1, 0, +1, etc.)
+
+  - `Int`: The formal charge (-1, 0, +1, etc.)
 
 # Example
+
 ```julia
 mol = mol_from_smiles("[NH3+]")
 atom = get_atom(mol, 1)
@@ -126,12 +141,15 @@ end
 Get the hybridization state of an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `String`: The hybridization state ("SP3", "SP2", "SP", "UNSPECIFIED", etc.)
+
+  - `String`: The hybridization state ("SP3", "SP2", "SP", "UNSPECIFIED", etc.)
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C=C")
 atom = get_atom(mol, 1)  # Carbon with double bond
@@ -148,12 +166,15 @@ end
 Get the number of explicit hydrogens attached to an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Int`: The number of explicitly specified hydrogen atoms
+
+  - `Int`: The number of explicitly specified hydrogen atoms
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C[H]")
 atom = get_atom(mol, 1)  # Carbon
@@ -170,12 +191,15 @@ end
 Get the number of implicit hydrogens attached to an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Int`: The number of implicitly specified hydrogen atoms
+
+  - `Int`: The number of implicitly specified hydrogen atoms
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C")
 atom = get_atom(mol, 1)  # Carbon
@@ -192,12 +216,15 @@ end
 Get the total number of hydrogens (explicit + implicit) attached to an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Int`: The total number of hydrogen atoms attached
+
+  - `Int`: The total number of hydrogen atoms attached
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 atom = get_atom(mol, 1)  # First carbon
@@ -214,12 +241,15 @@ end
 Get the atomic mass of an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Float64`: The atomic mass in atomic mass units (amu)
+
+  - `Float64`: The atomic mass in atomic mass units (amu)
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 atom = get_atom(mol, 1)  # Carbon
@@ -236,12 +266,15 @@ end
 Get the isotope number of an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Int`: The isotope number (0 for most common isotope)
+
+  - `Int`: The isotope number (0 for most common isotope)
 
 # Example
+
 ```julia
 mol = mol_from_smiles("[13C]")
 atom = get_atom(mol, 1)  # Carbon-13
@@ -258,12 +291,15 @@ end
 Check if an atom is aromatic.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Bool`: true if the atom is aromatic, false otherwise
+
+  - `Bool`: true if the atom is aromatic, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")  # Benzene
 atom = get_atom(mol, 1)  # Aromatic carbon
@@ -280,12 +316,15 @@ end
 Check if an atom is part of a ring.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Bool`: true if the atom is in a ring, false otherwise
+
+  - `Bool`: true if the atom is in a ring, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")
 atom = get_atom(mol, 1)
@@ -302,13 +341,16 @@ end
 Check if an atom is part of a ring of specific size.
 
 # Arguments
-- `atom`: An Atom object
-- `size`: Ring size to check for
+
+  - `atom`: An Atom object
+  - `size`: Ring size to check for
 
 # Returns
-- `Bool`: true if the atom is in a ring of the specified size
+
+  - `Bool`: true if the atom is in a ring of the specified size
 
 # Example
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")  # Benzene (6-membered ring)
 atom = get_atom(mol, 1)
@@ -326,12 +368,15 @@ end
 Get the chirality tag of an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `String`: The chirality tag ("CHI_UNSPECIFIED", "CHI_TETRAHEDRAL_CW", "CHI_TETRAHEDRAL_CCW", etc.)
+
+  - `String`: The chirality tag ("CHI_UNSPECIFIED", "CHI_TETRAHEDRAL_CW", "CHI_TETRAHEDRAL_CCW", etc.)
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C[C@H](O)N")  # Chiral carbon
 atom = get_atom(mol, 2)
@@ -348,13 +393,16 @@ end
 Get all atoms from a molecule as a vector of Atom objects.
 
 # Arguments
-- `mol`: A Molecule object
+
+  - `mol`: A Molecule object
 
 # Returns
-- `Vector{Atom}`: Vector of all atoms in the molecule
-- `missing`: If the molecule is invalid
+
+  - `Vector{Atom}`: Vector of all atoms in the molecule
+  - `missing`: If the molecule is invalid
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 atoms = get_atoms(mol)  # Returns vector of 3 atoms
@@ -364,7 +412,7 @@ length(atoms)  # Returns 3
 function get_atoms(mol::Molecule)
     !mol.valid && return missing
     rdkit_atoms = mol._rdkit_mol.GetAtoms()
-    return [Atom(; _rdkit_atom=atom) for atom in rdkit_atoms]
+    return [Atom(; _rdkit_atom = atom) for atom in rdkit_atoms]
 end
 
 """
@@ -373,14 +421,17 @@ end
 Get a specific atom from a molecule by its index (1-based).
 
 # Arguments
-- `mol`: A Molecule object
-- `idx`: 1-based index of the atom to retrieve
+
+  - `mol`: A Molecule object
+  - `idx`: 1-based index of the atom to retrieve
 
 # Returns
-- `Atom`: The atom at the specified index
-- `missing`: If the molecule is invalid
+
+  - `Atom`: The atom at the specified index
+  - `missing`: If the molecule is invalid
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 atom = get_atom(mol, 1)  # Returns first carbon atom
@@ -392,7 +443,7 @@ function get_atom(mol::Molecule, idx::Int)
     try
         # Convert to 0-based indexing for RDKit
         rdkit_atom = mol._rdkit_mol.GetAtomWithIdx(idx - 1)
-        return Atom(; _rdkit_atom=rdkit_atom)
+        return Atom(; _rdkit_atom = rdkit_atom)
     catch
         return missing
     end
@@ -405,14 +456,17 @@ end
 Get the indices of neighboring atoms for a given atom.
 
 # Arguments
-- `mol::Molecule`: The molecule containing the atom
-- `atom_idx::Int`: 1-based index of the atom
+
+  - `mol::Molecule`: The molecule containing the atom
+  - `atom_idx::Int`: 1-based index of the atom
 
 # Returns
-- `Vector{Int}`: Vector of 1-based atom indices that are neighbors to the specified atom
-- `missing`: If the molecule is invalid
+
+  - `Vector{Int}`: Vector of 1-based atom indices that are neighbors to the specified atom
+  - `missing`: If the molecule is invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")  # Ethanol
 neighbors = get_neighbors(mol, 1)  # Neighbors of first carbon: [2]
@@ -432,14 +486,17 @@ end
 Get all bonds connected to a specific atom.
 
 # Arguments
-- `mol::Molecule`: The molecule containing the atom
-- `atom_idx::Int`: 1-based index of the atom
+
+  - `mol::Molecule`: The molecule containing the atom
+  - `atom_idx::Int`: 1-based index of the atom
 
 # Returns
-- `Vector{Bond}`: Vector of Bond objects connected to the specified atom
-- `missing`: If the molecule is invalid
+
+  - `Vector{Bond}`: Vector of Bond objects connected to the specified atom
+  - `missing`: If the molecule is invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")  # Ethanol
 bonds = get_bonds_from_atom(mol, 2)  # Bonds from second carbon
@@ -453,7 +510,7 @@ function get_bonds_from_atom(mol::Molecule, atom_idx::Int)
     !mol.valid && return missing
     atom = mol._rdkit_mol.GetAtomWithIdx(atom_idx - 1)  # Convert to 0-based
     bonds = atom.GetBonds()
-    return [Bond(; _rdkit_bond=bond) for bond in bonds]
+    return [Bond(; _rdkit_bond = bond) for bond in bonds]
 end
 
 # Gasteiger partial charges (if available)
@@ -463,12 +520,15 @@ end
 Compute Gasteiger partial charges for all atoms in a molecule.
 
 # Arguments
-- `mol::Molecule`: The molecule to compute charges for (modified in-place)
+
+  - `mol::Molecule`: The molecule to compute charges for (modified in-place)
 
 # Returns
-- `Nothing`
+
+  - `Nothing`
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")  # Ethanol
 compute_gasteiger_charges!(mol)
@@ -480,9 +540,7 @@ charge = get_gasteiger_charge(atoms[1])  # Charge on first carbon
 """
 function compute_gasteiger_charges!(mol::Molecule)
     !mol.valid && return nothing
-    @pyconst(pyimport("rdkit.Chem.rdPartialCharges").ComputeGasteigerCharges)(
-        mol._rdkit_mol
-    )
+    _compute_gasteiger_charges(mol._rdkit_mol)
     return nothing
 end
 
@@ -492,12 +550,15 @@ end
 Get the Gasteiger partial charge for a specific atom.
 
 # Arguments
-- `atom::Atom`: The atom to get the charge for
+
+  - `atom::Atom`: The atom to get the charge for
 
 # Returns
-- `Float64`: The Gasteiger partial charge
+
+  - `Float64`: The Gasteiger partial charge
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")  # Ethanol
 compute_gasteiger_charges!(mol)  # Must compute charges first
@@ -520,35 +581,21 @@ function get_atom_type(atom::Atom)
     end
 end
 
-# Vectorized functions for multiple atoms
-function get_atomic_numbers(atoms::Vector{Atom})
-    return [get_atomic_number(atom) for atom in atoms]
-end
-
-function get_symbols(atoms::Vector{Atom})
-    return [get_symbol(atom) for atom in atoms]
-end
-
-function get_degrees(atoms::Vector{Atom})
-    return [get_degree(atom) for atom in atoms]
-end
-
-function get_formal_charges(atoms::Vector{Atom})
-    return [get_formal_charge(atom) for atom in atoms]
-end
-
 """
     get_num_radical_electrons(atom::Atom) -> Int
 
 Get the number of radical electrons on an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Int`: The number of radical electrons
+
+  - `Int`: The number of radical electrons
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C[CH2]")  # Radical carbon
 atom = get_atom(mol, 2)
@@ -565,12 +612,15 @@ end
 Check if an atom is a heteroatom (not carbon or hydrogen).
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Bool`: true if the atom is a heteroatom, false otherwise
+
+  - `Bool`: true if the atom is a heteroatom, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 atom = get_atom(mol, 3)  # Oxygen
@@ -588,12 +638,15 @@ end
 Get the CIP (Cahn-Ingold-Prelog) stereochemistry code for an atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Union{String,Missing}`: The CIP code ("R", "S", or missing if not assigned)
+
+  - `Union{String,Missing}`: The CIP code ("R", "S", or missing if not assigned)
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C[C@H](O)N")  # Chiral carbon
 atom = get_atom(mol, 2)
@@ -615,12 +668,15 @@ end
 Check if an atom is a chiral center.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Bool`: true if the atom is a chiral center, false otherwise
+
+  - `Bool`: true if the atom is a chiral center, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C[C@H](O)N")  # Chiral carbon
 atom = get_atom(mol, 2)
@@ -638,17 +694,20 @@ end
 Check if an atom can act as a hydrogen bond donor.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Bool`: true if the atom is a hydrogen bond donor, false otherwise
+
+  - `Bool`: true if the atom is a hydrogen bond donor, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 atom = get_atom(mol, 3)  # Oxygen
 is_hydrogen_donor(atom)  # Returns true (OH can donate hydrogen)
-```
+```    # An atom is a hydrogen donor if it's O, N, or S with hydrogens attached
 """
 function is_hydrogen_donor(atom::Atom)
     # An atom is a hydrogen donor if it's O, N, or S with hydrogens attached
@@ -665,17 +724,20 @@ end
 Check if an atom can act as a hydrogen bond acceptor.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Bool`: true if the atom is a hydrogen bond acceptor, false otherwise
+
+  - `Bool`: true if the atom is a hydrogen bond acceptor, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C=O")
 atom = get_atom(mol, 2)  # Oxygen
 is_hydrogen_acceptor(atom)  # Returns true (C=O oxygen can accept hydrogen bonds)
-```
+```    # An atom is a hydrogen acceptor if it's O, N, or F with lone pairs
 """
 function is_hydrogen_acceptor(atom::Atom)
     # An atom is a hydrogen acceptor if it's O, N, or F with lone pairs
@@ -693,12 +755,15 @@ end
 Get the size of the smallest ring containing the atom.
 
 # Arguments
-- `atom`: An Atom object
+
+  - `atom`: An Atom object
 
 # Returns
-- `Union{Int,Missing}`: The size of the smallest ring, or missing if not in a ring
+
+  - `Union{Int,Missing}`: The size of the smallest ring, or missing if not in a ring
 
 # Example
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")  # Benzene
 atom = get_atom(mol, 1)
@@ -726,13 +791,16 @@ end
 Get the Crippen LogP contribution for a specific atom.
 
 # Arguments
-- `mol`: A Molecule object
-- `atom_idx`: 1-based index of the atom
+
+  - `mol`: A Molecule object
+  - `atom_idx`: 1-based index of the atom
 
 # Returns
-- `Union{Float64,Missing}`: The LogP contribution, or missing if not available
+
+  - `Union{Float64,Missing}`: The LogP contribution, or missing if not available
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 logp_contrib = get_crippen_log_p_contribution(mol, 1)
@@ -742,8 +810,7 @@ function get_crippen_log_p_contribution(mol::Molecule, atom_idx::Int)
     !mol.valid && return missing
 
     try
-        crippen = @pyconst(pyimport("rdkit.Chem.Crippen"))
-        contribs = crippen._GetAtomContribs(mol._rdkit_mol)
+        contribs = _get_atom_contribs(mol._rdkit_mol)
         # Convert to 0-based indexing for RDKit
         return pyconvert(Float64, contribs[atom_idx - 1][0])  # LogP contribution
     catch e
@@ -757,13 +824,16 @@ end
 Get the Crippen molar refractivity contribution for a specific atom.
 
 # Arguments
-- `mol`: A Molecule object
-- `atom_idx`: 1-based index of the atom
+
+  - `mol`: A Molecule object
+  - `atom_idx`: 1-based index of the atom
 
 # Returns
-- `Union{Float64,Missing}`: The molar refractivity contribution, or missing if not available
+
+  - `Union{Float64,Missing}`: The molar refractivity contribution, or missing if not available
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 mr_contrib = get_crippen_molar_refractivity_contribution(mol, 1)
@@ -773,8 +843,7 @@ function get_crippen_molar_refractivity_contribution(mol::Molecule, atom_idx::In
     !mol.valid && return missing
 
     try
-        crippen = @pyconst(pyimport("rdkit.Chem.Crippen"))
-        contribs = crippen._GetAtomContribs(mol._rdkit_mol)
+        contribs = _get_atom_contribs(mol._rdkit_mol)
         # Convert to 0-based indexing for RDKit
         return pyconvert(Float64, contribs[atom_idx - 1][1])  # MR contribution
     catch e
@@ -788,13 +857,16 @@ end
 Get the TPSA (Topological Polar Surface Area) contribution for a specific atom.
 
 # Arguments
-- `mol`: A Molecule object
-- `atom_idx`: 1-based index of the atom
+
+  - `mol`: A Molecule object
+  - `atom_idx`: 1-based index of the atom
 
 # Returns
-- `Union{Float64,Missing}`: The TPSA contribution, or missing if not available
+
+  - `Union{Float64,Missing}`: The TPSA contribution, or missing if not available
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 tpsa_contrib = get_tpsa_contribution(mol, 3)  # Oxygen contribution
@@ -804,8 +876,7 @@ function get_tpsa_contribution(mol::Molecule, atom_idx::Int)
     !mol.valid && return missing
 
     try
-        rdmoldescriptors = @pyconst(pyimport("rdkit.Chem.rdMolDescriptors"))
-        contribs = rdmoldescriptors._TPSAContribs(mol._rdkit_mol)
+        contribs = _tpsa_contribs(mol._rdkit_mol)
         # Convert to 0-based indexing for RDKit
         return pyconvert(Float64, contribs[atom_idx - 1])
     catch e
@@ -819,13 +890,16 @@ end
 Get the Labute ASA (Accessible Surface Area) contribution for a specific atom.
 
 # Arguments
-- `mol`: A Molecule object
-- `atom_idx`: 1-based index of the atom
+
+  - `mol`: A Molecule object
+  - `atom_idx`: 1-based index of the atom
 
 # Returns
-- `Union{Float64,Missing}`: The ASA contribution, or missing if not available
+
+  - `Union{Float64,Missing}`: The ASA contribution, or missing if not available
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 asa_contrib = get_labute_asa_contribution(mol, 1)
@@ -835,8 +909,7 @@ function get_labute_asa_contribution(mol::Molecule, atom_idx::Int)
     !mol.valid && return missing
 
     try
-        rdmoldescriptors = @pyconst(pyimport("rdkit.Chem.rdMolDescriptors"))
-        contribs = rdmoldescriptors._LabuteASAContribs(mol._rdkit_mol)
+        contribs = _labute_asa_contribs(mol._rdkit_mol)
         # Convert to 0-based indexing for RDKit
         return pyconvert(Float64, contribs[atom_idx - 1])
     catch e
@@ -850,13 +923,16 @@ end
 Get all available properties for a specific atom as a dictionary.
 
 # Arguments
-- `mol`: A Molecule object
-- `atom_idx`: 1-based index of the atom
+
+  - `mol`: A Molecule object
+  - `atom_idx`: 1-based index of the atom
 
 # Returns
-- `Union{Dict{Symbol,Any},Missing}`: Dictionary with all atom properties, or missing if invalid
+
+  - `Union{Dict{Symbol,Any},Missing}`: Dictionary with all atom properties, or missing if invalid
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 props = get_all_atom_properties(mol, 1)
@@ -892,7 +968,9 @@ function get_all_atom_properties(mol::Molecule, atom_idx::Int)
 
     # Contribution-based properties (require molecule context)
     props[:crippen_log_p_contribution] = get_crippen_log_p_contribution(mol, atom_idx)
-    props[:crippen_molar_refractivity_contribution] = get_crippen_molar_refractivity_contribution(mol, atom_idx)
+    props[:crippen_molar_refractivity_contribution] = get_crippen_molar_refractivity_contribution(
+        mol, atom_idx
+    )
     props[:tpsa_contribution] = get_tpsa_contribution(mol, atom_idx)
     props[:labute_asa_contribution] = get_labute_asa_contribution(mol, atom_idx)
 
@@ -905,4 +983,97 @@ function get_all_atom_properties(mol::Molecule, atom_idx::Int)
     end
 
     return props
+end
+
+# Vectorized versions for multiple atoms
+for func in [
+    :get_atomic_number,
+    :get_symbol,
+    :get_degree,
+    :get_valence,
+    :get_implicit_valence,
+    :get_explicit_valence,
+    :get_formal_charge,
+    :get_hybridization,
+    :get_num_explicit_hs,
+    :get_num_implicit_hs,
+    :get_total_num_hs,
+    :get_mass,
+    :get_isotope,
+    :is_aromatic,
+    :is_in_ring,
+    :get_chiral_tag,
+    :get_gasteiger_charge,
+    :get_atom_type,
+    :get_num_radical_electrons,
+    :is_hetero,
+    :get_cip_code,
+    :is_chiral_center,
+    :is_hydrogen_donor,
+    :is_hydrogen_acceptor,
+    :get_ring_size,
+]
+    @eval function $(func)(atoms::Vector{Union{Atom, Missing}})
+        return [ismissing(atom) ? missing : $(func)(atom) for atom in atoms]
+    end
+    @eval function $(func)(atoms::Vector{Atom})
+        return [$(func)(atom) for atom in atoms]
+    end
+end
+
+# Vectorized functions that take additional parameters
+function is_in_ring_size(atoms::Vector{Union{Atom, Missing}}, size::Int)
+    return [ismissing(atom) ? missing : is_in_ring_size(atom, size) for atom in atoms]
+end
+
+function is_in_ring_size(atoms::Vector{Atom}, size::Int)
+    return [is_in_ring_size(atom, size) for atom in atoms]
+end
+
+# Vectorized functions that require molecule context
+function get_neighbors(mol::Molecule, atom_indices::Vector{Int})
+    return [get_neighbors(mol, idx) for idx in atom_indices]
+end
+
+function get_bonds_from_atom(mol::Molecule, atom_indices::Vector{Int})
+    return [get_bonds_from_atom(mol, idx) for idx in atom_indices]
+end
+
+function get_crippen_log_p_contribution(mol::Molecule, atom_indices::Vector{Int})
+    return [get_crippen_log_p_contribution(mol, idx) for idx in atom_indices]
+end
+
+function get_crippen_molar_refractivity_contribution(
+    mol::Molecule, atom_indices::Vector{Int}
+)
+    return [get_crippen_molar_refractivity_contribution(mol, idx) for idx in atom_indices]
+end
+
+function get_tpsa_contribution(mol::Molecule, atom_indices::Vector{Int})
+    return [get_tpsa_contribution(mol, idx) for idx in atom_indices]
+end
+
+function get_labute_asa_contribution(mol::Molecule, atom_indices::Vector{Int})
+    return [get_labute_asa_contribution(mol, idx) for idx in atom_indices]
+end
+
+function get_all_atom_properties(mol::Molecule, atom_indices::Vector{Int})
+    return [get_all_atom_properties(mol, idx) for idx in atom_indices]
+end
+
+# Legacy vectorized functions for backwards compatibility
+function get_atomic_numbers(atoms::Vector{Atom})
+    return [get_atomic_number(atom) for atom in atoms]
+end
+
+function get_symbols(atoms::Vector{Atom})
+    return [get_symbol(atom) for atom in atoms]
+end
+
+function get_degrees(atoms::Vector{Atom})
+    return [get_degree(atom) for atom in atoms]
+end
+
+function get_formal_charges(atoms::Vector{Atom})
+    return [get_formal_charge(atom) for atom in atoms]
 end

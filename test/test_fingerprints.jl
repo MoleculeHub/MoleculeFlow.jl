@@ -16,6 +16,6 @@ using MoleculeFlow
     @test isa(maccs_fp, Vector{Bool})
     @test length(maccs_fp) == 167
 
-    morgan_fp_256 = morgan_fingerprint(mol; nbits=256)
+    morgan_fp_256 = morgan_fingerprint(mol; nbits = 256)
     @test length(morgan_fp_256) == 256
 end

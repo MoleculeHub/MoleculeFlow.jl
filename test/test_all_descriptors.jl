@@ -7,7 +7,7 @@ using MoleculeFlow
         descriptors = calc_all_descriptors(mol)
 
         @test isa(descriptors, Dict{Symbol, Any})
-        @test length(descriptors) > 200  
+        @test length(descriptors) > 200
 
         @test haskey(descriptors, :MolWt)
         @test haskey(descriptors, :TPSA)
