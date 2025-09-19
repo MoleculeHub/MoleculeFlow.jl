@@ -7,7 +7,7 @@ MoleculeFlow - a cheminformatics library written in Julia.
 [![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl)
 
 <div align="center">
-<img src="assets/mols_to_grid.gif" width="500">
+<img src="assets/mols_to_grid.gif" width="700">
 </div>
 
 | | | |
