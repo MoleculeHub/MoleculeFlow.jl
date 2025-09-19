@@ -424,7 +424,7 @@ end
 """
     draw_similarity_map(mol1::Molecule, mol2::Molecule; kwargs...) -> Matrix{RGB{N0f8}}
 
-Draw two molecules side by side highlighting their common substructure.
+Draw two molecules side by side highlighting their most common substructure.
 
 # Arguments
 - `mol1::Molecule`: First molecule
