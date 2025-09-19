@@ -254,7 +254,7 @@ for i in eachindex(atoms)
             other_atom_idx = begin_idx == i ? end_idx : begin_idx
             other_symbol = get_symbol(get_atom(molecule, other_atom_idx))
 
-            println(" to Atom $other_atom_idx ($other_symbol): $bond_type" *
+            println("to Atom $other_atom_idx ($other_symbol): $bond_type" *
                    (is_aromatic_bond ? " (aromatic)" : "") *
                    (is_in_ring_bond ? " (in ring)" : ""))
         end
@@ -421,7 +421,7 @@ for (name, pattern) in custom_patterns
     if !isempty(matches)
         println("$name: Found $(length(matches)) match(es)")
         for (i, match) in enumerate(matches)
-            println("  Match $i: atoms $(join(match, ", "))")
+            println("Match $i: atoms $(join(match, ", "))")
         end
     else
         println("$name: Not found")
@@ -459,10 +459,10 @@ for fp_type in fingerprint_types
             dice = dice_similarity(mol_i, mol_j, fingerprint_type=fp_type)
             cosine = cosine_similarity(mol_i, mol_j, fingerprint_type=fp_type)
 
-            println("  $name1 vs $name2:")
-            println("    Tanimoto: $(round(tanimoto, digits=3))")
-            println("    Dice: $(round(dice, digits=3))")
-            println("    Cosine: $(round(cosine, digits=3))")
+            println("$name1 vs $name2:")
+            println("Tanimoto: $(round(tanimoto, digits=3))")
+            println("Dice: $(round(dice, digits=3))")
+            println("Cosine: $(round(cosine, digits=3))")
         end
     end
 end
@@ -484,7 +484,7 @@ similarities = bulk_similarity(query, valid_alcohols)
 println("Similarities to ethanol:")
 for (i, sim) in enumerate(similarities)
     smiles = mol_to_smiles(valid_alcohols[i])
-    println("  $smiles: $(round(sim, digits=3))")
+    println("$smiles: $(round(sim, digits=3))")
 end
 
 # Similarity matrix
@@ -492,7 +492,7 @@ sim_matrix = similarity_matrix(valid_alcohols[1:4])  # First 4 molecules
 println("\nSimilarity Matrix (4x4):")
 for i in 1:4
     row = [round(sim_matrix[i, j], digits=3) for j in 1:4]
-    println("  $(join(row, "  "))")
+    println("$(join(row, "  "))")
 end
 ```
 
@@ -688,7 +688,7 @@ standardized_mols = [standardize_molecule(mol) for mol in batch_mols]
 
 println("\nBatch Standardization:")
 for (i, (orig, std)) in enumerate(zip(batch_mols, standardized_mols))
-    println("  $i: $(mol_to_smiles(orig)) → $(mol_to_smiles(std))")
+    println("$i: $(mol_to_smiles(orig)) → $(mol_to_smiles(std))")
 end
 ```
 
@@ -711,11 +711,11 @@ if !isempty(conformers)
         energy = conf_result.energy
         converged = conf_result.converged ? "✓" : "✗"
 
-        println("  Conformer $i: $(round(energy, digits=2)) kcal/mol (converged: $converged)")
+        println("Conformer $i: $(round(energy, digits=2)) kcal/mol (converged: $converged)")
 
         # Access 3D coordinates
         coords = conf_mol.molecule.props[:coordinates_3d]
-        println("    Coordinates shape: $(size(coords))")
+        println("Coordinates shape: $(size(coords))")
     end
 
     # Find lowest energy conformer
@@ -741,16 +741,16 @@ if !isempty(conformers)
     energies = [conf.conformer_result.energy for conf in conformers]
 
     println("\nConformer Energy Analysis:")
-    println("  Number of conformers: $(length(energies))")
-    println("  Energy range: $(round(minimum(energies), digits=2)) - $(round(maximum(energies), digits=2)) kcal/mol")
-    println("  Energy span: $(round(maximum(energies) - minimum(energies), digits=2)) kcal/mol")
+    println("Number of conformers: $(length(energies))")
+    println("Energy range: $(round(minimum(energies), digits=2)) - $(round(maximum(energies), digits=2)) kcal/mol")
+    println("Energy span: $(round(maximum(energies) - minimum(energies), digits=2)) kcal/mol")
 
     # Count converged conformers
     converged_count = sum(conf.conformer_result.converged for conf in conformers)
-    println("  Converged conformers: $converged_count/$(length(conformers))")
+    println("Converged conformers: $converged_count/$(length(conformers))")
 
     # Energy distribution
     low_energy = sum(e < (minimum(energies) + 2.0) for e in energies)
-    println("  Low energy conformers (< 2 kcal/mol above minimum): $low_energy")
+    println("Low energy conformers (< 2 kcal/mol above minimum): $low_energy")
 end
 ```
