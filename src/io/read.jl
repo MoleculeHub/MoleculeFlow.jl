@@ -31,22 +31,12 @@ mol = mol_from_smiles("CCO")  # Ethanol
 if mol.valid
     println("Successfully parsed molecule")
 end
-
-mol2 = mol_from_smiles("c1ccccc1")  # Benzene
-
-# For SMILES with backslashes (stereochemistry), use raw strings:
-mol3 = mol_from_smiles(raw"C\C=C\C")  # E stereochemistry
-mol4 = mol_from_smiles(raw"CN(C)C\C=C\C(=O)Nc3cc1c(Nc(cc2Cl)ccc2F)ncnc1cc3OC4COCC4")
-
-# Alternative: escape backslashes
-mol5 = mol_from_smiles("C\\C=C\\C")  # Same as above
 ```
 
 # Notes
 - Invalid SMILES strings will return a Molecule with `valid=false`
-- **Important**: For SMILES containing backslashes (e.g., stereochemistry markers like `\C=C\`),
+- **Important**: For SMILES containing backslashes,
   use `raw"..."` strings to avoid Julia's escape sequence parsing, or double the backslashes `\\`
-- Escaped backslashes in SMILES strings are automatically handled
 """
 @inline function mol_from_smiles(smiles::String)
     # Handle escaped backslashes in SMILES strings (e.g., \\C=C\\ -> \C=C\)
