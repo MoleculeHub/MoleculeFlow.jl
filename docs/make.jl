@@ -21,6 +21,7 @@ makedocs(;
         "Practical Examples" => "examples.md",
         "API Reference" => [
             "Basic I/O" => "api/io.md",
+            "Molecular Operations" => "api/operations.md",
             "Drawing & Visualization" => "api/drawing.md",
             "Molecular Descriptors" => "api/descriptors.md",
             "Fingerprints" => "api/fingerprints.md",
@@ -30,6 +31,7 @@ makedocs(;
             "Similarity" => "api/similarity.md",
             "Standardization" => "api/standardization.md",
             "Conformers" => "api/conformers.md",
+            "Fragmentation" => "api/fragmentation.md",
             "Graph Operations" => "api/graph.md",
             "Progress Tracking" => "api/progress.md",
         ],

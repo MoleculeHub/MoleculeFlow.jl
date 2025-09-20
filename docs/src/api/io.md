@@ -26,6 +26,14 @@ mol_from_molblock
 mol_from_inchi
 ```
 
+## PDB Format Support
+
+```@docs
+mol_from_pdb_block
+mol_from_pdb_file
+mol_to_pdb_block
+```
+
 ## Read SDF
 
 ```@docs
@@ -48,5 +56,12 @@ mol_to_smiles
 
 ```@docs
 mol_to_inchi
+```
+
+## Enhanced Molecular Conversions
+
+```@docs
+mol_to_inchi_key
+mol_to_molblock
 ```
 

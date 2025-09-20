@@ -523,6 +523,347 @@ function kappa1(mol::Molecule)  # Kappa shape index
     return pyconvert(Float64, _kappa1(mol._rdkit_mol))
 end
 
+#######################################################
+# Advanced Drug-like and ADMET Properties
+#######################################################
+
+"""
+    qed(mol::Molecule) -> Union{Float64,Missing}
+
+Calculate the Quantitative Estimate of Drug-likeness (QED) score.
+
+QED combines multiple molecular properties into a single drug-likeness score
+ranging from 0 (non-drug-like) to 1 (highly drug-like).
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Float64,Missing}`: QED score (0-1), or missing if molecule is invalid
+
+# Examples
+```julia
+aspirin = mol_from_smiles("CC(=O)OC1=CC=CC=C1C(=O)O")
+drug_score = qed(aspirin)  # ≈ 0.73 (fairly drug-like)
+```
+
+# Notes
+- Based on desirability functions for MW, LogP, HBD, HBA, PSA, rotatable bonds, aromatic rings, and alerts
+- Higher scores indicate more drug-like properties
+- Commonly used threshold: QED > 0.5 for drug-like compounds
+"""
+function qed(mol::Molecule)
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _qed(mol._rdkit_mol))
+    catch
+        return missing
+    end
+end
+
+"""
+    fraction_csp3(mol::Molecule) -> Union{Float64,Missing}
+
+Calculate the fraction of sp3 hybridized carbons.
+
+Higher sp3 fraction correlates with increased drug-likeness and 3D character.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Float64,Missing}`: Fraction of sp3 carbons (0-1), or missing if molecule is invalid
+
+# Examples
+```julia
+cyclohexane = mol_from_smiles("C1CCCCC1")
+fsp3 = fraction_csp3(cyclohexane)  # 1.0 (all carbons are sp3)
+
+benzene = mol_from_smiles("c1ccccc1")
+fsp3_benzene = fraction_csp3(benzene)  # 0.0 (all carbons are sp2)
+```
+
+# Notes
+- Values range from 0 (fully aromatic/planar) to 1 (fully saturated)
+- Drug-like compounds typically have Fsp3 > 0.25
+- Important for assessing molecular complexity and 3D character
+"""
+function fraction_csp3(mol::Molecule)
+    !mol.valid && return missing
+    return pyconvert(Float64, _fraction_csp3(mol._rdkit_mol))
+end
+
+"""
+    labute_asa(mol::Molecule) -> Union{Float64,Missing}
+
+Calculate the Labute Accessible Surface Area.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Float64,Missing}`: Accessible surface area in Ų, or missing if molecule is invalid
+
+# Examples
+```julia
+mol = mol_from_smiles("CCO")
+asa = labute_asa(mol)  # Accessible surface area
+```
+
+# Notes
+- Estimates the solvent-accessible surface area
+- Important for understanding molecular size and shape
+- Correlates with solubility and membrane permeability
+"""
+function labute_asa(mol::Molecule)
+    !mol.valid && return missing
+    return pyconvert(Float64, _labute_asa(mol._rdkit_mol))
+end
+
+"""
+    molar_refractivity(mol::Molecule) -> Union{Float64,Missing}
+
+Calculate the molar refractivity.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Float64,Missing}`: Molar refractivity, or missing if molecule is invalid
+
+# Examples
+```julia
+mol = mol_from_smiles("CCO")
+mr = molar_refractivity(mol)  # Molar refractivity value
+```
+
+# Notes
+- Related to polarizability and molecular volume
+- Important for QSAR modeling
+- Correlates with London dispersion forces
+"""
+function molar_refractivity(mol::Molecule)
+    !mol.valid && return missing
+    return pyconvert(Float64, _mol_mr(mol._rdkit_mol))
+end
+
+"""
+    num_aliphatic_carbocycles(mol::Molecule) -> Union{Int,Missing}
+
+Count the number of aliphatic carbocycles (saturated carbon-only rings).
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Int,Missing}`: Number of aliphatic carbocycles, or missing if molecule is invalid
+
+# Examples
+```julia
+cyclohexane = mol_from_smiles("C1CCCCC1")
+count = num_aliphatic_carbocycles(cyclohexane)  # 1
+```
+"""
+function num_aliphatic_carbocycles(mol::Molecule)
+    !mol.valid && return missing
+    return pyconvert(Int, _num_aliphatic_carbocycles(mol._rdkit_mol))
+end
+
+"""
+    num_aromatic_carbocycles(mol::Molecule) -> Union{Int,Missing}
+
+Count the number of aromatic carbocycles (aromatic carbon-only rings).
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Int,Missing}`: Number of aromatic carbocycles, or missing if molecule is invalid
+
+# Examples
+```julia
+benzene = mol_from_smiles("c1ccccc1")
+count = num_aromatic_carbocycles(benzene)  # 1
+```
+"""
+function num_aromatic_carbocycles(mol::Molecule)
+    !mol.valid && return missing
+    return pyconvert(Int, _num_aromatic_carbocycles(mol._rdkit_mol))
+end
+
+"""
+    num_aromatic_heterocycles(mol::Molecule) -> Union{Int,Missing}
+
+Count the number of aromatic heterocycles (aromatic rings containing heteroatoms).
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Int,Missing}`: Number of aromatic heterocycles, or missing if molecule is invalid
+
+# Examples
+```julia
+pyridine = mol_from_smiles("c1cccnc1")
+count = num_aromatic_heterocycles(pyridine)  # 1
+```
+"""
+function num_aromatic_heterocycles(mol::Molecule)
+    !mol.valid && return missing
+    return pyconvert(Int, _num_aromatic_heterocycles(mol._rdkit_mol))
+end
+
+"""
+    num_atom_stereo_centers(mol::Molecule) -> Union{Int,Missing}
+
+Count the number of defined atom stereocenters.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Int,Missing}`: Number of defined stereocenters, or missing if molecule is invalid
+
+# Examples
+```julia
+chiral_mol = mol_from_smiles("C[C@H](O)C")
+count = num_atom_stereo_centers(chiral_mol)  # 1
+```
+"""
+function num_atom_stereo_centers(mol::Molecule)
+    !mol.valid && return missing
+    return pyconvert(Int, _num_atom_stereo_centers(mol._rdkit_mol))
+end
+
+"""
+    num_amide_bonds(mol::Molecule) -> Union{Int,Missing}
+
+Count the number of amide bonds in the molecule.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Int,Missing}`: Number of amide bonds, or missing if molecule is invalid
+
+# Examples
+```julia
+acetamide = mol_from_smiles("CC(=O)N")
+count = num_amide_bonds(acetamide)  # 1
+```
+"""
+function num_amide_bonds(mol::Molecule)
+    !mol.valid && return missing
+    return pyconvert(Int, _num_amide_bonds(mol._rdkit_mol))
+end
+
+"""
+    asphericity(mol::Molecule; conf_id::Int=-1) -> Union{Float64,Missing}
+
+Calculate the asphericity of a molecule from its 3D coordinates.
+
+Asphericity describes how much a molecule deviates from a spherical shape.
+
+# Arguments
+- `mol::Molecule`: Input molecule (must have 3D coordinates)
+- `conf_id::Int`: Conformer ID to use (-1 for default)
+
+# Returns
+- `Union{Float64,Missing}`: Asphericity value, or missing if molecule is invalid or lacks 3D coordinates
+
+# Examples
+```julia
+mol = mol_from_smiles("CCO")
+conformers = generate_3d_conformers(mol, 1)
+if !isempty(conformers)
+    mol_3d = conformers[1].molecule
+    asp = asphericity(mol_3d)
+end
+```
+
+# Notes
+- Requires 3D coordinates to be present
+- Values range from 0 (perfect sphere) to 1 (linear molecule)
+- Useful for describing molecular shape and compactness
+"""
+function asphericity(mol::Molecule; conf_id::Int=-1)
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _asphericity(mol._rdkit_mol; confId=conf_id))
+    catch
+        return missing
+    end
+end
+
+"""
+    radius_of_gyration(mol::Molecule; conf_id::Int=-1) -> Union{Float64,Missing}
+
+Calculate the radius of gyration from 3D coordinates.
+
+# Arguments
+- `mol::Molecule`: Input molecule (must have 3D coordinates)
+- `conf_id::Int`: Conformer ID to use (-1 for default)
+
+# Returns
+- `Union{Float64,Missing}`: Radius of gyration, or missing if molecule is invalid or lacks 3D coordinates
+
+# Notes
+- Requires 3D coordinates to be present
+- Measures molecular compactness
+- Useful for comparing molecular sizes and shapes
+"""
+function radius_of_gyration(mol::Molecule; conf_id::Int=-1)
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _radius_of_gyration(mol._rdkit_mol; confId=conf_id))
+    catch
+        return missing
+    end
+end
+
+"""
+    synthetic_accessibility(mol::Molecule) -> Union{Float64,Missing}
+
+Calculate the Synthetic Accessibility Score (SAscore).
+
+SAscore estimates how difficult a compound would be to synthesize, ranging from
+1 (very easy) to 10 (very difficult). 
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Float64,Missing}`: SAscore (1-10 scale), or missing if molecule is invalid
+
+# Examples
+```julia
+# Simple molecules are easy to synthesize
+ethanol = mol_from_smiles("CCO")
+sa_score = synthetic_accessibility(ethanol)  # ≈ 1.98 (easy)
+
+# Complex natural products are difficult
+paclitaxel = mol_from_smiles("CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)C6=CC=CC=C6)O)O)OC(=O)C7=CC=CC=C7)(CO4)OC(=O)C)O)C)OC(=O)C")
+if paclitaxel.valid
+    complex_score = synthetic_accessibility(paclitaxel)  # ≈ 8+ (very difficult)
+end
+```
+
+# Notes
+- Based on fragment contributions and structural complexity
+- Scores: 1-3 (easy), 4-6 (moderate), 7-10 (difficult)
+- Trained on known synthetic compounds vs. non-synthesizable structures
+- Essential for virtual screening and drug design
+- Helps prioritize synthesizable compounds in large libraries
+"""
+function synthetic_accessibility(mol::Molecule)
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _sascore(mol._rdkit_mol))
+    catch
+        return missing
+    end
+end
+
 """
     calc_all_descriptors(mol::Molecule) -> Union{Dict{Symbol,Any},Missing}
 
@@ -614,9 +955,24 @@ for func in [
     :chi0v,
     :kappa1,
     :calc_all_descriptors,
+    # Advanced drug-like and ADMET descriptors
+    :qed,
+    :synthetic_accessibility,
+    :fraction_csp3,
+    :labute_asa,
+    :molar_refractivity,
+    # Advanced ring and structure counts
+    :num_aliphatic_carbocycles,
+    :num_aromatic_carbocycles,
+    :num_aromatic_heterocycles,
+    :num_atom_stereo_centers,
+    :num_amide_bonds,
+    # 3D descriptors (note: these may fail for molecules without 3D coordinates)
+    :asphericity,
+    :radius_of_gyration,
 ]
     @eval function $(func)(mols::Vector{Union{Molecule, Missing}})
-        return [$(func)(mol) for mol in mols]
+        return [mol === missing ? missing : $(func)(mol) for mol in mols]
     end
     @eval function $(func)(mols::Vector{Molecule})
         return [$(func)(mol) for mol in mols]
@@ -670,3 +1026,342 @@ function get_address(mol_list::Vector{Union{Molecule, Missing}})
     strings = pyconvert(Vector{Union{String, Missing}}, results)
     return map(extract_address, strings)
 end
+
+# Additional Chi indices - molecular connectivity
+"""
+    chi0n(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Chi0n molecular connectivity index.
+"""
+function chi0n(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _chi0n(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Chi0n: $e"
+        return missing
+    end
+end
+
+"""
+    chi1n(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Chi1n molecular connectivity index.
+"""
+function chi1n(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _chi1n(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Chi1n: $e"
+        return missing
+    end
+end
+
+"""
+    chi2n(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Chi2n molecular connectivity index.
+"""
+function chi2n(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _chi2n(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Chi2n: $e"
+        return missing
+    end
+end
+
+"""
+    chi3n(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Chi3n molecular connectivity index.
+"""
+function chi3n(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _chi3n(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Chi3n: $e"
+        return missing
+    end
+end
+
+"""
+    chi4n(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Chi4n molecular connectivity index.
+"""
+function chi4n(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _chi4n(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Chi4n: $e"
+        return missing
+    end
+end
+
+"""
+    chi1v(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Chi1v valence molecular connectivity index.
+"""
+function chi1v(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _chi1v(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Chi1v: $e"
+        return missing
+    end
+end
+
+"""
+    chi2v(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Chi2v valence molecular connectivity index.
+"""
+function chi2v(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _chi2v(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Chi2v: $e"
+        return missing
+    end
+end
+
+"""
+    chi3v(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Chi3v valence molecular connectivity index.
+"""
+function chi3v(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _chi3v(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Chi3v: $e"
+        return missing
+    end
+end
+
+"""
+    chi4v(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Chi4v valence molecular connectivity index.
+"""
+function chi4v(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _chi4v(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Chi4v: $e"
+        return missing
+    end
+end
+
+# Additional Kappa descriptors
+"""
+    kappa2(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Kappa2 shape index.
+"""
+function kappa2(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _kappa2(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Kappa2: $e"
+        return missing
+    end
+end
+
+"""
+    kappa3(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Kappa3 shape index.
+"""
+function kappa3(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _kappa3(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Kappa3: $e"
+        return missing
+    end
+end
+
+# EState descriptors
+"""
+    max_e_state_index(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the maximum E-state index.
+"""
+function max_e_state_index(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _max_e_state_index(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating MaxEStateIndex: $e"
+        return missing
+    end
+end
+
+"""
+    min_e_state_index(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the minimum E-state index.
+"""
+function min_e_state_index(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _min_e_state_index(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating MinEStateIndex: $e"
+        return missing
+    end
+end
+
+# Simple atom counts
+"""
+    num_carbons(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of carbon atoms.
+"""
+function num_carbons(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        atoms = get_atoms(mol)
+        return count(atom -> get_atomic_number(atom) == 6, atoms)
+    catch e
+        @warn "Error counting carbons: $e"
+        return missing
+    end
+end
+
+"""
+    num_nitrogens(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of nitrogen atoms.
+"""
+function num_nitrogens(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        atoms = get_atoms(mol)
+        return count(atom -> get_atomic_number(atom) == 7, atoms)
+    catch e
+        @warn "Error counting nitrogens: $e"
+        return missing
+    end
+end
+
+"""
+    num_oxygens(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of oxygen atoms.
+"""
+function num_oxygens(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        atoms = get_atoms(mol)
+        return count(atom -> get_atomic_number(atom) == 8, atoms)
+    catch e
+        @warn "Error counting oxygens: $e"
+        return missing
+    end
+end
+
+"""
+    num_sulfurs(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of sulfur atoms.
+"""
+function num_sulfurs(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        atoms = get_atoms(mol)
+        return count(atom -> get_atomic_number(atom) == 16, atoms)
+    catch e
+        @warn "Error counting sulfurs: $e"
+        return missing
+    end
+end
+
+"""
+    num_halogens(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of halogen atoms (F, Cl, Br, I, At).
+"""
+function num_halogens(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        atoms = get_atoms(mol)
+        halogen_nums = [9, 17, 35, 53, 85]  # F, Cl, Br, I, At
+        return count(atom -> get_atomic_number(atom) in halogen_nums, atoms)
+    catch e
+        @warn "Error counting halogens: $e"
+        return missing
+    end
+end
+
+"""
+    ipc(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Information Content of the distance degree sequence (IPC).
+"""
+function ipc(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _ipc(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating IPC: $e"
+        return missing
+    end
+end
+
+# Vectorized functions for new descriptors (moved to bottom for organization)
+const NEW_DESCRIPTOR_FUNCTIONS = [
+    # Chi connectivity indices
+    :chi0n, :chi1n, :chi2n, :chi3n, :chi4n,
+    :chi1v, :chi2v, :chi3v, :chi4v,
+    # Kappa shape indices
+    :kappa2, :kappa3,
+    # E-state descriptors
+    :max_e_state_index, :min_e_state_index,
+    # Atom counts
+    :num_carbons, :num_nitrogens, :num_oxygens, :num_sulfurs, :num_halogens,
+    # Complexity measures
+    :ipc
+]
+
+for func in NEW_DESCRIPTOR_FUNCTIONS
+    @eval function $(func)(mols::Vector{Union{Molecule, Missing}})
+        return [mol === missing ? missing : $(func)(mol) for mol in mols]
+    end
+    @eval function $(func)(mols::Vector{Molecule})
+        return [$(func)(mol) for mol in mols]
+    end
+end
+

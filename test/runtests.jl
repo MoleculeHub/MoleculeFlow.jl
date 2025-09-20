@@ -4,7 +4,9 @@ using Graphs
 
 @testset "MoleculeFlow.jl Tests" begin
     include("test_molecules.jl")
+    include("test_operations.jl")  # New operations tests
     include("test_descriptors.jl")
+    include("test_advanced_descriptors.jl")  # New advanced descriptors
     include("test_fingerprints.jl")
     include("test_similarity.jl")
     include("test_atoms.jl")
