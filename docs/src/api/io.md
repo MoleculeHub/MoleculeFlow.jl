@@ -26,12 +26,27 @@ mol_from_molblock
 mol_from_inchi
 ```
 
-## PDB Format Support
+## Molecule from PDB
 
 ```@docs
 mol_from_pdb_block
 mol_from_pdb_file
 mol_to_pdb_block
+```
+
+## Molecule from XYZ
+
+```@docs
+mol_from_xyz_file
+mol_from_xyz_block
+mol_to_xyz_block
+```
+
+### Molecule from MOL2
+
+```@docs
+mol_from_mol2_file
+mol_from_mol2_block
 ```
 
 ## Read SDF

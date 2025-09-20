@@ -22,40 +22,6 @@ add_hs
 remove_hs
 ```
 
-## Extended File I/O
-
-Additional file format support beyond basic SMILES and MOL files.
-
-### PDB Format Support
-
-```@docs
-mol_from_pdb_block
-mol_from_pdb_file
-mol_to_pdb_block
-```
-
-### XYZ Format Support
-
-```@docs
-mol_from_xyz_file
-mol_from_xyz_block
-mol_to_xyz_block
-```
-
-### MOL2 Format Support
-
-```@docs
-mol_from_mol2_file
-mol_from_mol2_block
-```
-
-### Enhanced Conversions
-
-```@docs
-mol_to_inchi_key
-mol_to_molblock
-```
-
 ## Molecular Editing
 
 Functions for modifying molecular structures programmatically.
