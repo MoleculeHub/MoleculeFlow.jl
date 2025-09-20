@@ -17,5 +17,6 @@ using Graphs
     include("test_standardization.jl")
     include("test_conformers.jl")
     include("test_error_handling.jl")
+    include("test_reaction.jl")
     include("test_aqua.jl")
 end

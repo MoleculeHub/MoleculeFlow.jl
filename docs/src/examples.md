@@ -1,6 +1,6 @@
 # Practical Examples
 
-Here are comprehensive practical examples of using MoleculeFlow.jl for molecular analysis, manipulation, and visualization.
+Here are comprehensive practical examples of using MoleculeFlow.jl for molecular analysis, manipulation, visualization, and chemical reaction processing.
 
 ## Basic Molecule Management
 
@@ -739,5 +739,425 @@ if !isempty(conformers)
     # Energy distribution
     low_energy = sum(e < (minimum(energies) + 2.0) for e in energies)
     println("Low energy conformers (< 2 kcal/mol above minimum): $low_energy")
+end
+```
+
+## Chemical Reaction Processing
+
+### Basic Reaction Creation and Application
+
+```julia
+using MoleculeFlow
+
+# Create reaction from SMARTS string
+# Example: ester hydrolysis
+rxn_smarts = "[C:1](=O)[O:2][C:3]>>[C:1](=O)[O-].[C:3][O+]"
+rxn = reaction_from_smarts(rxn_smarts)
+
+# Check reaction properties
+println("Reaction SMARTS: $(reaction_to_smarts(rxn))")
+println("Validated: $(rxn.validated)")
+println("Reactant templates: $(get_num_reactant_templates(rxn))")
+println("Product templates: $(get_num_product_templates(rxn))")
+
+# Apply reaction to molecules
+reactants = [
+    mol_from_smiles("CC(=O)OCC"),    # Ethyl acetate
+    mol_from_smiles("CC(=O)OCCC"),   # Propyl acetate
+    mol_from_smiles("CC(=O)OCCCC")   # Butyl acetate
+]
+
+println("\nApplying reaction to molecules:")
+for (i, reactant) in enumerate(reactants)
+    reactant_smiles = mol_to_smiles(reactant)
+
+    # Check if molecule matches reaction pattern
+    if has_reactant_substructure_match(rxn, reactant)
+        println("Reactant $i: $reactant_smiles - MATCHES")
+
+        # Run the reaction
+        products = run_reaction(rxn, [reactant])
+        println("Generated $(length(products)) product set(s)")
+
+        for (j, product_set) in enumerate(products)
+            println("  Product set $j:")
+            for product in product_set
+                product_smiles = mol_to_smiles(product)
+                println("    $product_smiles")
+            end
+        end
+    else
+        println("Reactant $i: $reactant_smiles - NO MATCH")
+    end
+    println()
+end
+```
+
+### Reaction Template Analysis
+
+```julia
+# Analyze reaction templates
+println("Reaction Template Analysis:")
+println("Number of reactant templates: $(get_num_reactant_templates(rxn))")
+println("Number of product templates: $(get_num_product_templates(rxn))")
+
+# Access individual templates
+for i in 0:(get_num_reactant_templates(rxn)-1)
+    template = get_reactant_template(rxn, i)
+    template_smiles = mol_to_smiles(template)
+    println("Reactant template $i: $template_smiles")
+end
+
+for i in 0:(get_num_product_templates(rxn)-1)
+    template = get_product_template(rxn, i)
+    template_smiles = mol_to_smiles(template)
+    println("Product template $i: $template_smiles")
+end
+
+# Get reacting atoms
+reacting_atoms = get_reacting_atoms(rxn)
+println("Reacting atoms: $reacting_atoms")
+```
+
+### Advanced Reaction Analysis
+
+```julia
+# Reaction classification and complexity
+classification = reaction_type_classification(rxn)
+complexity = reaction_complexity(rxn)
+balanced = is_balanced(rxn)
+
+println("Reaction Analysis:")
+println("Type: $classification")
+println("Complexity score: $(round(complexity, digits=2))")
+println("Atom balanced: $balanced")
+
+# Get comprehensive reaction information
+info = reaction_info(rxn)
+println("\nReaction Information:")
+for (key, value) in info
+    println("$key: $value")
+end
+```
+
+### Reaction Fingerprinting and Similarity
+
+```julia
+# Generate different types of reaction fingerprints
+diff_fp = reaction_fingerprint(rxn)
+struct_fp = reaction_structural_fingerprint(rxn)
+center_fp = reaction_center_fingerprint(rxn)
+
+println("Fingerprint Analysis:")
+println("Difference fingerprint bits set: $(sum(diff_fp))")
+println("Structural fingerprint bits set: $(sum(struct_fp))")
+println("Center fingerprint bits set: $(sum(center_fp))")
+
+# Compare with another reaction
+rxn2_smarts = "[C:1][OH:2]>>[C:1][O-]"
+rxn2 = reaction_from_smarts(rxn2_smarts)
+
+# Calculate similarities
+tanimoto_sim = reaction_similarity(rxn, rxn2, method=:tanimoto)
+dice_sim = reaction_similarity(rxn, rxn2, method=:dice)
+
+println("\nSimilarity Analysis:")
+println("Reaction 1: $(reaction_to_smarts(rxn))")
+println("Reaction 2: $(reaction_to_smarts(rxn2))")
+println("Tanimoto similarity: $(round(tanimoto_sim, digits=3))")
+println("Dice similarity: $(round(dice_sim, digits=3))")
+```
+
+### Reaction Database Analysis
+
+```julia
+# Create a small reaction database
+reaction_smarts_db = [
+    "[C:1](=O)[O:2][C:3]>>[C:1](=O)[O-].[C:3][O+]",     # Ester hydrolysis
+    "[C:1][OH:2]>>[C:1][O-]",                            # Alcohol deprotonation
+    "[N:1][C:2](=O)[C:3]>>[N:1].[C:2](=O)[C:3]",        # Amide cleavage
+    "[C:1]=[C:2]>>[C:1][C:2]",                           # Alkene reduction
+    "[C:1][Cl:2]>>[C:1][OH]",                            # Nucleophilic substitution
+]
+
+# Create reaction objects
+reaction_db = Reaction[]  # Use typed array to avoid method dispatch errors
+for smarts in reaction_smarts_db
+    try
+        local rxn = reaction_from_smarts(smarts)  # Use 'local' to avoid scope warnings
+        push!(reaction_db, rxn)
+        println("Added reaction: $smarts")
+    catch e
+        println("Failed to parse: $smarts - $e")
+    end
+end
+
+# Find similar reactions
+target_rxn = reaction_from_smarts("[C:1](=O)[O:2][C:3]>>[C:1](=O)[OH].[C:3]")
+similar_reactions = find_similar_reactions(target_rxn, reaction_db, threshold=0.3)
+
+println("\nSimilar Reactions (threshold=0.3):")
+println("Target: $(reaction_to_smarts(target_rxn))")
+for (rxn, similarity) in similar_reactions
+    println("Similarity: $(round(similarity, digits=3)) - $(reaction_to_smarts(rxn))")
+end
+```
+
+### Reaction Library Enumeration
+
+```julia
+# Define combinatorial synthesis
+# Example: esterification reaction
+esterification = "[C:1][OH:2].[C:3](=O)[OH:4]>>[C:1][O:2][C:3](=O)"
+ester_rxn = reaction_from_smarts(esterification)
+
+# Define reactant libraries
+alcohols = [
+    mol_from_smiles("CO"),      # Methanol
+    mol_from_smiles("CCO"),     # Ethanol
+    mol_from_smiles("CCCO"),    # Propanol
+]
+
+acids = [
+    mol_from_smiles("C(=O)O"),     # Formic acid
+    mol_from_smiles("CC(=O)O"),    # Acetic acid
+    mol_from_smiles("CCC(=O)O"),   # Propionic acid
+]
+
+println("Reaction Library Enumeration:")
+println("Alcohols: $(length(alcohols))")
+println("Acids: $(length(acids))")
+
+# Enumerate all possible products
+try
+    product_library = enumerate_library(ester_rxn, [alcohols, acids])
+    println("Generated $(length(product_library)) product combinations")
+
+    # Show first few products
+    for (i, product_set) in enumerate(product_library[1:min(5, length(product_library))])
+        println("Product set $i:")
+        for product in product_set
+            println("  $(mol_to_smiles(product))")
+        end
+    end
+catch e
+    println("Library enumeration failed: $e")
+end
+```
+
+### Atom Mapping and Reaction Mechanics
+
+```julia
+# Work with atom-mapped molecules
+mapped_mol = mol_from_smiles("[CH3:1][C:2](=[O:3])[O:4][CH2:5][CH3:6]")
+println("Original mapping: $(mol_to_smiles(mapped_mol))")
+
+# Get current atom mapping
+current_mapping = get_atom_mapping_numbers(mapped_mol)
+println("Current mapping numbers: $current_mapping")
+
+# Set new mapping
+new_mapping = [10, 20, 30, 40, 50, 60]
+set_atom_mapping_numbers!(mapped_mol, new_mapping)
+updated_mapping = get_atom_mapping_numbers(mapped_mol)
+println("Updated mapping numbers: $updated_mapping")
+println("New SMILES: $(mol_to_smiles(mapped_mol))")
+
+# Reaction preprocessing
+println("\nReaction Preprocessing:")
+test_rxn = reaction_from_smarts("[C:1][OH:2]>>[C:1][O-]", validate=false)
+println("Before validation: $(test_rxn.validated)")
+
+# Preprocess and validate
+preprocess_reaction!(test_rxn)
+println("After preprocessing: $(test_rxn.validated)")
+
+if validate_reaction!(test_rxn)
+    println("Validation successful")
+else
+    println("Validation failed")
+end
+```
+
+### Real-World Reaction Processing Pipeline
+
+```julia
+# Complete reaction processing workflow
+function process_reaction_database(reaction_smarts_list)
+    results = []
+
+    println("Processing $(length(reaction_smarts_list)) reactions...")
+
+    for (i, smarts) in enumerate(reaction_smarts_list)
+        try
+            # Create and validate reaction
+            rxn = reaction_from_smarts(smarts)
+
+            # Analyze reaction properties
+            classification = reaction_type_classification(rxn)
+            complexity = reaction_complexity(rxn)
+            balanced = is_balanced(rxn)
+
+            # Generate fingerprint
+            fingerprint = reaction_fingerprint(rxn)
+            fp_density = sum(fingerprint) / length(fingerprint)
+
+            # Store results
+            push!(results, (
+                index = i,
+                smarts = smarts,
+                type = classification,
+                complexity = complexity,
+                balanced = balanced,
+                fp_density = fp_density,
+                valid = true
+            ))
+
+            println("✓ Reaction $i: $classification (complexity: $(round(complexity, digits=2)))")
+
+        catch e
+            println("✗ Reaction $i failed: $e")
+            push!(results, (
+                index = i,
+                smarts = smarts,
+                valid = false,
+                error = string(e)
+            ))
+        end
+    end
+
+    # Summary statistics
+    valid_results = filter(r -> get(r, :valid, false), results)
+    println("\nProcessing Summary:")
+    println("Total reactions: $(length(reaction_smarts_list))")
+    println("Successfully processed: $(length(valid_results))")
+    println("Failed: $(length(results) - length(valid_results))")
+
+    if !isempty(valid_results)
+        types = [r.type for r in valid_results]
+        println("Reaction types: $(unique(types))")
+
+        complexities = [r.complexity for r in valid_results]
+        println("Complexity range: $(round(minimum(complexities), digits=2)) - $(round(maximum(complexities), digits=2))")
+
+        balanced_count = sum(r.balanced for r in valid_results)
+        println("Balanced reactions: $balanced_count/$(length(valid_results))")
+    end
+
+    return results
+end
+
+# Example usage
+example_reactions = [
+    "[C:1](=O)[O:2][C:3]>>[C:1](=O)[O-].[C:3][O+]",
+    "[C:1][OH:2]>>[C:1][O-]",
+    "[N:1][C:2](=O)[C:3]>>[N:1].[C:2](=O)[C:3]",
+    "[C:1]=[C:2]>>[C:1][C:2]",
+    "invalid_reaction_smarts"
+]
+
+results = process_reaction_database(example_reactions)
+```
+
+### Best Practices and Troubleshooting
+
+#### Type Safety with Reaction Collections
+
+When working with collections of reactions, use typed arrays to avoid method dispatch errors:
+
+```julia
+# Correct: Use typed array
+reaction_db = Reaction[]
+for smarts in reaction_smarts_list
+    try
+        local rxn = reaction_from_smarts(smarts)  # Use 'local' to avoid scope warnings
+        push!(reaction_db, rxn)
+        println("Added: $smarts")
+    catch e
+        println("Failed: $smarts - $e")
+    end
+end
+
+# Incorrect: Untyped array causes method errors
+reaction_db = []  # This creates Vector{Any}, causing type issues later
+```
+
+#### Handling RDKit Warnings
+
+RDKit may generate warnings about unmapped atoms, which are normal for many reactions:
+
+```julia
+# These warnings are informational and don't indicate errors:
+# [05:02:27] mapped atoms in the reactants were not mapped in the products.
+#   unmapped numbers are: 2
+
+# Example of a reaction that triggers this warning (still valid):
+rxn = reaction_from_smarts("[C:1][OH:2]>>[C:1][O-]")
+println("Reaction still valid: $(rxn.validated)")  # true
+```
+
+#### Error Handling for Invalid SMARTS
+
+Always wrap reaction creation in try-catch blocks when processing external data:
+
+```julia
+function safe_reaction_creation(smarts_list)
+    reactions = Reaction[]
+    errors = String[]
+
+    for smarts in smarts_list
+        try
+            rxn = reaction_from_smarts(smarts)
+            push!(reactions, rxn)
+        catch e
+            push!(errors, "$smarts: $e")
+        end
+    end
+
+    return reactions, errors
+end
+
+# Example with mixed valid/invalid SMARTS
+test_smarts = [
+    "[C:1](=O)[O:2][C:3]>>[C:1](=O)[O-].[C:3][O+]",  # Valid
+    "invalid_reaction_smarts",                          # Invalid
+    "[C:1][OH:2]>>[C:1][O-]"                          # Valid
+]
+
+reactions, errors = safe_reaction_creation(test_smarts)
+println("Successfully created: $(length(reactions)) reactions")
+println("Errors: $(length(errors))")
+```
+
+#### Performance Optimization
+
+For large-scale reaction processing, consider these optimizations:
+
+```julia
+# Pre-validate reactions when building databases
+function build_validated_reaction_db(smarts_list)
+    db = Reaction[]
+
+    for smarts in smarts_list
+        try
+            rxn = reaction_from_smarts(smarts, validate=true)  # Validate immediately
+            if rxn.validated
+                push!(db, rxn)
+            end
+        catch
+            continue  # Skip invalid reactions
+        end
+    end
+
+    return db
+end
+
+# Cache fingerprints for similarity searches
+function cache_reaction_fingerprints!(reactions)
+    for rxn in reactions
+        if isnothing(rxn.fingerprint)
+            rxn.fingerprint = reaction_fingerprint(rxn)
+        end
+    end
 end
 ```

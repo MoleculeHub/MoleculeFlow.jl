@@ -22,6 +22,7 @@ makedocs(;
         "API Reference" => [
             "Basic I/O" => "api/io.md",
             "Molecular Operations" => "api/operations.md",
+            "Chemical Reactions" => "api/reactions.md",
             "Drawing & Visualization" => "api/drawing.md",
             "Molecular Descriptors" => "api/descriptors.md",
             "Fingerprints" => "api/fingerprints.md",

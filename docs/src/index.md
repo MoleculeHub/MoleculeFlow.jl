@@ -4,9 +4,7 @@ CurrentModule = MoleculeFlow
 
 # MoleculeFlow.jl
 
-MoleculeFlow.jl is a Julia library for cheminformatics, providing 
-It enables common molecular manipulation tasks, such as reading/writing,
-descriptor calculation, fingerprint generation, similarity analysis, and others.
+MoleculeFlow.jl is a comprehensive Julia library for cheminformatics, providing tools for molecular and reaction analysis. It enables common molecular manipulation tasks, such as reading/writing, descriptor calculation, fingerprint generation, similarity analysis, chemical reaction processing, and others.
 
 !!! info
     This library is based on the [rdkit](https://github.com/rdkit/rdkit) and [PythonCall](https://github.com/JuliaPy/PythonCall.jl). Author sees little sense in trying to implement things from scratch, as rdkit has been, is, and very likely will continue being the benchmark cheminformatics library in the future.

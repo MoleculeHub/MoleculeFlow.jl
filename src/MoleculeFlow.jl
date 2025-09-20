@@ -109,6 +109,20 @@ export ConformerResult, ConformerMolecule, generate_3d_conformers, generate_2d_c
 export brics_decompose, recap_decompose, get_murcko_scaffold, get_generic_scaffold
 export fragment_by_bonds, get_fragment_count, split_fragments, get_largest_fragment
 
+# Chemical reactions
+export Reaction, reaction_from_smarts, run_reaction, reaction_to_smarts
+export reaction_from_rxn_file, reaction_from_rxn_block, reaction_to_rxn_block
+export validate_reaction!, is_reaction_valid, sanitize_reaction!
+export get_num_reactant_templates, get_num_product_templates
+export get_reactant_template, get_product_template
+export has_reactant_substructure_match, get_reacting_atoms
+export reaction_fingerprint, reaction_structural_fingerprint, reaction_center_fingerprint
+export reaction_similarity, enumerate_library, reaction_info
+export reaction_complexity, reaction_type_classification, find_similar_reactions
+export is_balanced, get_atom_mapping_numbers, set_atom_mapping_numbers!
+export remove_unmapped_reactant_templates!, remove_unmapped_product_templates!
+export preprocess_reaction!, compute_atom_mapping!, is_template_molecule_agent
+
 include("./config.jl")
 include("./utils.jl")
 include("./rdkit.jl")
@@ -129,5 +143,6 @@ include("./draw/draw.jl")
 include("./standardization/standardization.jl")
 include("./fragmentation/fragmentation.jl")
 include("./progress.jl")
+include("./reaction/reaction.jl")
 
 end

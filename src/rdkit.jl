@@ -699,3 +699,128 @@ end
 function _mols_to_grid_image(mols; kwargs...)
     @pyconst(pyimport("rdkit.Chem.Draw").MolsToGridImage)(mols; kwargs...)
 end
+
+# Chemical reactions
+function _reaction_from_smarts(smarts::String)
+    @pyconst(pyimport("rdkit.Chem.AllChem").ReactionFromSmarts)(smarts)
+end
+
+function _reaction_from_rxn_file(filename::String)
+    @pyconst(pyimport("rdkit.Chem.AllChem").ReactionFromRxnFile)(filename)
+end
+
+function _reaction_from_rxn_block(rxnblock::String)
+    @pyconst(pyimport("rdkit.Chem.AllChem").ReactionFromRxnBlock)(rxnblock)
+end
+
+function _reaction_to_rxn_block(rxn::Py)
+    @pyconst(pyimport("rdkit.Chem.AllChem").ReactionToRxnBlock)(rxn)
+end
+
+function _reaction_validate(rxn::Py)
+    @pyconst(pyimport("rdkit.Chem.AllChem").SanitizeRxn)(rxn)
+end
+
+function _reaction_get_num_reactant_templates(rxn::Py)
+    rxn.GetNumReactantTemplates()
+end
+
+function _reaction_get_num_product_templates(rxn::Py)
+    rxn.GetNumProductTemplates()
+end
+
+function _reaction_get_reactant_template(rxn::Py, idx::Int)
+    rxn.GetReactantTemplate(idx)
+end
+
+function _reaction_get_product_template(rxn::Py, idx::Int)
+    rxn.GetProductTemplate(idx)
+end
+
+function _reaction_has_reactant_substructure_match(rxn::Py, mol::Py)
+    try
+        products = rxn.RunReactants(pylist([mol]))
+        return length(products) > 0
+    catch
+        return false
+    end
+end
+
+function _reaction_get_reacting_atoms(rxn::Py)
+    return rxn.GetReactingAtoms()
+end
+
+function _reaction_fingerprint(rxn::Py, fp_size::Int=2048)
+    rdkit_reactions = @pyconst(pyimport("rdkit.Chem.rdChemReactions"))
+    params = rdkit_reactions.ReactionFingerprintParams()
+    params.fpSize = fp_size
+    return rdkit_reactions.CreateDifferenceFingerprintForReaction(rxn, params)
+end
+
+function _reaction_structural_fingerprint(rxn::Py, fp_size::Int=2048)
+    rdkit_reactions = @pyconst(pyimport("rdkit.Chem.rdChemReactions"))
+    params = rdkit_reactions.ReactionFingerprintParams()
+    params.fpSize = fp_size
+    return rdkit_reactions.CreateStructuralFingerprintForReaction(rxn, params)
+end
+
+function _compute_reaction_center_fingerprint(rxn::Py, fp_size::Int=2048)
+    rdkit_reactions = @pyconst(pyimport("rdkit.Chem.rdChemReactions"))
+    params = rdkit_reactions.ReactionFingerprintParams()
+    params.fpSize = fp_size
+    return rdkit_reactions.CreateDifferenceFingerprintForReaction(rxn, params)
+end
+
+function _reaction_run_reactants_inline_properties(rxn::Py, reactants::Vector{Py}, max_products::Int=1000)
+    rxn.RunReactants(pylist(reactants), max_products)
+end
+
+function _reaction_enumerate_library_from_reaction(rxn::Py, reactant_lists::Vector{Vector{Py}})
+    @pyconst(pyimport("rdkit.Chem.AllChem").EnumerateLibraryFromReaction)(rxn, pylist([pylist(r) for r in reactant_lists]))
+end
+
+function _reaction_to_smarts(rxn::Py)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").ReactionToSmarts)(rxn)
+end
+
+function _reaction_compute_atom_mapping(rxn::Py)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").ReduceProductToSideChains)(rxn)
+end
+
+function _reaction_sanitize_reaction(rxn::Py, sanitize_ops::Int=15)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").SanitizeRxn)(rxn, sanitize_ops)
+end
+
+function _reaction_remove_unmapped_reactant_templates(rxn::Py, mode::Int=1)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedReactantTemplates)(rxn, mode)
+end
+
+function _reaction_remove_unmapped_product_templates(rxn::Py, mode::Int=1)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedProductTemplates)(rxn, mode)
+end
+
+function _reaction_preprocess(rxn::Py)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").PreprocessReaction)(rxn)
+end
+
+function _reaction_is_template_molecule_agent(mol::Py)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").IsTemplateMoleculeAgent)(mol)
+end
+
+function _get_atom_mapping_numbers(mol::Py)
+    atom_map_nums = []
+    num_atoms = pyconvert(Int, mol.GetNumAtoms())
+    for i in 0:(num_atoms-1)
+        atom = mol.GetAtomWithIdx(i)
+        map_num = pyconvert(Int, atom.GetAtomMapNum())
+        push!(atom_map_nums, map_num)
+    end
+    return atom_map_nums
+end
+
+function _set_atom_mapping_numbers(mol::Py, map_nums::Vector{Int})
+    for (i, map_num) in enumerate(map_nums)
+        atom = mol.GetAtomWithIdx(i-1)
+        atom.SetAtomMapNum(map_num)
+    end
+end
