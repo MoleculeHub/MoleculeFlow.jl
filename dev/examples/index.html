@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Practical Examples · MoleculeFlow.jl</title><meta name="title" content="Practical Examples · MoleculeFlow.jl"/><meta property="og:title" content="Practical Examples · MoleculeFlow.jl"/><meta property="twitter:title" content="Practical Examples · MoleculeFlow.jl"/><meta name="description" content="Documentation for MoleculeFlow.jl."/><meta property="og:description" content="Documentation for MoleculeFlow.jl."/><meta property="twitter:description" content="Documentation for MoleculeFlow.jl."/><meta property="og:url" content="https://moleculehub.github.io/MoleculeFlow.jl/examples/"/><meta property="twitter:url" content="https://moleculehub.github.io/MoleculeFlow.jl/examples/"/><link rel="canonical" href="https://moleculehub.github.io/MoleculeFlow.jl/examples/"/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.png" alt="MoleculeFlow.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">MoleculeFlow.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../getting-started/">Getting Started</a></li><li class="is-active"><a class="tocitem" href>Practical Examples</a><ul class="internal"><li><a class="tocitem" href="#Basic-Molecule-Management"><span>Basic Molecule Management</span></a></li><li><a class="tocitem" href="#Working-with-Atoms"><span>Working with Atoms</span></a></li><li><a class="tocitem" href="#Working-with-Bonds"><span>Working with Bonds</span></a></li><li><a class="tocitem" href="#Molecular-Properties-and-Descriptors"><span>Molecular Properties and Descriptors</span></a></li><li><a class="tocitem" href="#Substructure-Analysis"><span>Substructure Analysis</span></a></li><li><a class="tocitem" href="#Similarity-and-Fingerprints"><span>Similarity and Fingerprints</span></a></li><li><a class="tocitem" href="#Molecular-Visualization"><span>Molecular Visualization</span></a></li><li><a class="tocitem" href="#Dataset-Analysis"><span>Dataset Analysis</span></a></li><li><a class="tocitem" href="#Molecular-Standardization"><span>Molecular Standardization</span></a></li><li><a class="tocitem" href="#3D-Conformer-Generation"><span>3D Conformer Generation</span></a></li></ul></li><li><span class="tocitem">API Reference</span><ul><li><a class="tocitem" href="../api/io/">Basic I/O</a></li><li><a class="tocitem" href="../api/operations/">Molecular Operations</a></li><li><a class="tocitem" href="../api/drawing/">Drawing &amp; Visualization</a></li><li><a class="tocitem" href="../api/descriptors/">Molecular Descriptors</a></li><li><a class="tocitem" href="../api/fingerprints/">Fingerprints</a></li><li><a class="tocitem" href="../api/substructure/">Substructure Search</a></li><li><a class="tocitem" href="../api/atoms/">Atom Operations</a></li><li><a class="tocitem" href="../api/bonds/">Bond Operations</a></li><li><a class="tocitem" href="../api/similarity/">Similarity</a></li><li><a class="tocitem" href="../api/standardization/">Standardization</a></li><li><a class="tocitem" href="../api/conformers/">Conformers</a></li><li><a class="tocitem" href="../api/fragmentation/">Fragmentation</a></li><li><a class="tocitem" href="../api/graph/">Graph Operations</a></li><li><a class="tocitem" href="../api/progress/">Progress Tracking</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Practical Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Practical Examples</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/main/docs/src/examples.md#" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Practical-Examples"><a class="docs-heading-anchor" href="#Practical-Examples">Practical Examples</a><a id="Practical-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Practical-Examples" title="Permalink"></a></h1><p>Here are comprehensive practical examples of using MoleculeFlow.jl for molecular analysis, manipulation, and visualization.</p><h2 id="Basic-Molecule-Management"><a class="docs-heading-anchor" href="#Basic-Molecule-Management">Basic Molecule Management</a><a id="Basic-Molecule-Management-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Molecule-Management" title="Permalink"></a></h2><h3 id="Creating-and-Validating-Molecules"><a class="docs-heading-anchor" href="#Creating-and-Validating-Molecules">Creating and Validating Molecules</a><a id="Creating-and-Validating-Molecules-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-and-Validating-Molecules" title="Permalink"></a></h3><pre><code class="language-julia hljs">using MoleculeFlow
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Practical Examples · MoleculeFlow.jl</title><meta name="title" content="Practical Examples · MoleculeFlow.jl"/><meta property="og:title" content="Practical Examples · MoleculeFlow.jl"/><meta property="twitter:title" content="Practical Examples · MoleculeFlow.jl"/><meta name="description" content="Documentation for MoleculeFlow.jl."/><meta property="og:description" content="Documentation for MoleculeFlow.jl."/><meta property="twitter:description" content="Documentation for MoleculeFlow.jl."/><meta property="og:url" content="https://moleculehub.github.io/MoleculeFlow.jl/examples/"/><meta property="twitter:url" content="https://moleculehub.github.io/MoleculeFlow.jl/examples/"/><link rel="canonical" href="https://moleculehub.github.io/MoleculeFlow.jl/examples/"/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.png" alt="MoleculeFlow.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">MoleculeFlow.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../getting-started/">Getting Started</a></li><li class="is-active"><a class="tocitem" href>Practical Examples</a><ul class="internal"><li><a class="tocitem" href="#Basic-Molecule-Management"><span>Basic Molecule Management</span></a></li><li><a class="tocitem" href="#Working-with-Atoms"><span>Working with Atoms</span></a></li><li><a class="tocitem" href="#Working-with-Bonds"><span>Working with Bonds</span></a></li><li><a class="tocitem" href="#Molecular-Properties-and-Descriptors"><span>Molecular Properties and Descriptors</span></a></li><li><a class="tocitem" href="#Substructure-Analysis"><span>Substructure Analysis</span></a></li><li><a class="tocitem" href="#Similarity-and-Fingerprints"><span>Similarity and Fingerprints</span></a></li><li><a class="tocitem" href="#Molecular-Visualization"><span>Molecular Visualization</span></a></li><li><a class="tocitem" href="#Dataset-Analysis"><span>Dataset Analysis</span></a></li><li><a class="tocitem" href="#Molecular-Standardization"><span>Molecular Standardization</span></a></li><li><a class="tocitem" href="#3D-Conformer-Generation"><span>3D Conformer Generation</span></a></li><li><a class="tocitem" href="#Chemical-Reaction-Processing"><span>Chemical Reaction Processing</span></a></li></ul></li><li><span class="tocitem">API Reference</span><ul><li><a class="tocitem" href="../api/io/">Basic I/O</a></li><li><a class="tocitem" href="../api/operations/">Molecular Operations</a></li><li><a class="tocitem" href="../api/reactions/">Chemical Reactions</a></li><li><a class="tocitem" href="../api/drawing/">Drawing &amp; Visualization</a></li><li><a class="tocitem" href="../api/descriptors/">Molecular Descriptors</a></li><li><a class="tocitem" href="../api/fingerprints/">Fingerprints</a></li><li><a class="tocitem" href="../api/substructure/">Substructure Search</a></li><li><a class="tocitem" href="../api/atoms/">Atom Operations</a></li><li><a class="tocitem" href="../api/bonds/">Bond Operations</a></li><li><a class="tocitem" href="../api/similarity/">Similarity</a></li><li><a class="tocitem" href="../api/standardization/">Standardization</a></li><li><a class="tocitem" href="../api/conformers/">Conformers</a></li><li><a class="tocitem" href="../api/fragmentation/">Fragmentation</a></li><li><a class="tocitem" href="../api/graph/">Graph Operations</a></li><li><a class="tocitem" href="../api/progress/">Progress Tracking</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Practical Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Practical Examples</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/main/docs/src/examples.md#" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Practical-Examples"><a class="docs-heading-anchor" href="#Practical-Examples">Practical Examples</a><a id="Practical-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Practical-Examples" title="Permalink"></a></h1><p>Here are comprehensive practical examples of using MoleculeFlow.jl for molecular analysis, manipulation, visualization, and chemical reaction processing.</p><h2 id="Basic-Molecule-Management"><a class="docs-heading-anchor" href="#Basic-Molecule-Management">Basic Molecule Management</a><a id="Basic-Molecule-Management-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Molecule-Management" title="Permalink"></a></h2><h3 id="Creating-and-Validating-Molecules"><a class="docs-heading-anchor" href="#Creating-and-Validating-Molecules">Creating and Validating Molecules</a><a id="Creating-and-Validating-Molecules-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-and-Validating-Molecules" title="Permalink"></a></h3><pre><code class="language-julia hljs">using MoleculeFlow
 
 # Create molecules from SMILES
 ethanol = mol_from_smiles(&quot;CCO&quot;)
@@ -581,4 +581,340 @@ if !isempty(conformers)
     # Energy distribution
     low_energy = sum(e &lt; (minimum(energies) + 2.0) for e in energies)
     println(&quot;Low energy conformers (&lt; 2 kcal/mol above minimum): $low_energy&quot;)
-end</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../getting-started/">« Getting Started</a><a class="docs-footer-nextpage" href="../api/io/">Basic I/O »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Saturday 20 September 2025 04:18">Saturday 20 September 2025</span>. Using Julia version 1.11.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+end</code></pre><h2 id="Chemical-Reaction-Processing"><a class="docs-heading-anchor" href="#Chemical-Reaction-Processing">Chemical Reaction Processing</a><a id="Chemical-Reaction-Processing-1"></a><a class="docs-heading-anchor-permalink" href="#Chemical-Reaction-Processing" title="Permalink"></a></h2><h3 id="Basic-Reaction-Creation-and-Application"><a class="docs-heading-anchor" href="#Basic-Reaction-Creation-and-Application">Basic Reaction Creation and Application</a><a id="Basic-Reaction-Creation-and-Application-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Reaction-Creation-and-Application" title="Permalink"></a></h3><pre><code class="language-julia hljs">using MoleculeFlow
+
+# Create reaction from SMARTS string
+# Example: ester hydrolysis
+rxn_smarts = &quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[O-].[C:3][O+]&quot;
+rxn = reaction_from_smarts(rxn_smarts)
+
+# Check reaction properties
+println(&quot;Reaction SMARTS: $(reaction_to_smarts(rxn))&quot;)
+println(&quot;Validated: $(rxn.validated)&quot;)
+println(&quot;Reactant templates: $(get_num_reactant_templates(rxn))&quot;)
+println(&quot;Product templates: $(get_num_product_templates(rxn))&quot;)
+
+# Apply reaction to molecules
+reactants = [
+    mol_from_smiles(&quot;CC(=O)OCC&quot;),    # Ethyl acetate
+    mol_from_smiles(&quot;CC(=O)OCCC&quot;),   # Propyl acetate
+    mol_from_smiles(&quot;CC(=O)OCCCC&quot;)   # Butyl acetate
+]
+
+println(&quot;\nApplying reaction to molecules:&quot;)
+for (i, reactant) in enumerate(reactants)
+    reactant_smiles = mol_to_smiles(reactant)
+
+    # Check if molecule matches reaction pattern
+    if has_reactant_substructure_match(rxn, reactant)
+        println(&quot;Reactant $i: $reactant_smiles - MATCHES&quot;)
+
+        # Run the reaction
+        products = run_reaction(rxn, [reactant])
+        println(&quot;Generated $(length(products)) product set(s)&quot;)
+
+        for (j, product_set) in enumerate(products)
+            println(&quot;  Product set $j:&quot;)
+            for product in product_set
+                product_smiles = mol_to_smiles(product)
+                println(&quot;    $product_smiles&quot;)
+            end
+        end
+    else
+        println(&quot;Reactant $i: $reactant_smiles - NO MATCH&quot;)
+    end
+    println()
+end</code></pre><h3 id="Reaction-Template-Analysis"><a class="docs-heading-anchor" href="#Reaction-Template-Analysis">Reaction Template Analysis</a><a id="Reaction-Template-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Reaction-Template-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Analyze reaction templates
+println(&quot;Reaction Template Analysis:&quot;)
+println(&quot;Number of reactant templates: $(get_num_reactant_templates(rxn))&quot;)
+println(&quot;Number of product templates: $(get_num_product_templates(rxn))&quot;)
+
+# Access individual templates
+for i in 0:(get_num_reactant_templates(rxn)-1)
+    template = get_reactant_template(rxn, i)
+    template_smiles = mol_to_smiles(template)
+    println(&quot;Reactant template $i: $template_smiles&quot;)
+end
+
+for i in 0:(get_num_product_templates(rxn)-1)
+    template = get_product_template(rxn, i)
+    template_smiles = mol_to_smiles(template)
+    println(&quot;Product template $i: $template_smiles&quot;)
+end
+
+# Get reacting atoms
+reacting_atoms = get_reacting_atoms(rxn)
+println(&quot;Reacting atoms: $reacting_atoms&quot;)</code></pre><h3 id="Advanced-Reaction-Analysis"><a class="docs-heading-anchor" href="#Advanced-Reaction-Analysis">Advanced Reaction Analysis</a><a id="Advanced-Reaction-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Advanced-Reaction-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Reaction classification and complexity
+classification = reaction_type_classification(rxn)
+complexity = reaction_complexity(rxn)
+balanced = is_balanced(rxn)
+
+println(&quot;Reaction Analysis:&quot;)
+println(&quot;Type: $classification&quot;)
+println(&quot;Complexity score: $(round(complexity, digits=2))&quot;)
+println(&quot;Atom balanced: $balanced&quot;)
+
+# Get comprehensive reaction information
+info = reaction_info(rxn)
+println(&quot;\nReaction Information:&quot;)
+for (key, value) in info
+    println(&quot;$key: $value&quot;)
+end</code></pre><h3 id="Reaction-Fingerprinting-and-Similarity"><a class="docs-heading-anchor" href="#Reaction-Fingerprinting-and-Similarity">Reaction Fingerprinting and Similarity</a><a id="Reaction-Fingerprinting-and-Similarity-1"></a><a class="docs-heading-anchor-permalink" href="#Reaction-Fingerprinting-and-Similarity" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate different types of reaction fingerprints
+diff_fp = reaction_fingerprint(rxn)
+struct_fp = reaction_structural_fingerprint(rxn)
+center_fp = reaction_center_fingerprint(rxn)
+
+println(&quot;Fingerprint Analysis:&quot;)
+println(&quot;Difference fingerprint bits set: $(sum(diff_fp))&quot;)
+println(&quot;Structural fingerprint bits set: $(sum(struct_fp))&quot;)
+println(&quot;Center fingerprint bits set: $(sum(center_fp))&quot;)
+
+# Compare with another reaction
+rxn2_smarts = &quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;
+rxn2 = reaction_from_smarts(rxn2_smarts)
+
+# Calculate similarities
+tanimoto_sim = reaction_similarity(rxn, rxn2, method=:tanimoto)
+dice_sim = reaction_similarity(rxn, rxn2, method=:dice)
+
+println(&quot;\nSimilarity Analysis:&quot;)
+println(&quot;Reaction 1: $(reaction_to_smarts(rxn))&quot;)
+println(&quot;Reaction 2: $(reaction_to_smarts(rxn2))&quot;)
+println(&quot;Tanimoto similarity: $(round(tanimoto_sim, digits=3))&quot;)
+println(&quot;Dice similarity: $(round(dice_sim, digits=3))&quot;)</code></pre><h3 id="Reaction-Database-Analysis"><a class="docs-heading-anchor" href="#Reaction-Database-Analysis">Reaction Database Analysis</a><a id="Reaction-Database-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Reaction-Database-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Create a small reaction database
+reaction_smarts_db = [
+    &quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[O-].[C:3][O+]&quot;,     # Ester hydrolysis
+    &quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;,                            # Alcohol deprotonation
+    &quot;[N:1][C:2](=O)[C:3]&gt;&gt;[N:1].[C:2](=O)[C:3]&quot;,        # Amide cleavage
+    &quot;[C:1]=[C:2]&gt;&gt;[C:1][C:2]&quot;,                           # Alkene reduction
+    &quot;[C:1][Cl:2]&gt;&gt;[C:1][OH]&quot;,                            # Nucleophilic substitution
+]
+
+# Create reaction objects
+reaction_db = Reaction[]  # Use typed array to avoid method dispatch errors
+for smarts in reaction_smarts_db
+    try
+        local rxn = reaction_from_smarts(smarts)  # Use &#39;local&#39; to avoid scope warnings
+        push!(reaction_db, rxn)
+        println(&quot;Added reaction: $smarts&quot;)
+    catch e
+        println(&quot;Failed to parse: $smarts - $e&quot;)
+    end
+end
+
+# Find similar reactions
+target_rxn = reaction_from_smarts(&quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[OH].[C:3]&quot;)
+similar_reactions = find_similar_reactions(target_rxn, reaction_db, threshold=0.3)
+
+println(&quot;\nSimilar Reactions (threshold=0.3):&quot;)
+println(&quot;Target: $(reaction_to_smarts(target_rxn))&quot;)
+for (rxn, similarity) in similar_reactions
+    println(&quot;Similarity: $(round(similarity, digits=3)) - $(reaction_to_smarts(rxn))&quot;)
+end</code></pre><h3 id="Reaction-Library-Enumeration"><a class="docs-heading-anchor" href="#Reaction-Library-Enumeration">Reaction Library Enumeration</a><a id="Reaction-Library-Enumeration-1"></a><a class="docs-heading-anchor-permalink" href="#Reaction-Library-Enumeration" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Define combinatorial synthesis
+# Example: esterification reaction
+esterification = &quot;[C:1][OH:2].[C:3](=O)[OH:4]&gt;&gt;[C:1][O:2][C:3](=O)&quot;
+ester_rxn = reaction_from_smarts(esterification)
+
+# Define reactant libraries
+alcohols = [
+    mol_from_smiles(&quot;CO&quot;),      # Methanol
+    mol_from_smiles(&quot;CCO&quot;),     # Ethanol
+    mol_from_smiles(&quot;CCCO&quot;),    # Propanol
+]
+
+acids = [
+    mol_from_smiles(&quot;C(=O)O&quot;),     # Formic acid
+    mol_from_smiles(&quot;CC(=O)O&quot;),    # Acetic acid
+    mol_from_smiles(&quot;CCC(=O)O&quot;),   # Propionic acid
+]
+
+println(&quot;Reaction Library Enumeration:&quot;)
+println(&quot;Alcohols: $(length(alcohols))&quot;)
+println(&quot;Acids: $(length(acids))&quot;)
+
+# Enumerate all possible products
+try
+    product_library = enumerate_library(ester_rxn, [alcohols, acids])
+    println(&quot;Generated $(length(product_library)) product combinations&quot;)
+
+    # Show first few products
+    for (i, product_set) in enumerate(product_library[1:min(5, length(product_library))])
+        println(&quot;Product set $i:&quot;)
+        for product in product_set
+            println(&quot;  $(mol_to_smiles(product))&quot;)
+        end
+    end
+catch e
+    println(&quot;Library enumeration failed: $e&quot;)
+end</code></pre><h3 id="Atom-Mapping-and-Reaction-Mechanics"><a class="docs-heading-anchor" href="#Atom-Mapping-and-Reaction-Mechanics">Atom Mapping and Reaction Mechanics</a><a id="Atom-Mapping-and-Reaction-Mechanics-1"></a><a class="docs-heading-anchor-permalink" href="#Atom-Mapping-and-Reaction-Mechanics" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Work with atom-mapped molecules
+mapped_mol = mol_from_smiles(&quot;[CH3:1][C:2](=[O:3])[O:4][CH2:5][CH3:6]&quot;)
+println(&quot;Original mapping: $(mol_to_smiles(mapped_mol))&quot;)
+
+# Get current atom mapping
+current_mapping = get_atom_mapping_numbers(mapped_mol)
+println(&quot;Current mapping numbers: $current_mapping&quot;)
+
+# Set new mapping
+new_mapping = [10, 20, 30, 40, 50, 60]
+set_atom_mapping_numbers!(mapped_mol, new_mapping)
+updated_mapping = get_atom_mapping_numbers(mapped_mol)
+println(&quot;Updated mapping numbers: $updated_mapping&quot;)
+println(&quot;New SMILES: $(mol_to_smiles(mapped_mol))&quot;)
+
+# Reaction preprocessing
+println(&quot;\nReaction Preprocessing:&quot;)
+test_rxn = reaction_from_smarts(&quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;, validate=false)
+println(&quot;Before validation: $(test_rxn.validated)&quot;)
+
+# Preprocess and validate
+preprocess_reaction!(test_rxn)
+println(&quot;After preprocessing: $(test_rxn.validated)&quot;)
+
+if validate_reaction!(test_rxn)
+    println(&quot;Validation successful&quot;)
+else
+    println(&quot;Validation failed&quot;)
+end</code></pre><h3 id="Real-World-Reaction-Processing-Pipeline"><a class="docs-heading-anchor" href="#Real-World-Reaction-Processing-Pipeline">Real-World Reaction Processing Pipeline</a><a id="Real-World-Reaction-Processing-Pipeline-1"></a><a class="docs-heading-anchor-permalink" href="#Real-World-Reaction-Processing-Pipeline" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Complete reaction processing workflow
+function process_reaction_database(reaction_smarts_list)
+    results = []
+
+    println(&quot;Processing $(length(reaction_smarts_list)) reactions...&quot;)
+
+    for (i, smarts) in enumerate(reaction_smarts_list)
+        try
+            # Create and validate reaction
+            rxn = reaction_from_smarts(smarts)
+
+            # Analyze reaction properties
+            classification = reaction_type_classification(rxn)
+            complexity = reaction_complexity(rxn)
+            balanced = is_balanced(rxn)
+
+            # Generate fingerprint
+            fingerprint = reaction_fingerprint(rxn)
+            fp_density = sum(fingerprint) / length(fingerprint)
+
+            # Store results
+            push!(results, (
+                index = i,
+                smarts = smarts,
+                type = classification,
+                complexity = complexity,
+                balanced = balanced,
+                fp_density = fp_density,
+                valid = true
+            ))
+
+            println(&quot;✓ Reaction $i: $classification (complexity: $(round(complexity, digits=2)))&quot;)
+
+        catch e
+            println(&quot;✗ Reaction $i failed: $e&quot;)
+            push!(results, (
+                index = i,
+                smarts = smarts,
+                valid = false,
+                error = string(e)
+            ))
+        end
+    end
+
+    # Summary statistics
+    valid_results = filter(r -&gt; get(r, :valid, false), results)
+    println(&quot;\nProcessing Summary:&quot;)
+    println(&quot;Total reactions: $(length(reaction_smarts_list))&quot;)
+    println(&quot;Successfully processed: $(length(valid_results))&quot;)
+    println(&quot;Failed: $(length(results) - length(valid_results))&quot;)
+
+    if !isempty(valid_results)
+        types = [r.type for r in valid_results]
+        println(&quot;Reaction types: $(unique(types))&quot;)
+
+        complexities = [r.complexity for r in valid_results]
+        println(&quot;Complexity range: $(round(minimum(complexities), digits=2)) - $(round(maximum(complexities), digits=2))&quot;)
+
+        balanced_count = sum(r.balanced for r in valid_results)
+        println(&quot;Balanced reactions: $balanced_count/$(length(valid_results))&quot;)
+    end
+
+    return results
+end
+
+# Example usage
+example_reactions = [
+    &quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[O-].[C:3][O+]&quot;,
+    &quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;,
+    &quot;[N:1][C:2](=O)[C:3]&gt;&gt;[N:1].[C:2](=O)[C:3]&quot;,
+    &quot;[C:1]=[C:2]&gt;&gt;[C:1][C:2]&quot;,
+    &quot;invalid_reaction_smarts&quot;
+]
+
+results = process_reaction_database(example_reactions)</code></pre><h3 id="Best-Practices-and-Troubleshooting"><a class="docs-heading-anchor" href="#Best-Practices-and-Troubleshooting">Best Practices and Troubleshooting</a><a id="Best-Practices-and-Troubleshooting-1"></a><a class="docs-heading-anchor-permalink" href="#Best-Practices-and-Troubleshooting" title="Permalink"></a></h3><h4 id="Type-Safety-with-Reaction-Collections"><a class="docs-heading-anchor" href="#Type-Safety-with-Reaction-Collections">Type Safety with Reaction Collections</a><a id="Type-Safety-with-Reaction-Collections-1"></a><a class="docs-heading-anchor-permalink" href="#Type-Safety-with-Reaction-Collections" title="Permalink"></a></h4><p>When working with collections of reactions, use typed arrays to avoid method dispatch errors:</p><pre><code class="language-julia hljs"># Correct: Use typed array
+reaction_db = Reaction[]
+for smarts in reaction_smarts_list
+    try
+        local rxn = reaction_from_smarts(smarts)  # Use &#39;local&#39; to avoid scope warnings
+        push!(reaction_db, rxn)
+        println(&quot;Added: $smarts&quot;)
+    catch e
+        println(&quot;Failed: $smarts - $e&quot;)
+    end
+end
+
+# Incorrect: Untyped array causes method errors
+reaction_db = []  # This creates Vector{Any}, causing type issues later</code></pre><h4 id="Handling-RDKit-Warnings"><a class="docs-heading-anchor" href="#Handling-RDKit-Warnings">Handling RDKit Warnings</a><a id="Handling-RDKit-Warnings-1"></a><a class="docs-heading-anchor-permalink" href="#Handling-RDKit-Warnings" title="Permalink"></a></h4><p>RDKit may generate warnings about unmapped atoms, which are normal for many reactions:</p><pre><code class="language-julia hljs"># These warnings are informational and don&#39;t indicate errors:
+# [05:02:27] mapped atoms in the reactants were not mapped in the products.
+#   unmapped numbers are: 2
+
+# Example of a reaction that triggers this warning (still valid):
+rxn = reaction_from_smarts(&quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;)
+println(&quot;Reaction still valid: $(rxn.validated)&quot;)  # true</code></pre><h4 id="Error-Handling-for-Invalid-SMARTS"><a class="docs-heading-anchor" href="#Error-Handling-for-Invalid-SMARTS">Error Handling for Invalid SMARTS</a><a id="Error-Handling-for-Invalid-SMARTS-1"></a><a class="docs-heading-anchor-permalink" href="#Error-Handling-for-Invalid-SMARTS" title="Permalink"></a></h4><p>Always wrap reaction creation in try-catch blocks when processing external data:</p><pre><code class="language-julia hljs">function safe_reaction_creation(smarts_list)
+    reactions = Reaction[]
+    errors = String[]
+
+    for smarts in smarts_list
+        try
+            rxn = reaction_from_smarts(smarts)
+            push!(reactions, rxn)
+        catch e
+            push!(errors, &quot;$smarts: $e&quot;)
+        end
+    end
+
+    return reactions, errors
+end
+
+# Example with mixed valid/invalid SMARTS
+test_smarts = [
+    &quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[O-].[C:3][O+]&quot;,  # Valid
+    &quot;invalid_reaction_smarts&quot;,                          # Invalid
+    &quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;                          # Valid
+]
+
+reactions, errors = safe_reaction_creation(test_smarts)
+println(&quot;Successfully created: $(length(reactions)) reactions&quot;)
+println(&quot;Errors: $(length(errors))&quot;)</code></pre><h4 id="Performance-Optimization"><a class="docs-heading-anchor" href="#Performance-Optimization">Performance Optimization</a><a id="Performance-Optimization-1"></a><a class="docs-heading-anchor-permalink" href="#Performance-Optimization" title="Permalink"></a></h4><p>For large-scale reaction processing, consider these optimizations:</p><pre><code class="language-julia hljs"># Pre-validate reactions when building databases
+function build_validated_reaction_db(smarts_list)
+    db = Reaction[]
+
+    for smarts in smarts_list
+        try
+            rxn = reaction_from_smarts(smarts, validate=true)  # Validate immediately
+            if rxn.validated
+                push!(db, rxn)
+            end
+        catch
+            continue  # Skip invalid reactions
+        end
+    end
+
+    return db
+end
+
+# Cache fingerprints for similarity searches
+function cache_reaction_fingerprints!(reactions)
+    for rxn in reactions
+        if isnothing(rxn.fingerprint)
+            rxn.fingerprint = reaction_fingerprint(rxn)
+        end
+    end
+end</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../getting-started/">« Getting Started</a><a class="docs-footer-nextpage" href="../api/io/">Basic I/O »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Saturday 20 September 2025 09:27">Saturday 20 September 2025</span>. Using Julia version 1.11.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
