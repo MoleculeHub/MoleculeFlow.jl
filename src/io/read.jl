@@ -349,3 +349,223 @@ function mol_from_inchi(inchi_list::Vector{String})
 
     return results
 end
+
+"""
+    mol_from_pdb_block(pdb_block::String) -> Molecule
+
+Create a molecule from a PDB block string.
+
+# Arguments
+- `pdb_block::String`: PDB format string
+
+# Returns
+- `Molecule`: Parsed molecule or invalid molecule if parsing fails
+
+# Example
+```julia
+pdb_data = "ATOM      1  C   MOL A   1      20.154  21.875  21.235  1.00 10.00           C"
+mol = mol_from_pdb_block(pdb_data)
+```
+"""
+function mol_from_pdb_block(pdb_block::String)
+    try
+        rdkit_mol = _mol_from_pdb_block(pdb_block)
+        if pyconvert(Bool, rdkit_mol !== pybuiltins.None)
+            return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "PDB block")
+        else
+            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = "PDB block")
+        end
+    catch e
+        @warn "Error parsing PDB block: $e"
+        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = "PDB block")
+    end
+end
+
+"""
+    mol_from_pdb_file(filename::String) -> Molecule
+
+Create a molecule from a PDB file.
+
+# Arguments
+- `filename::String`: Path to PDB file
+
+# Returns
+- `Molecule`: Parsed molecule or invalid molecule if parsing fails
+
+# Example
+```julia
+mol = mol_from_pdb_file("protein.pdb")
+```
+"""
+function mol_from_pdb_file(filename::String)
+    try
+        rdkit_mol = _mol_from_pdb_file(filename)
+        if pyconvert(Bool, rdkit_mol !== pybuiltins.None)
+            return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = filename)
+        else
+            @warn "Failed to parse PDB file: $filename"
+            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = filename)
+        end
+    catch e
+        @warn "Error reading PDB file '$filename': $e"
+        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = filename)
+    end
+end
+
+"""
+    mol_from_xyz_file(filename::String) -> Molecule
+
+Create a molecule from an XYZ file.
+
+# Arguments
+- `filename::String`: Path to XYZ file
+
+# Returns
+- `Molecule`: Parsed molecule or invalid molecule if parsing fails
+
+# Example
+```julia
+mol = mol_from_xyz_file("molecule.xyz")
+```
+
+# Notes
+- XYZ format only contains atomic coordinates, not bond information
+- RDKit will attempt to infer bonds based on distances
+- May not preserve original bond orders or formal charges
+"""
+function mol_from_xyz_file(filename::String)
+    try
+        rdkit_mol = _mol_from_xyz_file(filename)
+        if pyconvert(Bool, rdkit_mol !== pybuiltins.None)
+            return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = filename)
+        else
+            @warn "Failed to parse XYZ file: $filename"
+            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = filename)
+        end
+    catch e
+        @warn "Error reading XYZ file '$filename': $e"
+        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = filename)
+    end
+end
+
+"""
+    mol_from_xyz_block(xyz_block::String) -> Molecule
+
+Create a molecule from an XYZ block string.
+
+# Arguments
+- `xyz_block::String`: XYZ format string
+
+# Returns
+- `Molecule`: Parsed molecule or invalid molecule if parsing fails
+
+# Example
+```julia
+xyz_data = \"\"\"3
+Ethanol
+C     0.000   0.000   0.000
+C     1.540   0.000   0.000
+O     2.000   1.000   0.000\"\"\"
+mol = mol_from_xyz_block(xyz_data)
+```
+
+# Notes
+- XYZ format only contains atomic coordinates, not bond information
+- RDKit will attempt to infer bonds based on distances
+"""
+function mol_from_xyz_block(xyz_block::String)
+    try
+        rdkit_mol = _mol_from_xyz_block(xyz_block)
+        if pyconvert(Bool, rdkit_mol === pybuiltins.None)
+            @warn "Failed to parse XYZ block"
+            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = "xyz_block", props = Dict{Symbol, Any}())
+        end
+        return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "xyz_block", props = Dict{Symbol, Any}())
+    catch e
+        @warn "Error parsing XYZ block: $e"
+        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = "xyz_block", props = Dict{Symbol, Any}())
+    end
+end
+
+"""
+    mol_from_mol2_file(filename::String) -> Molecule
+
+Create a molecule from a MOL2 file.
+
+# Arguments
+- `filename::String`: Path to MOL2 file
+
+# Returns
+- `Molecule`: Parsed molecule or invalid molecule if parsing fails
+
+# Example
+```julia
+mol = mol_from_mol2_file("ligand.mol2")
+```
+
+# Notes
+- MOL2 format includes atom types, bond types, and partial charges
+- Supports multiple conformations and substructures
+- Commonly used for small molecule drug-like compounds
+"""
+function mol_from_mol2_file(filename::String)
+    try
+        rdkit_mol = _mol_from_mol2_file(filename)
+        if pyconvert(Bool, rdkit_mol === pybuiltins.None)
+            @warn "Failed to parse MOL2 file: $filename"
+            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = filename, props = Dict{Symbol, Any}())
+        end
+        return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = filename, props = Dict{Symbol, Any}())
+    catch e
+        @warn "Error reading MOL2 file '$filename': $e"
+        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = filename, props = Dict{Symbol, Any}())
+    end
+end
+
+"""
+    mol_from_mol2_block(mol2_block::String) -> Molecule
+
+Create a molecule from a MOL2 block string.
+
+# Arguments
+- `mol2_block::String`: MOL2 format string
+
+# Returns
+- `Molecule`: Parsed molecule or invalid molecule if parsing fails
+
+# Example
+```julia
+mol2_data = \"\"\"
+@<TRIPOS>MOLECULE
+ethanol
+3 2 0 0 0
+SMALL
+@<TRIPOS>ATOM
+1 C1 0.0000 0.0000 0.0000 C.3 1 MOL 0.0000
+2 C2 1.5400 0.0000 0.0000 C.3 1 MOL 0.0000
+3 O1 2.0000 1.0000 0.0000 O.3 1 MOL 0.0000
+@<TRIPOS>BOND
+1 1 2 1
+2 2 3 1
+\"\"\"
+mol = mol_from_mol2_block(mol2_data)
+```
+
+# Notes
+- MOL2 format uses TRIPOS record types
+- Supports various atom and bond types
+- May include substructure and partial charge information
+"""
+function mol_from_mol2_block(mol2_block::String)
+    try
+        rdkit_mol = _mol_from_mol2_block(mol2_block)
+        if pyconvert(Bool, rdkit_mol === pybuiltins.None)
+            @warn "Failed to parse MOL2 block"
+            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = "mol2_block", props = Dict{Symbol, Any}())
+        end
+        return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "mol2_block", props = Dict{Symbol, Any}())
+    catch e
+        @warn "Error parsing MOL2 block: $e"
+        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = "mol2_block", props = Dict{Symbol, Any}())
+    end
+end

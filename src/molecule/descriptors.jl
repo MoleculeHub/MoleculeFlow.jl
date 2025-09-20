@@ -1385,6 +1385,361 @@ function ipc(mol::Union{Molecule, Missing})
     end
 end
 
+# Additional missing descriptors that need high-level wrappers
+
+"""
+    num_aliphatic_heterocycles(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of aliphatic heterocycles in the molecule.
+"""
+function num_aliphatic_heterocycles(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_aliphatic_heterocycles(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating aliphatic heterocycles: $e"
+        return missing
+    end
+end
+
+"""
+    num_saturated_heterocycles(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of saturated heterocycles in the molecule.
+"""
+function num_saturated_heterocycles(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_saturated_heterocycles(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating saturated heterocycles: $e"
+        return missing
+    end
+end
+
+"""
+    num_saturated_carbocycles(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of saturated carbocycles in the molecule.
+"""
+function num_saturated_carbocycles(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_saturated_carbocycles(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating saturated carbocycles: $e"
+        return missing
+    end
+end
+
+"""
+    num_unspecified_atom_stereo_centers(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of unspecified atom stereo centers.
+"""
+function num_unspecified_atom_stereo_centers(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_unspecified_atom_stereo_centers(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating unspecified stereo centers: $e"
+        return missing
+    end
+end
+
+"""
+    num_spiro_atoms(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of spiro atoms in the molecule.
+"""
+function num_spiro_atoms(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_spiro_atoms(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating spiro atoms: $e"
+        return missing
+    end
+end
+
+"""
+    num_bridgehead_atoms(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of bridgehead atoms in the molecule.
+"""
+function num_bridgehead_atoms(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_bridgehead_atoms(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating bridgehead atoms: $e"
+        return missing
+    end
+end
+
+"""
+    hall_kier_alpha(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Hall-Kier alpha descriptor.
+"""
+function hall_kier_alpha(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _hall_kier_alpha(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Hall-Kier alpha: $e"
+        return missing
+    end
+end
+
+"""
+    eccentricity(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the eccentricity of the molecule's 3D structure.
+"""
+function eccentricity(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _eccentricity(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating eccentricity: $e"
+        return missing
+    end
+end
+
+"""
+    inertial_shape_factor(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the inertial shape factor of the molecule.
+"""
+function inertial_shape_factor(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _inertial_shape_factor(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating inertial shape factor: $e"
+        return missing
+    end
+end
+
+# BCUT descriptors
+"""
+    bcut2d_mwlow(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_MWLOW descriptor.
+"""
+function bcut2d_mwlow(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_mwlow(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_MWLOW: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_mwhi(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_MWHI descriptor.
+"""
+function bcut2d_mwhi(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_mwhi(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_MWHI: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_chglow(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_CHGLO descriptor.
+"""
+function bcut2d_chglow(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_chglow(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_CHGLO: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_chghi(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_CHGHI descriptor.
+"""
+function bcut2d_chghi(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_chghi(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_CHGHI: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_logplow(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_LOGPLOW descriptor.
+"""
+function bcut2d_logplow(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_logplow(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_LOGPLOW: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_logphi(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_LOGPHI descriptor.
+"""
+function bcut2d_logphi(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_logphi(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_LOGPHI: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_mrlow(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_MRLOW descriptor.
+"""
+function bcut2d_mrlow(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_mrlow(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_MRLOW: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_mrhi(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_MRHI descriptor.
+"""
+function bcut2d_mrhi(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_mrhi(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_MRHI: $e"
+        return missing
+    end
+end
+
+"""
+    max_absolute_e_state_index(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the maximum absolute E-state index.
+"""
+function max_absolute_e_state_index(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _max_absolute_e_state_index(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating max absolute E-state index: $e"
+        return missing
+    end
+end
+
+"""
+    min_absolute_e_state_index(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the minimum absolute E-state index.
+"""
+function min_absolute_e_state_index(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _min_absolute_e_state_index(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating min absolute E-state index: $e"
+        return missing
+    end
+end
+
+"""
+    num_sp3_hbonds(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of SP3 hybridized heavy atoms.
+"""
+function num_sp3_hbonds(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_sp3_hbonds(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SP3 heavy atoms: $e"
+        return missing
+    end
+end
+
+"""
+    num_aliphatic_rings(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of aliphatic rings in the molecule.
+"""
+function num_aliphatic_rings(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_aliphatic_rings(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating aliphatic rings: $e"
+        return missing
+    end
+end
+
+"""
+    num_heterocycles(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of heterocycles in the molecule.
+"""
+function num_heterocycles(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_heterocycles(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating heterocycles: $e"
+        return missing
+    end
+end
+
 # Vectorized functions for new descriptors (moved to bottom for organization)
 const NEW_DESCRIPTOR_FUNCTIONS = [
     # Chi connectivity indices
@@ -1403,12 +1758,39 @@ const NEW_DESCRIPTOR_FUNCTIONS = [
     # E-state descriptors
     :max_e_state_index,
     :min_e_state_index,
+    :max_absolute_e_state_index,
+    :min_absolute_e_state_index,
     # Atom counts
     :num_carbons,
     :num_nitrogens,
     :num_oxygens,
     :num_sulfurs,
     :num_halogens,
+    # Additional ring counts
+    :num_aliphatic_heterocycles,
+    :num_saturated_heterocycles,
+    :num_saturated_carbocycles,
+    :num_aliphatic_rings,
+    :num_heterocycles,
+    # Stereo and structure counts
+    :num_unspecified_atom_stereo_centers,
+    :num_spiro_atoms,
+    :num_bridgehead_atoms,
+    :num_sp3_hbonds,
+    # 3D descriptors
+    :eccentricity,
+    :inertial_shape_factor,
+    # BCUT descriptors
+    :bcut2d_mwlow,
+    :bcut2d_mwhi,
+    :bcut2d_chglow,
+    :bcut2d_chghi,
+    :bcut2d_logplow,
+    :bcut2d_logphi,
+    :bcut2d_mrlow,
+    :bcut2d_mrhi,
+    # Other descriptors
+    :hall_kier_alpha,
     # Complexity measures
     :ipc,
 ]

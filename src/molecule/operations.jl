@@ -6,157 +6,7 @@
 # File I/O Extensions
 #######################################################
 
-"""
-    mol_from_pdb_block(pdb_block::String) -> Molecule
 
-Create a molecule from a PDB block string.
-
-# Arguments
-- `pdb_block::String`: PDB format string
-
-# Returns
-- `Molecule`: Parsed molecule or invalid molecule if parsing fails
-
-# Example
-```julia
-pdb_data = "ATOM      1  C   MOL A   1      20.154  21.875  21.235  1.00 10.00           C"
-mol = mol_from_pdb_block(pdb_data)
-```
-"""
-function mol_from_pdb_block(pdb_block::String)
-    try
-        rdkit_mol = _mol_from_pdb_block(pdb_block)
-        if pyconvert(Bool, rdkit_mol !== pybuiltins.None)
-            return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "PDB block")
-        else
-            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = "PDB block")
-        end
-    catch e
-        @warn "Error parsing PDB block: $e"
-        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = "PDB block")
-    end
-end
-
-"""
-    mol_from_pdb_file(filename::String) -> Molecule
-
-Create a molecule from a PDB file.
-
-# Arguments
-- `filename::String`: Path to PDB file
-
-# Returns
-- `Molecule`: Parsed molecule or invalid molecule if parsing fails
-
-# Example
-```julia
-mol = mol_from_pdb_file("protein.pdb")
-```
-"""
-function mol_from_pdb_file(filename::String)
-    try
-        rdkit_mol = _mol_from_pdb_file(filename)
-        if pyconvert(Bool, rdkit_mol !== pybuiltins.None)
-            return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = filename)
-        else
-            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = filename)
-        end
-    catch e
-        @warn "Error reading PDB file: $e"
-        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = filename)
-    end
-end
-
-"""
-    mol_to_pdb_block(mol::Molecule; confId::Int=-1) -> String
-
-Convert a molecule to PDB block format.
-
-# Arguments
-- `mol::Molecule`: Input molecule
-- `confId::Int`: Conformer ID to use (-1 for default)
-
-# Returns
-- `String`: PDB format string or empty string if conversion fails
-
-# Example
-```julia
-mol = mol_from_smiles("CCO")
-pdb_block = mol_to_pdb_block(mol)
-```
-"""
-function mol_to_pdb_block(mol::Molecule; confId::Int=-1)
-    if !mol.valid
-        return ""
-    end
-
-    try
-        return pyconvert(String, _mol_to_pdb_block(mol._rdkit_mol))
-    catch e
-        @warn "Error converting to PDB block: $e"
-        return ""
-    end
-end
-
-"""
-    mol_to_inchi_key(mol::Molecule) -> String
-
-Generate InChI key for a molecule.
-
-# Arguments
-- `mol::Molecule`: Input molecule
-
-# Returns
-- `String`: InChI key or empty string if generation fails
-
-# Example
-```julia
-mol = mol_from_smiles("CCO")
-inchi_key = mol_to_inchi_key(mol)
-```
-"""
-function mol_to_inchi_key(mol::Molecule)
-    if !mol.valid
-        return ""
-    end
-
-    try
-        return pyconvert(String, _mol_to_inchi_key(mol._rdkit_mol))
-    catch e
-        @warn "Error generating InChI key: $e"
-        return ""
-    end
-end
-
-"""
-    mol_to_molblock(mol::Molecule) -> String
-
-Convert a molecule to MOL block format.
-
-# Arguments
-- `mol::Molecule`: Input molecule
-
-# Returns
-- `String`: MOL block string or empty string if conversion fails
-
-# Example
-```julia
-mol = mol_from_smiles("CCO")
-molblock = mol_to_molblock(mol)
-```
-"""
-function mol_to_molblock(mol::Molecule)
-    if !mol.valid
-        return ""
-    end
-
-    try
-        return pyconvert(String, _mol_to_molblock(mol._rdkit_mol))
-    catch e
-        @warn "Error converting to MOL block: $e"
-        return ""
-    end
-end
 
 #######################################################
 # Molecular Editing and Manipulation
@@ -499,223 +349,408 @@ function mol_fragment_to_smarts(mol::Molecule, atom_indices::Vector{Int})
     end
 end
 
-# XYZ format support
+
+
+
+#######################################################
+# Additional Missing Operations
+#######################################################
+
+
 """
-    mol_from_xyz_file(filename::String) -> Molecule
+    renumber_atoms(mol::Molecule, new_order::Vector{Int}) -> Union{Molecule, Missing}
 
-Read a molecule from an XYZ file.
-
-XYZ is a simple file format for storing molecular coordinates. The format typically
-contains the number of atoms, an optional comment line, and atom coordinates.
+Renumber atoms in a molecule according to a new ordering.
 
 # Arguments
-- `filename`: Path to the XYZ file
+- `mol::Molecule`: Input molecule
+- `new_order::Vector{Int}`: New atom ordering (0-indexed)
 
 # Returns
-- `Molecule`: The parsed molecule object
-- Returns invalid molecule if parsing fails
-
-# Examples
-```julia
-mol = mol_from_xyz_file("molecule.xyz")
-if mol.valid
-    println("Successfully loaded molecule with ", heavy_atom_count(mol), " heavy atoms")
-end
-```
-
-# Notes
-- XYZ files contain only 3D coordinates, no bond information
-- RDKit may infer bonds based on interatomic distances
-- Not all XYZ files will produce chemically meaningful molecules
+- `Union{Molecule, Missing}`: Renumbered molecule or missing if operation fails
 """
-function mol_from_xyz_file(filename::String)
+function renumber_atoms(mol::Molecule, new_order::Vector{Int})
+    !mol.valid && return missing
     try
-        rdkit_mol = _mol_from_xyz_file(filename)
-        if pyconvert(Bool, rdkit_mol === pybuiltins.None)
-            @warn "Failed to parse XYZ file: $filename"
-            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = filename, props = Dict{Symbol, Any}())
-        end
-        return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = filename, props = Dict{Symbol, Any}())
+        new_mol = _renumber_atoms(mol._rdkit_mol, new_order)
+        return Molecule(_rdkit_mol = new_mol, valid = true, source = "renumbered")
     catch e
-        @warn "Error reading XYZ file $filename: $e"
-        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = filename, props = Dict{Symbol, Any}())
+        @warn "Error renumbering atoms: $e"
+        return missing
     end
 end
 
 """
-    mol_from_xyz_block(xyz_block::String) -> Molecule
+    split_mol_by_pdb_chain_id(mol::Molecule) -> Union{Vector{Molecule}, Missing}
 
-Parse a molecule from an XYZ format string.
-
-# Arguments
-- `xyz_block`: XYZ format string containing atom coordinates
+Split a PDB molecule by chain ID.
 
 # Returns
-- `Molecule`: The parsed molecule object
-- Returns invalid molecule if parsing fails
-
-# Examples
-```julia
-xyz_data = \"\"\"3
-Ethanol molecule
-C    0.000    0.000    0.000
-C    1.520    0.000    0.000
-O    2.080    1.100    0.000\"\"\"
-mol = mol_from_xyz_block(xyz_data)
-```
-
-# Notes
-- First line: number of atoms
-- Second line: comment (molecule name/description)
-- Following lines: element symbol and x, y, z coordinates
+- `Union{Vector{Molecule}, Missing}`: Vector of molecules (one per chain) or missing if operation fails
 """
-function mol_from_xyz_block(xyz_block::String)
+function split_mol_by_pdb_chain_id(mol::Molecule)
+    !mol.valid && return missing
     try
-        rdkit_mol = _mol_from_xyz_block(xyz_block)
-        if pyconvert(Bool, rdkit_mol === pybuiltins.None)
-            @warn "Failed to parse XYZ block"
-            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = "xyz_block", props = Dict{Symbol, Any}())
+        mol_dict = _split_mol_by_pdb_chain_id(mol._rdkit_mol)
+        molecules = Molecule[]
+        for (chain_id, rdkit_mol) in mol_dict
+            push!(molecules, Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "PDB_chain_$chain_id"))
         end
-        return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "xyz_block", props = Dict{Symbol, Any}())
+        return molecules
     catch e
-        @warn "Error parsing XYZ block: $e"
-        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = "xyz_block", props = Dict{Symbol, Any}())
+        @warn "Error splitting molecule by chain ID: $e"
+        return missing
     end
 end
 
 """
-    mol_to_xyz_block(mol::Molecule) -> String
+    split_mol_by_pdb_residues(mol::Molecule) -> Union{Vector{Molecule}, Missing}
 
-Convert a molecule to XYZ format string.
-
-Exports the 3D coordinates of the molecule in XYZ format. The molecule must have
-3D coordinates assigned for this to work properly.
-
-# Arguments
-- `mol`: Molecule object with 3D coordinates
+Split a PDB molecule by residues.
 
 # Returns
-- `String`: XYZ format representation
-- Empty string if conversion fails or molecule has no 3D coordinates
-
-# Examples
-```julia
-mol = mol_from_smiles("CCO")
-# Generate 3D coordinates first
-conformers = generate_3d_conformers(mol, 1)
-if !isempty(conformers)
-    mol_3d = conformers[1].molecule
-    xyz_string = mol_to_xyz_block(mol_3d)
-    println(xyz_string)
-end
-```
-
-# Notes
-- Requires 3D coordinates to be present in the molecule
-- Only exports heavy atoms (no hydrogens unless explicit)
-- Bond information is lost in XYZ format
+- `Union{Vector{Molecule}, Missing}`: Vector of molecules (one per residue) or missing if operation fails
 """
-function mol_to_xyz_block(mol::Molecule)
-    !mol.valid && return ""
+function split_mol_by_pdb_residues(mol::Molecule)
+    !mol.valid && return missing
     try
-        return pyconvert(String, _mol_to_xyz_block(mol._rdkit_mol))
-    catch e
-        @warn "Error converting molecule to XYZ: $e"
-        return ""
-    end
-end
-
-# MOL2 format support
-"""
-    mol_from_mol2_file(filename::String) -> Molecule
-
-Read a molecule from a MOL2 file.
-
-MOL2 (Sybyl format) is a comprehensive molecular file format that includes
-atoms, bonds, and additional molecular information like partial charges.
-
-# Arguments
-- `filename`: Path to the MOL2 file
-
-# Returns
-- `Molecule`: The parsed molecule object
-- Returns invalid molecule if parsing fails
-
-# Examples
-```julia
-mol = mol_from_mol2_file("ligand.mol2")
-if mol.valid
-    println("Loaded molecule: ", mol_to_smiles(mol))
-    println("Molecular weight: ", molecular_weight(mol))
-end
-```
-
-# Notes
-- MOL2 format preserves bond orders and formal charges
-- May contain multiple molecules (only first one is loaded)
-- Partial charges are preserved if present in the file
-"""
-function mol_from_mol2_file(filename::String)
-    try
-        rdkit_mol = _mol_from_mol2_file(filename)
-        if pyconvert(Bool, rdkit_mol === pybuiltins.None)
-            @warn "Failed to parse MOL2 file: $filename"
-            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = filename, props = Dict{Symbol, Any}())
+        mol_list = _split_mol_by_pdb_residues(mol._rdkit_mol)
+        molecules = Molecule[]
+        for (i, rdkit_mol) in enumerate(mol_list)
+            push!(molecules, Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "PDB_residue_$i"))
         end
-        return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = filename, props = Dict{Symbol, Any}())
+        return molecules
     catch e
-        @warn "Error reading MOL2 file $filename: $e"
-        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = filename, props = Dict{Symbol, Any}())
+        @warn "Error splitting molecule by residues: $e"
+        return missing
     end
 end
 
 """
-    mol_from_mol2_block(mol2_block::String) -> Molecule
+    assign_stereochemistry_from_3d!(mol::Molecule; conf_id::Int = -1) -> Bool
 
-Parse a molecule from a MOL2 format string.
+Assign stereochemistry from 3D coordinates.
 
 # Arguments
-- `mol2_block`: MOL2 format string
+- `mol::Molecule`: Input molecule (modified in place)
+- `conf_id::Int`: Conformer ID to use (-1 for default)
 
 # Returns
-- `Molecule`: The parsed molecule object
-- Returns invalid molecule if parsing fails
-
-# Examples
-```julia
-mol2_data = \"\"\"@<TRIPOS>MOLECULE
-ethanol
-3 2 0 0 0
-SMALL
-NO_CHARGES
-
-@<TRIPOS>ATOM
-1 C1 0.0000 0.0000 0.0000 C.3 1 RES1 0.0000
-2 C2 1.5200 0.0000 0.0000 C.3 1 RES1 0.0000
-3 O1 2.0800 1.1000 0.0000 O.3 1 RES1 0.0000
-
-@<TRIPOS>BOND
-1 1 2 1
-2 2 3 1
-\"\"\"
-mol = mol_from_mol2_block(mol2_data)
-```
-
-# Notes
-- MOL2 format uses TRIPOS record types
-- Supports various atom and bond types
-- May include substructure and partial charge information
+- `Bool`: true if successful, false otherwise
 """
-function mol_from_mol2_block(mol2_block::String)
+function assign_stereochemistry_from_3d!(mol::Molecule; conf_id::Int = -1)
+    !mol.valid && return false
     try
-        rdkit_mol = _mol_from_mol2_block(mol2_block)
-        if pyconvert(Bool, rdkit_mol === pybuiltins.None)
-            @warn "Failed to parse MOL2 block"
-            return Molecule(_rdkit_mol = rdkit_mol, valid = false, source = "mol2_block", props = Dict{Symbol, Any}())
-        end
-        return Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "mol2_block", props = Dict{Symbol, Any}())
+        _assign_stereochemistry_from_3d(mol._rdkit_mol; confId = conf_id)
+        return true
     catch e
-        @warn "Error parsing MOL2 block: $e"
-        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = "mol2_block", props = Dict{Symbol, Any}())
+        @warn "Error assigning stereochemistry from 3D: $e"
+        return false
+    end
+end
+
+"""
+    detect_bond_stereochemistry(mol::Molecule, bond_idx::Int) -> Union{String, Missing}
+
+Detect the stereochemistry of a specific bond.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+- `bond_idx::Int`: Bond index
+
+# Returns
+- `Union{String, Missing}`: Stereochemistry designation or missing if detection fails
+"""
+function detect_bond_stereochemistry(mol::Molecule, bond_idx::Int)
+    !mol.valid && return missing
+    try
+        return pyconvert(String, _detect_bond_stereochemistry(mol._rdkit_mol, bond_idx))
+    catch e
+        @warn "Error detecting bond stereochemistry: $e"
+        return missing
+    end
+end
+
+"""
+    find_potential_stereo(mol::Molecule) -> Union{Vector, Missing}
+
+Find potential stereo centers in a molecule.
+
+# Returns
+- `Union{Vector, Missing}`: Vector of potential stereo information or missing if detection fails
+"""
+function find_potential_stereo(mol::Molecule)
+    !mol.valid && return missing
+    try
+        return pyconvert(Vector, _find_potential_stereo(mol._rdkit_mol))
+    catch e
+        @warn "Error finding potential stereo: $e"
+        return missing
+    end
+end
+
+"""
+    canonicalize_enhanced_stereo!(mol::Molecule) -> Bool
+
+Canonicalize enhanced stereochemistry information.
+
+# Returns
+- `Bool`: true if successful, false otherwise
+"""
+function canonicalize_enhanced_stereo!(mol::Molecule)
+    !mol.valid && return false
+    try
+        _canonicalize_enhanced_stereo(mol._rdkit_mol)
+        return true
+    catch e
+        @warn "Error canonicalizing enhanced stereo: $e"
+        return false
+    end
+end
+
+"""
+    set_bond_stereo_from_directions!(mol::Molecule) -> Bool
+
+Set bond stereochemistry from directional information.
+
+# Returns
+- `Bool`: true if successful, false otherwise
+"""
+function set_bond_stereo_from_directions!(mol::Molecule)
+    !mol.valid && return false
+    try
+        _set_bond_stereo_from_directions(mol._rdkit_mol)
+        return true
+    catch e
+        @warn "Error setting bond stereo from directions: $e"
+        return false
+    end
+end
+
+"""
+    wedge_mol_bonds!(mol::Molecule; wedge_bonds::Bool = true) -> Bool
+
+Add wedge information to molecule bonds for visualization.
+
+# Arguments
+- `mol::Molecule`: Input molecule (modified in place)
+- `wedge_bonds::Bool`: Whether to add wedge bonds
+
+# Returns
+- `Bool`: true if successful, false otherwise
+"""
+function wedge_mol_bonds!(mol::Molecule; wedge_bonds::Bool = true)
+    !mol.valid && return false
+    try
+        _wedge_mol_bonds(mol._rdkit_mol; wedgeBonds = wedge_bonds)
+        return true
+    catch e
+        @warn "Error wedging mol bonds: $e"
+        return false
+    end
+end
+
+"""
+    find_ring_families(mol::Molecule) -> Union{Vector, Missing}
+
+Find ring families in the molecule.
+
+# Returns
+- `Union{Vector, Missing}`: Vector of ring families or missing if operation fails
+"""
+function find_ring_families(mol::Molecule)
+    !mol.valid && return missing
+    try
+        return pyconvert(Vector, _find_ring_families(mol._rdkit_mol))
+    catch e
+        @warn "Error finding ring families: $e"
+        return missing
+    end
+end
+
+"""
+    get_ring_info(mol::Molecule) -> Union{Any, Missing}
+
+Get ring information for the molecule.
+
+# Returns
+- `Union{Any, Missing}`: Ring information object or missing if operation fails
+"""
+function get_ring_info(mol::Molecule)
+    !mol.valid && return missing
+    try
+        return _get_ring_info(mol._rdkit_mol)
+    catch e
+        @warn "Error getting ring info: $e"
+        return missing
+    end
+end
+
+"""
+    canonical_rank_atoms_in_fragment(mol::Molecule, atoms_to_use::Vector{Int}) -> Union{Vector{Int}, Missing}
+
+Get canonical ranking of atoms in a molecular fragment.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+- `atoms_to_use::Vector{Int}`: Atom indices to include in ranking
+
+# Returns
+- `Union{Vector{Int}, Missing}`: Canonical ranks or missing if operation fails
+"""
+function canonical_rank_atoms_in_fragment(mol::Molecule, atoms_to_use::Vector{Int})
+    !mol.valid && return missing
+    try
+        ranks = _canonical_rank_atoms_in_fragment(mol._rdkit_mol, atoms_to_use)
+        return pyconvert(Vector{Int}, ranks)
+    catch e
+        @warn "Error ranking atoms in fragment: $e"
+        return missing
+    end
+end
+
+"""
+    find_atom_environment_of_radius_n(mol::Molecule, radius::Int, atom_idx::Int) -> Union{Vector{Int}, Missing}
+
+Find atoms within a specified radius of a given atom.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+- `radius::Int`: Search radius
+- `atom_idx::Int`: Central atom index
+
+# Returns
+- `Union{Vector{Int}, Missing}`: Atom indices within radius or missing if operation fails
+"""
+function find_atom_environment_of_radius_n(mol::Molecule, radius::Int, atom_idx::Int)
+    !mol.valid && return missing
+    try
+        env = _find_atom_environment_of_radius_n(mol._rdkit_mol, radius, atom_idx)
+        return pyconvert(Vector{Int}, env)
+    catch e
+        @warn "Error finding atom environment: $e"
+        return missing
+    end
+end
+
+"""
+    remove_stereochemistry!(mol::Molecule) -> Bool
+
+Remove all stereochemistry information from a molecule.
+
+# Returns
+- `Bool`: true if successful, false otherwise
+"""
+function remove_stereochemistry!(mol::Molecule)
+    !mol.valid && return false
+    try
+        _remove_stereochemistry(mol._rdkit_mol)
+        return true
+    catch e
+        @warn "Error removing stereochemistry: $e"
+        return false
+    end
+end
+
+"""
+    sanitize_mol!(mol::Molecule) -> Bool
+
+Sanitize a molecule (perform standard cleanup operations).
+
+# Returns
+- `Bool`: true if successful, false otherwise
+"""
+function sanitize_mol!(mol::Molecule)
+    !mol.valid && return false
+    try
+        _sanitize_mol(mol._rdkit_mol)
+        return true
+    catch e
+        @warn "Error sanitizing molecule: $e"
+        return false
+    end
+end
+
+"""
+    get_most_substituted_core_match(mol::Molecule, core::Molecule) -> Union{Vector{Int}, Missing}
+
+Get the most substituted core match in a molecule.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+- `core::Molecule`: Core pattern to match
+
+# Returns
+- `Union{Vector{Int}, Missing}`: Atom indices of the match or missing if no match found
+"""
+function get_most_substituted_core_match(mol::Molecule, core::Molecule)
+    !mol.valid && return missing
+    !core.valid && return missing
+    try
+        match = _get_most_substituted_core_match(mol._rdkit_mol, core._rdkit_mol)
+        return pyconvert(Vector{Int}, match)
+    catch e
+        @warn "Error finding most substituted core match: $e"
+        return missing
+    end
+end
+
+"""
+    compute_gasteiger_charges!(mol::Molecule) -> Bool
+
+Compute Gasteiger partial charges for atoms in the molecule.
+
+# Returns
+- `Bool`: true if successful, false otherwise
+"""
+function compute_gasteiger_charges!(mol::Molecule)
+    !mol.valid && return false
+    try
+        _compute_gasteiger_charges(mol._rdkit_mol)
+        return true
+    catch e
+        @warn "Error computing Gasteiger charges: $e"
+        return false
+    end
+end
+
+"""
+    get_atom_mapping_numbers(mol::Molecule) -> Union{Vector{Int}, Missing}
+
+Get atom mapping numbers from a molecule.
+
+# Returns
+- `Union{Vector{Int}, Missing}`: Vector of mapping numbers or missing if operation fails
+"""
+function get_atom_mapping_numbers(mol::Molecule)
+    !mol.valid && return missing
+    try
+        return _get_atom_mapping_numbers(mol._rdkit_mol)
+    catch e
+        @warn "Error getting atom mapping numbers: $e"
+        return missing
+    end
+end
+
+"""
+    set_atom_mapping_numbers!(mol::Molecule, map_nums::Vector{Int}) -> Bool
+
+Set atom mapping numbers for a molecule.
+
+# Arguments
+- `mol::Molecule`: Input molecule (modified in place)
+- `map_nums::Vector{Int}`: Mapping numbers for each atom
+
+# Returns
+- `Bool`: true if successful, false otherwise
+"""
+function set_atom_mapping_numbers!(mol::Molecule, map_nums::Vector{Int})
+    !mol.valid && return false
+    try
+        _set_atom_mapping_numbers(mol._rdkit_mol, map_nums)
+        return true
+    catch e
+        @warn "Error setting atom mapping numbers: $e"
+        return false
     end
 end
