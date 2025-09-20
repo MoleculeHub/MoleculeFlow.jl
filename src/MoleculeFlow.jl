@@ -10,6 +10,27 @@ export mol_from_smiles, mol_to_smiles, mol_to_inchi
 export mol_from_molblock, mol_from_inchi, read_sdf, read_sdf_lazy
 export get_address
 
+# Hydrogen manipulation
+export add_hs, remove_hs
+
+# Extended file I/O
+export mol_from_pdb_block, mol_from_pdb_file, mol_to_pdb_block
+export mol_to_inchi_key, mol_to_molblock
+export mol_from_xyz_file, mol_from_xyz_block, mol_to_xyz_block
+export mol_from_mol2_file, mol_from_mol2_block
+
+# Molecular editing and manipulation
+export combine_mols, delete_substructs, replace_substructs
+
+# Stereochemistry operations
+export assign_stereochemistry!, find_chiral_centers
+
+# Ring analysis
+export fast_find_rings!, canonical_atom_ranks
+
+# Pattern matching
+export quick_smarts_match, mol_fragment_to_smarts
+
 # Drawing
 export mol_to_image, mols_to_grid_image, mol_to_svg
 export highlight_substructure, draw_molecule_with_atom_labels, draw_similarity_map
@@ -20,6 +41,23 @@ export molecular_weight, exact_molecular_weight, heavy_atom_count, num_heteroato
 export num_rotatable_bonds, num_hbd, num_hba, logp, tpsa, slogp_vsa
 export num_rings, num_aromatic_rings, num_saturated_rings
 export bertz_ct, balaban_j, chi0v, kappa1, calc_all_descriptors
+
+# Additional molecular connectivity and shape descriptors
+export chi0n, chi1n, chi2n, chi3n, chi4n, chi1v, chi2v, chi3v, chi4v
+export kappa2, kappa3, max_e_state_index, min_e_state_index, ipc
+
+# Atom counts
+export num_carbons, num_nitrogens, num_oxygens, num_sulfurs, num_halogens
+
+# Advanced drug-like and ADMET descriptors
+export qed, fraction_csp3, labute_asa, molar_refractivity, synthetic_accessibility
+
+# Advanced ring and structure counts
+export num_aliphatic_carbocycles, num_aromatic_carbocycles, num_aromatic_heterocycles
+export num_atom_stereo_centers, num_amide_bonds
+
+# 3D descriptors
+export asphericity, radius_of_gyration
 
 # Fingerprints
 export morgan_fingerprint, rdk_fingerprint, maccs_fingerprint
@@ -75,6 +113,7 @@ include("./config.jl")
 include("./utils.jl")
 include("./rdkit.jl")
 include("./molecule/molecule.jl")
+include("./molecule/operations.jl")
 include("./molecule/descriptors.jl")
 include("./molecule/fingerprints.jl")
 include("./molecule/similarity.jl")

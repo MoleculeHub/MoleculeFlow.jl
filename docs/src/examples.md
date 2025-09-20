@@ -2,19 +2,6 @@
 
 Here are comprehensive practical examples of using MoleculeFlow.jl for molecular analysis, manipulation, and visualization.
 
-## Table of Contents
-
-1. [Basic Molecule Management](#basic-molecule-management)
-2. [Working with Atoms](#working-with-atoms)
-3. [Working with Bonds](#working-with-bonds)
-4. [Molecular Properties and Descriptors](#molecular-properties-and-descriptors)
-5. [Substructure Analysis](#substructure-analysis)
-6. [Similarity and Fingerprints](#similarity-and-fingerprints)
-7. [Molecular Visualization](#molecular-visualization)
-8. [Dataset Analysis](#dataset-analysis)
-9. [Molecular Standardization](#molecular-standardization)
-10. [3D Conformer Generation](#3d-conformer-generation)
-
 ## Basic Molecule Management
 
 ### Creating and Validating Molecules
