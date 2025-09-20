@@ -170,11 +170,11 @@ compounds = [
 
 for (i, mol) in enumerate(compounds)
     println("Compound $i:")
-    println("  QED score: ", qed(mol))
-    println("  SAscore: ", synthetic_accessibility(mol))
-    println("  Fsp3: ", fraction_csp3(mol))
-    println("  Aromatic rings: ", num_aromatic_carbocycles(mol))
-    println("  Stereocenters: ", num_atom_stereo_centers(mol))
+    println("QED score: ", qed(mol))
+    println("SAscore: ", synthetic_accessibility(mol))
+    println("Fsp3: ", fraction_csp3(mol))
+    println("Aromatic rings: ", num_aromatic_carbocycles(mol))
+    println("Stereocenters: ", num_atom_stereo_centers(mol))
     println()
 end
 ```
@@ -202,14 +202,14 @@ end
 mol = mol_from_smiles("CC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F")
 
 println("Comprehensive Descriptor Analysis:")
-println("  Drug-likeness (QED): ", qed(mol))
-println("  Synthetic accessibility: ", synthetic_accessibility(mol))
-println("  3D character (Fsp3): ", fraction_csp3(mol))
-println("  Surface area (LabuteASA): ", labute_asa(mol))
-println("  Molar refractivity: ", molar_refractivity(mol))
-println("  Aromatic carbocycles: ", num_aromatic_carbocycles(mol))
-println("  Aromatic heterocycles: ", num_aromatic_heterocycles(mol))
-println("  Amide bonds: ", num_amide_bonds(mol))
+println("Drug-likeness (QED): ", qed(mol))
+println("Synthetic accessibility: ", synthetic_accessibility(mol))
+println("3D character (Fsp3): ", fraction_csp3(mol))
+println("Surface area (LabuteASA): ", labute_asa(mol))
+println("Molar refractivity: ", molar_refractivity(mol))
+println("Aromatic carbocycles: ", num_aromatic_carbocycles(mol))
+println("Aromatic heterocycles: ", num_aromatic_heterocycles(mol))
+println("Amide bonds: ", num_amide_bonds(mol))
 ```
 
 ## Additional Molecular Connectivity Descriptors
