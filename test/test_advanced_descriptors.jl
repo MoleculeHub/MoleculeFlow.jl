@@ -267,12 +267,15 @@ end
 
     # All descriptors should handle empty/invalid molecules gracefully
     @test qed(empty_mol) === missing || isa(qed(empty_mol), Float64)
-    @test synthetic_accessibility(empty_mol) === missing || isa(synthetic_accessibility(empty_mol), Float64)
+    @test synthetic_accessibility(empty_mol) === missing ||
+        isa(synthetic_accessibility(empty_mol), Float64)
     @test fraction_csp3(empty_mol) === missing || isa(fraction_csp3(empty_mol), Float64)
     @test labute_asa(empty_mol) === missing || isa(labute_asa(empty_mol), Float64)
-    @test molar_refractivity(empty_mol) === missing || isa(molar_refractivity(empty_mol), Float64)
+    @test molar_refractivity(empty_mol) === missing ||
+        isa(molar_refractivity(empty_mol), Float64)
 
     # Test integer returns for count functions
-    @test num_aromatic_carbocycles(empty_mol) === missing || isa(num_aromatic_carbocycles(empty_mol), Int)
+    @test num_aromatic_carbocycles(empty_mol) === missing ||
+        isa(num_aromatic_carbocycles(empty_mol), Int)
     @test num_amide_bonds(empty_mol) === missing || isa(num_amide_bonds(empty_mol), Int)
 end

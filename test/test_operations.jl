@@ -181,17 +181,17 @@ end
         # Test with achiral molecule
         mol_achiral = mol_from_smiles("CCO")
         centers_achiral = find_chiral_centers(mol_achiral)
-        @test isa(centers_achiral, Vector{Tuple{Int,String}})
+        @test isa(centers_achiral, Vector{Tuple{Int, String}})
 
         # Test with potentially chiral molecule
         mol_chiral = mol_from_smiles("C[C@H](O)C")
         centers_chiral = find_chiral_centers(mol_chiral)
-        @test isa(centers_chiral, Vector{Tuple{Int,String}})
+        @test isa(centers_chiral, Vector{Tuple{Int, String}})
 
         # Test with invalid molecule
         invalid_mol = mol_from_smiles("invalid_smiles")
         result = find_chiral_centers(invalid_mol)
-        @test result == Tuple{Int,String}[]
+        @test result == Tuple{Int, String}[]
     end
 end
 

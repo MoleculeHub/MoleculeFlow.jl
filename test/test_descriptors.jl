@@ -131,7 +131,9 @@ end
     end
 
     @testset "Vectorized Operations for New Descriptors" begin
-        mols = [mol_from_smiles("CCO"), mol_from_smiles("c1ccccc1"), mol_from_smiles("CC(=O)N")]
+        mols = [
+            mol_from_smiles("CCO"), mol_from_smiles("c1ccccc1"), mol_from_smiles("CC(=O)N")
+        ]
 
         # Test vectorized Chi indices
         chi0n_values = chi0n(mols)

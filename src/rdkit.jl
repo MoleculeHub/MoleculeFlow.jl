@@ -303,7 +303,9 @@ end
 
 # Stereochemistry and 3D operations
 function _assign_stereochemistry(mol::Py; cleanIt::Bool = true, force::Bool = false)
-    @pyconst(pyimport("rdkit.Chem").AssignStereochemistry)(mol; cleanIt = cleanIt, force = force)
+    @pyconst(pyimport("rdkit.Chem").AssignStereochemistry)(
+        mol; cleanIt = cleanIt, force = force
+    )
 end
 function _assign_stereochemistry_from_3d(mol::Py; confId::Int = -1)
     @pyconst(pyimport("rdkit.Chem").AssignStereochemistryFrom3D)(mol; confId = confId)
@@ -312,7 +314,9 @@ function _detect_bond_stereochemistry(mol::Py, bond_idx::Int)
     @pyconst(pyimport("rdkit.Chem").DetectBondStereochemistry)(mol, bond_idx)
 end
 function _find_mol_chiral_centers(mol::Py; includeUnassigned::Bool = false)
-    @pyconst(pyimport("rdkit.Chem").FindMolChiralCenters)(mol; includeUnassigned = includeUnassigned)
+    @pyconst(pyimport("rdkit.Chem").FindMolChiralCenters)(
+        mol; includeUnassigned = includeUnassigned
+    )
 end
 function _find_potential_stereo(mol::Py)
     @pyconst(pyimport("rdkit.Chem").FindPotentialStereo)(mol)
@@ -326,8 +330,12 @@ end
 function _wedge_mol_bonds(mol::Py; wedgeBonds::Bool = true)
     @pyconst(pyimport("rdkit.Chem").WedgeMolBonds)(mol; wedgeBonds = wedgeBonds)
 end
-function _set_terminal_atom_coords(mol::Py, confId::Int, terminalAtomIdx::Int, otherAtomIdx::Int, bondLength::Float64)
-    @pyconst(pyimport("rdkit.Chem").SetTerminalAtomCoords)(mol, confId, terminalAtomIdx, otherAtomIdx, bondLength)
+function _set_terminal_atom_coords(
+    mol::Py, confId::Int, terminalAtomIdx::Int, otherAtomIdx::Int, bondLength::Float64
+)
+    @pyconst(pyimport("rdkit.Chem").SetTerminalAtomCoords)(
+        mol, confId, terminalAtomIdx, otherAtomIdx, bondLength
+    )
 end
 
 # Ring analysis and aromaticity

@@ -536,21 +536,25 @@ QED combines multiple molecular properties into a single drug-likeness score
 ranging from 0 (non-drug-like) to 1 (highly drug-like).
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Float64,Missing}`: QED score (0-1), or missing if molecule is invalid
+
+  - `Union{Float64,Missing}`: QED score (0-1), or missing if molecule is invalid
 
 # Examples
+
 ```julia
 aspirin = mol_from_smiles("CC(=O)OC1=CC=CC=C1C(=O)O")
 drug_score = qed(aspirin)  # ≈ 0.73 (fairly drug-like)
 ```
 
 # Notes
-- Based on desirability functions for MW, LogP, HBD, HBA, PSA, rotatable bonds, aromatic rings, and alerts
-- Higher scores indicate more drug-like properties
-- Commonly used threshold: QED > 0.5 for drug-like compounds
+
+  - Based on desirability functions for MW, LogP, HBD, HBA, PSA, rotatable bonds, aromatic rings, and alerts
+  - Higher scores indicate more drug-like properties
+  - Commonly used threshold: QED > 0.5 for drug-like compounds
 """
 function qed(mol::Molecule)
     !mol.valid && return missing
@@ -569,12 +573,15 @@ Calculate the fraction of sp3 hybridized carbons.
 Higher sp3 fraction correlates with increased drug-likeness and 3D character.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Float64,Missing}`: Fraction of sp3 carbons (0-1), or missing if molecule is invalid
+
+  - `Union{Float64,Missing}`: Fraction of sp3 carbons (0-1), or missing if molecule is invalid
 
 # Examples
+
 ```julia
 cyclohexane = mol_from_smiles("C1CCCCC1")
 fsp3 = fraction_csp3(cyclohexane)  # 1.0 (all carbons are sp3)
@@ -584,9 +591,10 @@ fsp3_benzene = fraction_csp3(benzene)  # 0.0 (all carbons are sp2)
 ```
 
 # Notes
-- Values range from 0 (fully aromatic/planar) to 1 (fully saturated)
-- Drug-like compounds typically have Fsp3 > 0.25
-- Important for assessing molecular complexity and 3D character
+
+  - Values range from 0 (fully aromatic/planar) to 1 (fully saturated)
+  - Drug-like compounds typically have Fsp3 > 0.25
+  - Important for assessing molecular complexity and 3D character
 """
 function fraction_csp3(mol::Molecule)
     !mol.valid && return missing
@@ -599,21 +607,25 @@ end
 Calculate the Labute Accessible Surface Area.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Float64,Missing}`: Accessible surface area in Ų, or missing if molecule is invalid
+
+  - `Union{Float64,Missing}`: Accessible surface area in Ų, or missing if molecule is invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 asa = labute_asa(mol)  # Accessible surface area
 ```
 
 # Notes
-- Estimates the solvent-accessible surface area
-- Important for understanding molecular size and shape
-- Correlates with solubility and membrane permeability
+
+  - Estimates the solvent-accessible surface area
+  - Important for understanding molecular size and shape
+  - Correlates with solubility and membrane permeability
 """
 function labute_asa(mol::Molecule)
     !mol.valid && return missing
@@ -626,21 +638,25 @@ end
 Calculate the molar refractivity.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Float64,Missing}`: Molar refractivity, or missing if molecule is invalid
+
+  - `Union{Float64,Missing}`: Molar refractivity, or missing if molecule is invalid
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 mr = molar_refractivity(mol)  # Molar refractivity value
 ```
 
 # Notes
-- Related to polarizability and molecular volume
-- Important for QSAR modeling
-- Correlates with London dispersion forces
+
+  - Related to polarizability and molecular volume
+  - Important for QSAR modeling
+  - Correlates with London dispersion forces
 """
 function molar_refractivity(mol::Molecule)
     !mol.valid && return missing
@@ -653,12 +669,15 @@ end
 Count the number of aliphatic carbocycles (saturated carbon-only rings).
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Int,Missing}`: Number of aliphatic carbocycles, or missing if molecule is invalid
+
+  - `Union{Int,Missing}`: Number of aliphatic carbocycles, or missing if molecule is invalid
 
 # Examples
+
 ```julia
 cyclohexane = mol_from_smiles("C1CCCCC1")
 count = num_aliphatic_carbocycles(cyclohexane)  # 1
@@ -675,12 +694,15 @@ end
 Count the number of aromatic carbocycles (aromatic carbon-only rings).
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Int,Missing}`: Number of aromatic carbocycles, or missing if molecule is invalid
+
+  - `Union{Int,Missing}`: Number of aromatic carbocycles, or missing if molecule is invalid
 
 # Examples
+
 ```julia
 benzene = mol_from_smiles("c1ccccc1")
 count = num_aromatic_carbocycles(benzene)  # 1
@@ -697,12 +719,15 @@ end
 Count the number of aromatic heterocycles (aromatic rings containing heteroatoms).
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Int,Missing}`: Number of aromatic heterocycles, or missing if molecule is invalid
+
+  - `Union{Int,Missing}`: Number of aromatic heterocycles, or missing if molecule is invalid
 
 # Examples
+
 ```julia
 pyridine = mol_from_smiles("c1cccnc1")
 count = num_aromatic_heterocycles(pyridine)  # 1
@@ -719,12 +744,15 @@ end
 Count the number of defined atom stereocenters.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Int,Missing}`: Number of defined stereocenters, or missing if molecule is invalid
+
+  - `Union{Int,Missing}`: Number of defined stereocenters, or missing if molecule is invalid
 
 # Examples
+
 ```julia
 chiral_mol = mol_from_smiles("C[C@H](O)C")
 count = num_atom_stereo_centers(chiral_mol)  # 1
@@ -741,12 +769,15 @@ end
 Count the number of amide bonds in the molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Int,Missing}`: Number of amide bonds, or missing if molecule is invalid
+
+  - `Union{Int,Missing}`: Number of amide bonds, or missing if molecule is invalid
 
 # Examples
+
 ```julia
 acetamide = mol_from_smiles("CC(=O)N")
 count = num_amide_bonds(acetamide)  # 1
@@ -765,13 +796,16 @@ Calculate the asphericity of a molecule from its 3D coordinates.
 Asphericity describes how much a molecule deviates from a spherical shape.
 
 # Arguments
-- `mol::Molecule`: Input molecule (must have 3D coordinates)
-- `conf_id::Int`: Conformer ID to use (-1 for default)
+
+  - `mol::Molecule`: Input molecule (must have 3D coordinates)
+  - `conf_id::Int`: Conformer ID to use (-1 for default)
 
 # Returns
-- `Union{Float64,Missing}`: Asphericity value, or missing if molecule is invalid or lacks 3D coordinates
+
+  - `Union{Float64,Missing}`: Asphericity value, or missing if molecule is invalid or lacks 3D coordinates
 
 # Examples
+
 ```julia
 mol = mol_from_smiles("CCO")
 conformers = generate_3d_conformers(mol, 1)
@@ -782,14 +816,15 @@ end
 ```
 
 # Notes
-- Requires 3D coordinates to be present
-- Values range from 0 (perfect sphere) to 1 (linear molecule)
-- Useful for describing molecular shape and compactness
+
+  - Requires 3D coordinates to be present
+  - Values range from 0 (perfect sphere) to 1 (linear molecule)
+  - Useful for describing molecular shape and compactness
 """
-function asphericity(mol::Molecule; conf_id::Int=-1)
+function asphericity(mol::Molecule; conf_id::Int = -1)
     !mol.valid && return missing
     try
-        return pyconvert(Float64, _asphericity(mol._rdkit_mol; confId=conf_id))
+        return pyconvert(Float64, _asphericity(mol._rdkit_mol; confId = conf_id))
     catch
         return missing
     end
@@ -801,21 +836,24 @@ end
 Calculate the radius of gyration from 3D coordinates.
 
 # Arguments
-- `mol::Molecule`: Input molecule (must have 3D coordinates)
-- `conf_id::Int`: Conformer ID to use (-1 for default)
+
+  - `mol::Molecule`: Input molecule (must have 3D coordinates)
+  - `conf_id::Int`: Conformer ID to use (-1 for default)
 
 # Returns
-- `Union{Float64,Missing}`: Radius of gyration, or missing if molecule is invalid or lacks 3D coordinates
+
+  - `Union{Float64,Missing}`: Radius of gyration, or missing if molecule is invalid or lacks 3D coordinates
 
 # Notes
-- Requires 3D coordinates to be present
-- Measures molecular compactness
-- Useful for comparing molecular sizes and shapes
+
+  - Requires 3D coordinates to be present
+  - Measures molecular compactness
+  - Useful for comparing molecular sizes and shapes
 """
-function radius_of_gyration(mol::Molecule; conf_id::Int=-1)
+function radius_of_gyration(mol::Molecule; conf_id::Int = -1)
     !mol.valid && return missing
     try
-        return pyconvert(Float64, _radius_of_gyration(mol._rdkit_mol; confId=conf_id))
+        return pyconvert(Float64, _radius_of_gyration(mol._rdkit_mol; confId = conf_id))
     catch
         return missing
     end
@@ -827,33 +865,39 @@ end
 Calculate the Synthetic Accessibility Score (SAscore).
 
 SAscore estimates how difficult a compound would be to synthesize, ranging from
-1 (very easy) to 10 (very difficult). 
+1 (very easy) to 10 (very difficult).
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Float64,Missing}`: SAscore (1-10 scale), or missing if molecule is invalid
+
+  - `Union{Float64,Missing}`: SAscore (1-10 scale), or missing if molecule is invalid
 
 # Examples
+
 ```julia
 # Simple molecules are easy to synthesize
 ethanol = mol_from_smiles("CCO")
 sa_score = synthetic_accessibility(ethanol)  # ≈ 1.98 (easy)
 
 # Complex natural products are difficult
-paclitaxel = mol_from_smiles("CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)C6=CC=CC=C6)O)O)OC(=O)C7=CC=CC=C7)(CO4)OC(=O)C)O)C)OC(=O)C")
+paclitaxel = mol_from_smiles(
+    "CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)C6=CC=CC=C6)O)O)OC(=O)C7=CC=CC=C7)(CO4)OC(=O)C)O)C)OC(=O)C",
+)
 if paclitaxel.valid
     complex_score = synthetic_accessibility(paclitaxel)  # ≈ 8+ (very difficult)
 end
 ```
 
 # Notes
-- Based on fragment contributions and structural complexity
-- Scores: 1-3 (easy), 4-6 (moderate), 7-10 (difficult)
-- Trained on known synthetic compounds vs. non-synthesizable structures
-- Essential for virtual screening and drug design
-- Helps prioritize synthesizable compounds in large libraries
+
+  - Based on fragment contributions and structural complexity
+  - Scores: 1-3 (easy), 4-6 (moderate), 7-10 (difficult)
+  - Trained on known synthetic compounds vs. non-synthesizable structures
+  - Essential for virtual screening and drug design
+  - Helps prioritize synthesizable compounds in large libraries
 """
 function synthetic_accessibility(mol::Molecule)
     !mol.valid && return missing
@@ -1344,16 +1388,29 @@ end
 # Vectorized functions for new descriptors (moved to bottom for organization)
 const NEW_DESCRIPTOR_FUNCTIONS = [
     # Chi connectivity indices
-    :chi0n, :chi1n, :chi2n, :chi3n, :chi4n,
-    :chi1v, :chi2v, :chi3v, :chi4v,
+    :chi0n,
+    :chi1n,
+    :chi2n,
+    :chi3n,
+    :chi4n,
+    :chi1v,
+    :chi2v,
+    :chi3v,
+    :chi4v,
     # Kappa shape indices
-    :kappa2, :kappa3,
+    :kappa2,
+    :kappa3,
     # E-state descriptors
-    :max_e_state_index, :min_e_state_index,
+    :max_e_state_index,
+    :min_e_state_index,
     # Atom counts
-    :num_carbons, :num_nitrogens, :num_oxygens, :num_sulfurs, :num_halogens,
+    :num_carbons,
+    :num_nitrogens,
+    :num_oxygens,
+    :num_sulfurs,
+    :num_halogens,
     # Complexity measures
-    :ipc
+    :ipc,
 ]
 
 for func in NEW_DESCRIPTOR_FUNCTIONS
@@ -1364,4 +1421,3 @@ for func in NEW_DESCRIPTOR_FUNCTIONS
         return [$(func)(mol) for mol in mols]
     end
 end
-

@@ -42,12 +42,15 @@ end
 Add explicit hydrogens to a molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Molecule`: New molecule with explicit hydrogens added
+
+  - `Molecule`: New molecule with explicit hydrogens added
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 mol_with_hs = add_hs(mol)
@@ -60,19 +63,19 @@ function add_hs(mol::Molecule)
 
     try
         new_rdkit_mol = _add_hs(mol._rdkit_mol)
-        return Molecule(
+        return Molecule(;
             _rdkit_mol = new_rdkit_mol,
             valid = true,
             source = mol.source,
-            props = copy(mol.props)
+            props = copy(mol.props),
         )
     catch e
         @warn "Error adding hydrogens: $e"
-        return Molecule(
+        return Molecule(;
             _rdkit_mol = mol._rdkit_mol,
             valid = false,
             source = mol.source,
-            props = copy(mol.props)
+            props = copy(mol.props),
         )
     end
 end
@@ -83,12 +86,15 @@ end
 Remove explicit hydrogens from a molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Molecule`: New molecule with explicit hydrogens removed
+
+  - `Molecule`: New molecule with explicit hydrogens removed
 
 # Example
+
 ```julia
 mol_with_hs = add_hs(mol_from_smiles("CCO"))
 mol_no_hs = remove_hs(mol_with_hs)
@@ -101,19 +107,19 @@ function remove_hs(mol::Molecule)
 
     try
         new_rdkit_mol = _remove_hs(mol._rdkit_mol)
-        return Molecule(
+        return Molecule(;
             _rdkit_mol = new_rdkit_mol,
             valid = true,
             source = mol.source,
-            props = copy(mol.props)
+            props = copy(mol.props),
         )
     catch e
         @warn "Error removing hydrogens: $e"
-        return Molecule(
+        return Molecule(;
             _rdkit_mol = mol._rdkit_mol,
             valid = false,
             source = mol.source,
-            props = copy(mol.props)
+            props = copy(mol.props),
         )
     end
 end
