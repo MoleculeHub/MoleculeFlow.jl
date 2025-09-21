@@ -635,11 +635,6 @@ function _min_absolute_e_state_index(mol::Py)
     @pyconst(pyimport("rdkit.Chem.Descriptors").MinAbsEStateIndex)(mol)
 end
 
-# Functional group counts - drug discovery relevant
-# Note: NumSP3Hbonds does not exist in RDKit - removing this function
-# function _num_sp3_heavy_atoms(mol::Py)
-#     # This function doesn't exist in RDKit
-# end
 function _num_aliphatic_rings(mol::Py)
     @pyconst(pyimport("rdkit.Chem.Descriptors").NumAliphaticRings)(mol)
 end
