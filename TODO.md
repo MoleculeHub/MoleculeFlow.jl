@@ -1,1 +1,0 @@
-make sure that in place property calculation gets added as a prop
