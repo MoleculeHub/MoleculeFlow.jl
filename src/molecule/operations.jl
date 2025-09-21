@@ -410,12 +410,24 @@ Compute 2D coordinates for a molecule (in-place operation).
 ```julia
 mol = mol_from_smiles("CCO")
 compute_2d_coords!(mol)
+println(mol.props)
 ```
 """
 function compute_2d_coords!(mol::Molecule)
     !mol.valid && return mol
     try
         _compute_2d_coords(mol._rdkit_mol)
+        conf = mol._rdkit_mol.GetConformer()
+        num_atoms = pyconvert(Int, mol._rdkit_mol.GetNumAtoms())
+        coords_2d = Matrix{Float64}(undef, num_atoms, 2)
+
+        for i in 0:(num_atoms - 1)
+            pos = conf.GetAtomPosition(i)
+            coords_2d[i + 1, 1] = pyconvert(Float64, pos.x)
+            coords_2d[i + 1, 2] = pyconvert(Float64, pos.y)
+        end
+
+        mol.props[:coordinates_2d] = coords_2d
         return mol
     catch e
         @warn "Error computing 2D coordinates: $e"
