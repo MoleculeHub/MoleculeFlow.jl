@@ -128,23 +128,3 @@ println("Custom fragments: ", fragments)
 fragments = brics_decompose(mol, min_fragment_size=3, max_fragment_size=8)
 println("Size-constrained fragments: ", fragments)
 ```
-
-### Vectorized Operations
-
-```julia
-# Process multiple molecules at once
-smiles_list = ["CCCOCCc1ccccc1", "CC(=O)NCCc1ccccc1", "CCCCCC"]
-mols = mol_from_smiles(smiles_list)
-
-# Get all BRICS fragments
-all_brics = brics_decompose(mols)
-for (i, frags) in enumerate(all_brics)
-    println("Molecule $i BRICS: ", frags)
-end
-
-# Get all scaffolds
-all_scaffolds = get_murcko_scaffold(mols)
-for (i, scaffold) in enumerate(all_scaffolds)
-    println("Molecule $i scaffold: ", scaffold)
-end
-```
