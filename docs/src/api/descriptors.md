@@ -155,7 +155,7 @@ num_aromatic_heterocycles
 ## Number of Stereo Centres
 
 ```@docs
-num_amide_bonds
+num_atom_stereo_centers
 ```
 
 ## Number of Amide Bonds

@@ -55,6 +55,12 @@ fast_find_rings!
 get_ring_info
 ```
 
+## Is Ring Aromatic
+
+```@docs
+is_ring_aromatic
+```
+
 ## Atom Ranking
 
 ```@docs
