@@ -206,6 +206,27 @@ end
         @test radius_of_gyration(invalid_mol) === missing
     end
 
+    @testset "Principal Moments of Inertia" begin
+        # Test PMI descriptors (may fail without 3D coordinates)
+        ethanol = mol_from_smiles("CCO")
+
+        pmi1_result = pmi1(ethanol)
+        pmi2_result = pmi2(ethanol)
+        pmi3_result = pmi3(ethanol)
+
+        # Should either be Float64 or missing (if no 3D coords)
+        @test pmi1_result === missing || isa(pmi1_result, Float64)
+        @test pmi2_result === missing || isa(pmi2_result, Float64)
+        @test pmi3_result === missing || isa(pmi3_result, Float64)
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        @test pmi1(invalid_mol) === missing
+        @test pmi2(invalid_mol) === missing
+        @test pmi3(invalid_mol) === missing
+    end
+
+
     @testset "3D Descriptors with Generated Conformers" begin
         # Skip this test if conformer generation is not available
         try

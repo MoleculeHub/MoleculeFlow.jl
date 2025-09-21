@@ -7,6 +7,8 @@ using Graphs
     include("test_operations.jl")  # New operations tests
     include("test_descriptors.jl")
     include("test_advanced_descriptors.jl")  # New advanced descriptors
+    include("test_vsa_descriptors.jl")  # VSA and BCUT descriptors
+    include("test_new_wrappers_integration.jl")  # Comprehensive integration tests
     include("test_fingerprints.jl")
     include("test_similarity.jl")
     include("test_atoms.jl")

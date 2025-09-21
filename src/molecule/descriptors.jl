@@ -1692,21 +1692,7 @@ function min_absolute_e_state_index(mol::Union{Molecule, Missing})
     end
 end
 
-"""
-    num_sp3_hbonds(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
-
-Count the number of SP3 hybridized heavy atoms.
-"""
-function num_sp3_hbonds(mol::Union{Molecule, Missing})
-    isa(mol, Missing) && return missing
-    !mol.valid && return missing
-    try
-        return pyconvert(Int, _num_sp3_hbonds(mol._rdkit_mol))
-    catch e
-        @warn "Error calculating SP3 heavy atoms: $e"
-        return missing
-    end
-end
+# Removed num_sp3_heavy_atoms as the underlying RDKit function doesn't exist
 
 """
     num_aliphatic_rings(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
@@ -1776,7 +1762,6 @@ const NEW_DESCRIPTOR_FUNCTIONS = [
     :num_unspecified_atom_stereo_centers,
     :num_spiro_atoms,
     :num_bridgehead_atoms,
-    :num_sp3_hbonds,
     # 3D descriptors
     :eccentricity,
     :inertial_shape_factor,
@@ -1796,6 +1781,642 @@ const NEW_DESCRIPTOR_FUNCTIONS = [
 ]
 
 for func in NEW_DESCRIPTOR_FUNCTIONS
+    @eval function $(func)(mols::Vector{Union{Molecule, Missing}})
+        return [mol === missing ? missing : $(func)(mol) for mol in mols]
+    end
+    @eval function $(func)(mols::Vector{Molecule})
+        return [$(func)(mol) for mol in mols]
+    end
+end
+
+# Additional 3D descriptors
+"""
+    pmi1(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the first principal moment of inertia (PMI1).
+"""
+function pmi1(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _pmi1(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating PMI1: $e"
+        return missing
+    end
+end
+
+"""
+    pmi2(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the second principal moment of inertia (PMI2).
+"""
+function pmi2(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _pmi2(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating PMI2: $e"
+        return missing
+    end
+end
+
+"""
+    pmi3(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the third principal moment of inertia (PMI3).
+"""
+function pmi3(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _pmi3(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating PMI3: $e"
+        return missing
+    end
+end
+
+# VSA descriptors (SlogP_VSA series)
+"""
+    slogp_vsa2(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA2 descriptor.
+"""
+function slogp_vsa2(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa2(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA2: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa3(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA3 descriptor.
+"""
+function slogp_vsa3(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa3(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA3: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa4(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA4 descriptor.
+"""
+function slogp_vsa4(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa4(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA4: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa5(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA5 descriptor.
+"""
+function slogp_vsa5(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa5(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA5: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa6(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA6 descriptor.
+"""
+function slogp_vsa6(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa6(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA6: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa7(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA7 descriptor.
+"""
+function slogp_vsa7(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa7(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA7: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa8(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA8 descriptor.
+"""
+function slogp_vsa8(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa8(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA8: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa9(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA9 descriptor.
+"""
+function slogp_vsa9(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa9(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA9: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa10(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA10 descriptor.
+"""
+function slogp_vsa10(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa10(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA10: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa11(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA11 descriptor.
+"""
+function slogp_vsa11(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa11(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA11: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa12(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA12 descriptor.
+"""
+function slogp_vsa12(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa12(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA12: $e"
+        return missing
+    end
+end
+
+# SMR_VSA descriptors
+"""
+    smr_vsa1(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA1 descriptor.
+"""
+function smr_vsa1(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa1(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA1: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa2(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA2 descriptor.
+"""
+function smr_vsa2(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa2(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA2: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa3(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA3 descriptor.
+"""
+function smr_vsa3(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa3(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA3: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa4(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA4 descriptor.
+"""
+function smr_vsa4(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa4(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA4: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa5(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA5 descriptor.
+"""
+function smr_vsa5(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa5(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA5: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa6(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA6 descriptor.
+"""
+function smr_vsa6(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa6(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA6: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa7(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA7 descriptor.
+"""
+function smr_vsa7(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa7(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA7: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa8(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA8 descriptor.
+"""
+function smr_vsa8(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa8(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA8: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa9(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA9 descriptor.
+"""
+function smr_vsa9(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa9(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA9: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa10(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA10 descriptor.
+"""
+function smr_vsa10(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa10(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA10: $e"
+        return missing
+    end
+end
+
+# PEOE_VSA descriptors
+"""
+    peoe_vsa1(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA1 descriptor.
+"""
+function peoe_vsa1(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa1(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA1: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa2(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA2 descriptor.
+"""
+function peoe_vsa2(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa2(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA2: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa3(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA3 descriptor.
+"""
+function peoe_vsa3(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa3(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA3: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa4(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA4 descriptor.
+"""
+function peoe_vsa4(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa4(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA4: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa5(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA5 descriptor.
+"""
+function peoe_vsa5(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa5(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA5: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa6(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA6 descriptor.
+"""
+function peoe_vsa6(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa6(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA6: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa7(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA7 descriptor.
+"""
+function peoe_vsa7(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa7(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA7: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa8(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA8 descriptor.
+"""
+function peoe_vsa8(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa8(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA8: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa9(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA9 descriptor.
+"""
+function peoe_vsa9(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa9(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA9: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa10(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA10 descriptor.
+"""
+function peoe_vsa10(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa10(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA10: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa11(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA11 descriptor.
+"""
+function peoe_vsa11(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa11(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA11: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa12(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA12 descriptor.
+"""
+function peoe_vsa12(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa12(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA12: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa13(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA13 descriptor.
+"""
+function peoe_vsa13(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa13(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA13: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa14(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA14 descriptor.
+"""
+function peoe_vsa14(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa14(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA14: $e"
+        return missing
+    end
+end
+
+# Update vectorized function list with the new descriptors
+const ADDITIONAL_VSA_DESCRIPTOR_FUNCTIONS = [
+    # 3D descriptors
+    :pmi1, :pmi2, :pmi3,
+    # SlogP_VSA series (2-12)
+    :slogp_vsa2, :slogp_vsa3, :slogp_vsa4, :slogp_vsa5, :slogp_vsa6,
+    :slogp_vsa7, :slogp_vsa8, :slogp_vsa9, :slogp_vsa10, :slogp_vsa11, :slogp_vsa12,
+    # SMR_VSA series (1-10)
+    :smr_vsa1, :smr_vsa2, :smr_vsa3, :smr_vsa4, :smr_vsa5,
+    :smr_vsa6, :smr_vsa7, :smr_vsa8, :smr_vsa9, :smr_vsa10,
+    # PEOE_VSA series (1-14)
+    :peoe_vsa1, :peoe_vsa2, :peoe_vsa3, :peoe_vsa4, :peoe_vsa5, :peoe_vsa6, :peoe_vsa7,
+    :peoe_vsa8, :peoe_vsa9, :peoe_vsa10, :peoe_vsa11, :peoe_vsa12, :peoe_vsa13, :peoe_vsa14,
+]
+
+for func in ADDITIONAL_VSA_DESCRIPTOR_FUNCTIONS
     @eval function $(func)(mols::Vector{Union{Molecule, Missing}})
         return [mol === missing ? missing : $(func)(mol) for mol in mols]
     end

@@ -104,6 +104,297 @@ mol = mol_from_smiles("CCO")
 replacements = replace_substructs(mol, "[OH]", "N")
 ```
 """
+# Ring analysis functions
+"""
+    get_ring_info(mol::Molecule) -> Union{Py, Missing}
+
+Get ring information for a molecule.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Py, Missing}`: RingInfo object or missing if molecule is invalid
+
+# Example
+```julia
+mol = mol_from_smiles("c1ccccc1")
+ring_info = get_ring_info(mol)
+```
+"""
+function get_ring_info(mol::Molecule)
+    !mol.valid && return missing
+    try
+        ring_info = _get_ring_info(mol._rdkit_mol)
+        return Dict(
+            :num_rings => pyconvert(Int, ring_info.NumRings()),
+            :atom_rings => [pyconvert(Vector{Int}, ring) .+ 1 for ring in ring_info.AtomRings()],
+            :bond_rings => [pyconvert(Vector{Int}, ring) .+ 1 for ring in ring_info.BondRings()],
+        )
+    catch e
+        @warn "Error getting ring info: $e"
+        return missing
+    end
+end
+
+"""
+    canonical_atom_ranks(mol::Molecule) -> Union{Vector{Int}, Missing}
+
+Get canonical atom ranks for a molecule.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Union{Vector{Int}, Missing}`: Vector of atom ranks or missing if molecule is invalid
+
+# Example
+```julia
+mol = mol_from_smiles("CCO")
+ranks = canonical_atom_ranks(mol)
+```
+"""
+function canonical_atom_ranks(mol::Molecule)
+    !mol.valid && return Int[]
+    try
+        py_ranks = _canonical_rank_atoms(mol._rdkit_mol)
+        return pyconvert(Vector{Int}, py_ranks)
+    catch e
+        @warn "Error getting canonical atom ranks: $e"
+        return Int[]
+    end
+end
+
+"""
+    find_atom_environment(mol::Molecule, radius::Int, atom_idx::Int) -> Union{Vector{Int}, Missing}
+
+Find atom environment of specified radius around an atom.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+- `radius::Int`: Radius to search
+- `atom_idx::Int`: Index of central atom (0-based)
+
+# Returns
+- `Union{Vector{Int}, Missing}`: Vector of bond indices in environment or missing if invalid
+
+# Example
+```julia
+mol = mol_from_smiles("CCCCC")
+env = find_atom_environment(mol, 2, 1)
+```
+"""
+function find_atom_environment(mol::Molecule, radius::Int, atom_idx::Int)
+    !mol.valid && return missing
+    try
+        py_env = _find_atom_environment_of_radius_n(mol._rdkit_mol, radius, atom_idx)
+        return pyconvert(Vector{Int}, py_env)
+    catch e
+        @warn "Error finding atom environment: $e"
+        return missing
+    end
+end
+
+"""
+    mol_fragment_to_smarts(mol::Molecule, atom_indices::Vector{Int}) -> Union{String, Missing}
+
+Convert a molecular fragment to SMARTS pattern.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+- `atom_indices::Vector{Int}`: Indices of atoms to include in fragment
+
+# Returns
+- `Union{String, Missing}`: SMARTS pattern or missing if invalid
+
+# Example
+```julia
+mol = mol_from_smiles("CCCO")
+smarts = mol_fragment_to_smarts(mol, [0, 1])  # First two carbons
+```
+"""
+function mol_fragment_to_smarts(mol::Molecule, atom_indices::Vector{Int})
+    !mol.valid && return missing
+    try
+        py_smarts = _mol_fragment_to_smarts(mol._rdkit_mol, atom_indices)
+        return pyconvert(String, py_smarts)
+    catch e
+        @warn "Error converting fragment to SMARTS: $e"
+        return missing
+    end
+end
+
+"""
+    mol_fragment_to_smiles(mol::Molecule, atom_indices::Vector{Int}) -> Union{String, Missing}
+
+Convert a molecular fragment to SMILES string.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+- `atom_indices::Vector{Int}`: Indices of atoms to include in fragment
+
+# Returns
+- `Union{String, Missing}`: SMILES string or missing if invalid
+
+# Example
+```julia
+mol = mol_from_smiles("CCCO")
+smiles = mol_fragment_to_smiles(mol, [0, 1])  # First two carbons
+```
+"""
+function mol_fragment_to_smiles(mol::Molecule, atom_indices::Vector{Int})
+    !mol.valid && return missing
+    try
+        py_smiles = _mol_fragment_to_smiles(mol._rdkit_mol, atom_indices)
+        return pyconvert(String, py_smiles)
+    catch e
+        @warn "Error converting fragment to SMILES: $e"
+        return missing
+    end
+end
+
+"""
+    renumber_atoms(mol::Molecule, new_order::Vector{Int}) -> Molecule
+
+Renumber atoms in a molecule according to a new ordering.
+
+# Arguments
+- `mol::Molecule`: Input molecule
+- `new_order::Vector{Int}`: New atom ordering (0-based indices)
+
+# Returns
+- `Molecule`: Molecule with renumbered atoms
+
+# Example
+```julia
+mol = mol_from_smiles("CCO")
+# Reverse atom order
+new_mol = renumber_atoms(mol, [2, 1, 0])
+```
+"""
+function renumber_atoms(mol::Molecule, new_order::Vector{Int})
+    !mol.valid && return mol
+    try
+        new_mol = _renumber_atoms(mol._rdkit_mol, new_order)
+        return Molecule(_rdkit_mol = new_mol, valid = true, source = mol.source)
+    catch e
+        @warn "Error renumbering atoms: $e"
+        return mol
+    end
+end
+
+"""
+    remove_stereochemistry!(mol::Molecule) -> Molecule
+
+Remove stereochemistry information from a molecule (in-place operation).
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Molecule`: Modified molecule
+
+# Example
+```julia
+mol = mol_from_smiles("C[C@H](O)C")
+remove_stereochemistry!(mol)
+```
+"""
+function remove_stereochemistry!(mol::Molecule)
+    !mol.valid && return mol
+    try
+        _remove_stereochemistry(mol._rdkit_mol)
+        return mol
+    catch e
+        @warn "Error removing stereochemistry: $e"
+        return mol
+    end
+end
+
+"""
+    sanitize_mol!(mol::Molecule) -> Molecule
+
+Sanitize a molecule (in-place operation).
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Molecule`: Sanitized molecule
+
+# Example
+```julia
+mol = mol_from_smiles("CCO")
+sanitize_mol!(mol)
+```
+"""
+function sanitize_mol!(mol::Molecule)
+    !mol.valid && return mol
+    try
+        _sanitize_mol(mol._rdkit_mol)
+        return mol
+    catch e
+        @warn "Error sanitizing molecule: $e"
+        return mol
+    end
+end
+
+"""
+    fast_find_rings!(mol::Molecule) -> Molecule
+
+Find rings in a molecule using the fast algorithm (in-place operation).
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Molecule`: Molecule with ring information computed
+
+# Example
+```julia
+mol = mol_from_smiles("c1ccccc1")
+fast_find_rings!(mol)
+```
+"""
+function fast_find_rings!(mol::Molecule)
+    !mol.valid && return false
+    try
+        _fast_find_rings(mol._rdkit_mol)
+        return true
+    catch e
+        @warn "Error finding rings: $e"
+        return false
+    end
+end
+
+"""
+    compute_2d_coords!(mol::Molecule) -> Molecule
+
+Compute 2D coordinates for a molecule (in-place operation).
+
+# Arguments
+- `mol::Molecule`: Input molecule
+
+# Returns
+- `Molecule`: Molecule with 2D coordinates
+
+# Example
+```julia
+mol = mol_from_smiles("CCO")
+compute_2d_coords!(mol)
+```
+"""
+function compute_2d_coords!(mol::Molecule)
+    !mol.valid && return mol
+    try
+        _compute_2d_coords(mol._rdkit_mol)
+        return mol
+    catch e
+        @warn "Error computing 2D coordinates: $e"
+        return mol
+    end
+end
+
 function replace_substructs(mol::Molecule, query::String, replacement::String)
     if !mol.valid
         return [mol]
@@ -214,67 +505,6 @@ end
 # Ring Analysis
 #######################################################
 
-"""
-    fast_find_rings!(mol::Molecule) -> Bool
-
-Perform fast ring finding on a molecule in place.
-
-# Arguments
-- `mol::Molecule`: Input molecule (modified in place)
-
-# Returns
-- `Bool`: Success status
-
-# Example
-```julia
-mol = mol_from_smiles("c1ccccc1")
-success = fast_find_rings!(mol)
-```
-"""
-function fast_find_rings!(mol::Molecule)
-    if !mol.valid
-        return false
-    end
-
-    try
-        _fast_find_rings(mol._rdkit_mol)
-        return true
-    catch e
-        @warn "Error finding rings: $e"
-        return false
-    end
-end
-
-"""
-    canonical_atom_ranks(mol::Molecule) -> Vector{Int}
-
-Get canonical ranking of atoms in a molecule.
-
-# Arguments
-- `mol::Molecule`: Input molecule
-
-# Returns
-- `Vector{Int}`: Canonical ranks for each atom
-
-# Example
-```julia
-mol = mol_from_smiles("CCO")
-ranks = canonical_atom_ranks(mol)
-```
-"""
-function canonical_atom_ranks(mol::Molecule)
-    if !mol.valid
-        return Int[]
-    end
-
-    try
-        ranks = _canonical_rank_atoms(mol._rdkit_mol)
-        return [pyconvert(Int, rank) for rank in ranks]
-    catch e
-        @warn "Error getting canonical ranks: $e"
-        return Int[]
-    end
-end
 
 #######################################################
 # Pattern Matching
@@ -318,36 +548,6 @@ function quick_smarts_match(mol::Molecule, smarts::String)
     end
 end
 
-"""
-    mol_fragment_to_smarts(mol::Molecule, atom_indices::Vector{Int}) -> String
-
-Convert a molecular fragment to SMARTS representation.
-
-# Arguments
-- `mol::Molecule`: Input molecule
-- `atom_indices::Vector{Int}`: Atom indices to include in fragment (0-based)
-
-# Returns
-- `String`: SMARTS representation of the fragment
-
-# Example
-```julia
-mol = mol_from_smiles("CCO")
-smarts = mol_fragment_to_smarts(mol, [0, 1])  # First two atoms
-```
-"""
-function mol_fragment_to_smarts(mol::Molecule, atom_indices::Vector{Int})
-    if !mol.valid
-        return ""
-    end
-
-    try
-        return pyconvert(String, _mol_fragment_to_smarts(mol._rdkit_mol, atom_indices))
-    catch e
-        @warn "Error converting fragment to SMARTS: $e"
-        return ""
-    end
-end
 
 
 
@@ -357,28 +557,6 @@ end
 #######################################################
 
 
-"""
-    renumber_atoms(mol::Molecule, new_order::Vector{Int}) -> Union{Molecule, Missing}
-
-Renumber atoms in a molecule according to a new ordering.
-
-# Arguments
-- `mol::Molecule`: Input molecule
-- `new_order::Vector{Int}`: New atom ordering (0-indexed)
-
-# Returns
-- `Union{Molecule, Missing}`: Renumbered molecule or missing if operation fails
-"""
-function renumber_atoms(mol::Molecule, new_order::Vector{Int})
-    !mol.valid && return missing
-    try
-        new_mol = _renumber_atoms(mol._rdkit_mol, new_order)
-        return Molecule(_rdkit_mol = new_mol, valid = true, source = "renumbered")
-    catch e
-        @warn "Error renumbering atoms: $e"
-        return missing
-    end
-end
 
 """
     split_mol_by_pdb_chain_id(mol::Molecule) -> Union{Vector{Molecule}, Missing}
@@ -568,23 +746,6 @@ function find_ring_families(mol::Molecule)
     end
 end
 
-"""
-    get_ring_info(mol::Molecule) -> Union{Any, Missing}
-
-Get ring information for the molecule.
-
-# Returns
-- `Union{Any, Missing}`: Ring information object or missing if operation fails
-"""
-function get_ring_info(mol::Molecule)
-    !mol.valid && return missing
-    try
-        return _get_ring_info(mol._rdkit_mol)
-    catch e
-        @warn "Error getting ring info: $e"
-        return missing
-    end
-end
 
 """
     canonical_rank_atoms_in_fragment(mol::Molecule, atoms_to_use::Vector{Int}) -> Union{Vector{Int}, Missing}
@@ -633,43 +794,7 @@ function find_atom_environment_of_radius_n(mol::Molecule, radius::Int, atom_idx:
     end
 end
 
-"""
-    remove_stereochemistry!(mol::Molecule) -> Bool
 
-Remove all stereochemistry information from a molecule.
-
-# Returns
-- `Bool`: true if successful, false otherwise
-"""
-function remove_stereochemistry!(mol::Molecule)
-    !mol.valid && return false
-    try
-        _remove_stereochemistry(mol._rdkit_mol)
-        return true
-    catch e
-        @warn "Error removing stereochemistry: $e"
-        return false
-    end
-end
-
-"""
-    sanitize_mol!(mol::Molecule) -> Bool
-
-Sanitize a molecule (perform standard cleanup operations).
-
-# Returns
-- `Bool`: true if successful, false otherwise
-"""
-function sanitize_mol!(mol::Molecule)
-    !mol.valid && return false
-    try
-        _sanitize_mol(mol._rdkit_mol)
-        return true
-    catch e
-        @warn "Error sanitizing molecule: $e"
-        return false
-    end
-end
 
 """
     get_most_substituted_core_match(mol::Molecule, core::Molecule) -> Union{Vector{Int}, Missing}
@@ -695,62 +820,5 @@ function get_most_substituted_core_match(mol::Molecule, core::Molecule)
     end
 end
 
-"""
-    compute_gasteiger_charges!(mol::Molecule) -> Bool
 
-Compute Gasteiger partial charges for atoms in the molecule.
 
-# Returns
-- `Bool`: true if successful, false otherwise
-"""
-function compute_gasteiger_charges!(mol::Molecule)
-    !mol.valid && return false
-    try
-        _compute_gasteiger_charges(mol._rdkit_mol)
-        return true
-    catch e
-        @warn "Error computing Gasteiger charges: $e"
-        return false
-    end
-end
-
-"""
-    get_atom_mapping_numbers(mol::Molecule) -> Union{Vector{Int}, Missing}
-
-Get atom mapping numbers from a molecule.
-
-# Returns
-- `Union{Vector{Int}, Missing}`: Vector of mapping numbers or missing if operation fails
-"""
-function get_atom_mapping_numbers(mol::Molecule)
-    !mol.valid && return missing
-    try
-        return _get_atom_mapping_numbers(mol._rdkit_mol)
-    catch e
-        @warn "Error getting atom mapping numbers: $e"
-        return missing
-    end
-end
-
-"""
-    set_atom_mapping_numbers!(mol::Molecule, map_nums::Vector{Int}) -> Bool
-
-Set atom mapping numbers for a molecule.
-
-# Arguments
-- `mol::Molecule`: Input molecule (modified in place)
-- `map_nums::Vector{Int}`: Mapping numbers for each atom
-
-# Returns
-- `Bool`: true if successful, false otherwise
-"""
-function set_atom_mapping_numbers!(mol::Molecule, map_nums::Vector{Int})
-    !mol.valid && return false
-    try
-        _set_atom_mapping_numbers(mol._rdkit_mol, map_nums)
-        return true
-    catch e
-        @warn "Error setting atom mapping numbers: $e"
-        return false
-    end
-end

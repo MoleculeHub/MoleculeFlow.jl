@@ -113,12 +113,12 @@ key = mol_to_inchi_key(mol)  # "LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
 ```
 """
 function mol_to_inchi_key(mol::Molecule)
-    !mol.valid && return missing
+    !mol.valid && return ""
     try
         return pyconvert(String, _mol_to_inchi_key(mol._rdkit_mol))
     catch e
         @warn "Error converting to InChI key: $e"
-        return missing
+        return ""
     end
 end
 
@@ -164,12 +164,12 @@ molblock = mol_to_molblock(mol)
 ```
 """
 function mol_to_molblock(mol::Molecule)
-    !mol.valid && return missing
+    !mol.valid && return ""
     try
         return pyconvert(String, _mol_to_molblock(mol._rdkit_mol))
     catch e
         @warn "Error converting to MOL block: $e"
-        return missing
+        return ""
     end
 end
 
@@ -216,12 +216,12 @@ pdb_block = mol_to_pdb_block(mol)
 ```
 """
 function mol_to_pdb_block(mol::Molecule; conf_id::Int=-1)
-    !mol.valid && return missing
+    !mol.valid && return ""
     try
         return pyconvert(String, _mol_to_pdb_block(mol._rdkit_mol))
     catch e
         @warn "Error converting to PDB block: $e"
-        return missing
+        return ""
     end
 end
 
@@ -240,12 +240,12 @@ xyz_block = mol_to_xyz_block(mol)
 ```
 """
 function mol_to_xyz_block(mol::Molecule)
-    !mol.valid && return missing
+    !mol.valid && return ""
     try
         return pyconvert(String, _mol_to_xyz_block(mol._rdkit_mol))
     catch e
         @warn "Error converting to XYZ block: $e"
-        return missing
+        return ""
     end
 end
 

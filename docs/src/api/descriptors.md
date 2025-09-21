@@ -145,6 +145,48 @@ num_atom_stereo_centers
 num_amide_bonds
 ```
 
+### Additional Ring Type Counts
+
+```@docs
+num_aliphatic_heterocycles
+```
+
+```@docs
+num_saturated_heterocycles
+```
+
+```@docs
+num_saturated_carbocycles
+```
+
+```@docs
+num_aliphatic_rings
+```
+
+```@docs
+num_heterocycles
+```
+
+### Additional Stereochemistry and Structure Counts
+
+```@docs
+num_unspecified_atom_stereo_centers
+```
+
+```@docs
+num_spiro_atoms
+```
+
+```@docs
+num_bridgehead_atoms
+```
+
+### Molecular Complexity
+
+```@docs
+hall_kier_alpha
+```
+
 ## 3D Descriptors
 
 These descriptors require 3D coordinates to be present in the molecule.
@@ -152,6 +194,30 @@ These descriptors require 3D coordinates to be present in the molecule.
 ```@docs
 asphericity
 radius_of_gyration
+```
+
+### Principal Moments of Inertia
+
+```@docs
+pmi1
+```
+
+```@docs
+pmi2
+```
+
+```@docs
+pmi3
+```
+
+### Additional 3D Shape Descriptors
+
+```@docs
+eccentricity
+```
+
+```@docs
+inertial_shape_factor
 ```
 
 ## Examples
@@ -244,10 +310,218 @@ max_e_state_index
 min_e_state_index
 ```
 
+```@docs
+max_absolute_e_state_index
+```
+
+```@docs
+min_absolute_e_state_index
+```
+
 ### Information Content
 
 ```@docs
 ipc
+```
+
+## VSA Descriptors
+
+Van der Waals Surface Area descriptors partitioned by various atomic properties.
+
+### SlogP_VSA Descriptors
+
+Surface area contributions based on SlogP values.
+
+```@docs
+slogp_vsa2
+```
+
+```@docs
+slogp_vsa3
+```
+
+```@docs
+slogp_vsa4
+```
+
+```@docs
+slogp_vsa5
+```
+
+```@docs
+slogp_vsa6
+```
+
+```@docs
+slogp_vsa7
+```
+
+```@docs
+slogp_vsa8
+```
+
+```@docs
+slogp_vsa9
+```
+
+```@docs
+slogp_vsa10
+```
+
+```@docs
+slogp_vsa11
+```
+
+```@docs
+slogp_vsa12
+```
+
+### SMR_VSA Descriptors
+
+Surface area contributions based on Molar Refractivity values.
+
+```@docs
+smr_vsa1
+```
+
+```@docs
+smr_vsa2
+```
+
+```@docs
+smr_vsa3
+```
+
+```@docs
+smr_vsa4
+```
+
+```@docs
+smr_vsa5
+```
+
+```@docs
+smr_vsa6
+```
+
+```@docs
+smr_vsa7
+```
+
+```@docs
+smr_vsa8
+```
+
+```@docs
+smr_vsa9
+```
+
+```@docs
+smr_vsa10
+```
+
+### PEOE_VSA Descriptors
+
+Surface area contributions based on Partial Equalization of Orbital Electronegativities (PEOE) charges.
+
+```@docs
+peoe_vsa1
+```
+
+```@docs
+peoe_vsa2
+```
+
+```@docs
+peoe_vsa3
+```
+
+```@docs
+peoe_vsa4
+```
+
+```@docs
+peoe_vsa5
+```
+
+```@docs
+peoe_vsa6
+```
+
+```@docs
+peoe_vsa7
+```
+
+```@docs
+peoe_vsa8
+```
+
+```@docs
+peoe_vsa9
+```
+
+```@docs
+peoe_vsa10
+```
+
+```@docs
+peoe_vsa11
+```
+
+```@docs
+peoe_vsa12
+```
+
+```@docs
+peoe_vsa13
+```
+
+```@docs
+peoe_vsa14
+```
+
+## BCUT Descriptors
+
+Burden-CAS-University of Texas descriptors based on molecular graphs and atomic properties.
+
+### BCUT2D Molecular Weight
+
+```@docs
+bcut2d_mwlow
+```
+
+```@docs
+bcut2d_mwhi
+```
+
+### BCUT2D Partial Charge
+
+```@docs
+bcut2d_chglow
+```
+
+```@docs
+bcut2d_chghi
+```
+
+### BCUT2D LogP
+
+```@docs
+bcut2d_logplow
+```
+
+```@docs
+bcut2d_logphi
+```
+
+### BCUT2D Molar Refractivity
+
+```@docs
+bcut2d_mrlow
+```
+
+```@docs
+bcut2d_mrhi
 ```
 
 ## Atom Counts
@@ -314,3 +588,4 @@ println("LogP values: ", logp_values)
 println("Chi1v values: ", chi_values)
 println("Carbon counts: ", carbon_counts)
 ```
+

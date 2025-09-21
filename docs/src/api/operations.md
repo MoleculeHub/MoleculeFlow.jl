@@ -65,10 +65,22 @@ Functions for analyzing ring systems and molecular topology.
 fast_find_rings!
 ```
 
+### Ring Information
+
+```@docs
+get_ring_info
+```
+
 ### Atom Ranking
 
 ```@docs
 canonical_atom_ranks
+```
+
+### Atom Environment Analysis
+
+```@docs
+find_atom_environment
 ```
 
 ## Pattern Matching
@@ -85,6 +97,34 @@ quick_smarts_match
 
 ```@docs
 mol_fragment_to_smarts
+```
+
+```@docs
+mol_fragment_to_smiles
+```
+
+## Advanced Molecular Editing
+
+Functions for sophisticated molecular structure manipulation.
+
+### Atom Renumbering
+
+```@docs
+renumber_atoms
+```
+
+### In-Place Molecular Modifications
+
+```@docs
+remove_stereochemistry!
+```
+
+```@docs
+sanitize_mol!
+```
+
+```@docs
+compute_2d_coords!
 ```
 
 ## Examples
