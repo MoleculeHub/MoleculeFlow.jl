@@ -460,9 +460,9 @@ results = replace_substructs(mol, "c1ccccc1", "c1ccncc1")
 
 # Notes
 
-- Returns original molecule in vector if replacement fails
-- Uses SMARTS pattern matching for query identification
-- Can generate multiple products if multiple matches exist
+  - Returns original molecule in vector if replacement fails
+  - Uses SMARTS pattern matching for query identification
+  - Can generate multiple products if multiple matches exist
 """
 function replace_substructs(mol::Molecule, query::String, replacement::String)
     if !mol.valid

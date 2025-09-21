@@ -929,7 +929,9 @@ end
 function _create_sig_factory(
     factory::Py; min_point_count::Int = 2, max_point_count::Int = 3
 )
-    sig_factory = @pyconst(pyimport("rdkit.Chem.Pharm2D.SigFactory").SigFactory)(factory, min_point_count, max_point_count)
+    sig_factory = @pyconst(pyimport("rdkit.Chem.Pharm2D.SigFactory").SigFactory)(
+        factory, min_point_count, max_point_count
+    )
     # Use non-overlapping distance bins that avoid boundary issues
     sig_factory.SetBins([(0, 2), (2, 6), (6, 12)])
     sig_factory.Init()
@@ -953,7 +955,11 @@ function _explicit_pharmacophore_from_mol(mol::Py, feature_factory::Py; conf_id:
     for feature in features
         family = pyconvert(String, feature.GetFamily())
         pos_obj = feature.GetPos()
-        pos = [pyconvert(Float64, pos_obj.x), pyconvert(Float64, pos_obj.y), pyconvert(Float64, pos_obj.z)]
+        pos = [
+            pyconvert(Float64, pos_obj.x),
+            pyconvert(Float64, pos_obj.y),
+            pyconvert(Float64, pos_obj.z),
+        ]
         push!(feature_list, (family, pos))
     end
 
