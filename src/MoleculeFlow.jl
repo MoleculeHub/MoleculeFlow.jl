@@ -56,23 +56,65 @@ export qed, fraction_csp3, labute_asa, molar_refractivity, synthetic_accessibili
 
 # Advanced ring and structure counts
 export num_aliphatic_carbocycles, num_aromatic_carbocycles, num_aromatic_heterocycles
-export num_atom_stereo_centers, num_amide_bonds, num_aliphatic_heterocycles, num_saturated_heterocycles
-export num_saturated_carbocycles, num_unspecified_atom_stereo_centers, num_spiro_atoms, num_bridgehead_atoms
+export num_atom_stereo_centers,
+    num_amide_bonds, num_aliphatic_heterocycles, num_saturated_heterocycles
+export num_saturated_carbocycles,
+    num_unspecified_atom_stereo_centers, num_spiro_atoms, num_bridgehead_atoms
 export hall_kier_alpha, num_aliphatic_rings, num_heterocycles
 
 # BCUT descriptors
-export bcut2d_mwlow, bcut2d_mwhi, bcut2d_chglow, bcut2d_chghi, bcut2d_logplow, bcut2d_logphi, bcut2d_mrlow, bcut2d_mrhi
+export bcut2d_mwlow,
+    bcut2d_mwhi,
+    bcut2d_chglow,
+    bcut2d_chghi,
+    bcut2d_logplow,
+    bcut2d_logphi,
+    bcut2d_mrlow,
+    bcut2d_mrhi
 
 # VSA descriptors
-export slogp_vsa2, slogp_vsa3, slogp_vsa4, slogp_vsa5, slogp_vsa6, slogp_vsa7, slogp_vsa8, slogp_vsa9, slogp_vsa10, slogp_vsa11, slogp_vsa12
-export smr_vsa1, smr_vsa2, smr_vsa3, smr_vsa4, smr_vsa5, smr_vsa6, smr_vsa7, smr_vsa8, smr_vsa9, smr_vsa10
-export peoe_vsa1, peoe_vsa2, peoe_vsa3, peoe_vsa4, peoe_vsa5, peoe_vsa6, peoe_vsa7, peoe_vsa8, peoe_vsa9, peoe_vsa10, peoe_vsa11, peoe_vsa12, peoe_vsa13, peoe_vsa14
+export slogp_vsa2,
+    slogp_vsa3,
+    slogp_vsa4,
+    slogp_vsa5,
+    slogp_vsa6,
+    slogp_vsa7,
+    slogp_vsa8,
+    slogp_vsa9,
+    slogp_vsa10,
+    slogp_vsa11,
+    slogp_vsa12
+export smr_vsa1,
+    smr_vsa2,
+    smr_vsa3,
+    smr_vsa4,
+    smr_vsa5,
+    smr_vsa6,
+    smr_vsa7,
+    smr_vsa8,
+    smr_vsa9,
+    smr_vsa10
+export peoe_vsa1,
+    peoe_vsa2,
+    peoe_vsa3,
+    peoe_vsa4,
+    peoe_vsa5,
+    peoe_vsa6,
+    peoe_vsa7,
+    peoe_vsa8,
+    peoe_vsa9,
+    peoe_vsa10,
+    peoe_vsa11,
+    peoe_vsa12,
+    peoe_vsa13,
+    peoe_vsa14
 
 # Additional E-state descriptors
 export max_absolute_e_state_index, min_absolute_e_state_index
 
 # 3D descriptors
-export asphericity, radius_of_gyration, pmi1, pmi2, pmi3, eccentricity, inertial_shape_factor
+export asphericity,
+    radius_of_gyration, pmi1, pmi2, pmi3, eccentricity, inertial_shape_factor
 
 # Fingerprints
 export morgan_fingerprint, rdk_fingerprint, maccs_fingerprint

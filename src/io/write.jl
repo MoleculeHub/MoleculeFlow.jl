@@ -101,12 +101,15 @@ end
 Convert a molecule to InChI Key format.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{String, Missing}`: InChI Key or missing if conversion fails
+
+  - `Union{String, Missing}`: InChI Key or missing if conversion fails
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 key = mol_to_inchi_key(mol)  # "LFQSCWFLJHTTHZ-UHFFFAOYSA-N"
@@ -128,9 +131,11 @@ end
 Convert a molecule to InChI string with auxiliary information.
 
 # Returns
-- `Union{Tuple{String, String}, Missing}`: (InChI, AuxInfo) or missing if conversion fails
+
+  - `Union{Tuple{String, String}, Missing}`: (InChI, AuxInfo) or missing if conversion fails
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 inchi, aux = mol_to_inchi_and_aux_info(mol)
@@ -155,9 +160,11 @@ end
 Convert a molecule to MOL block format.
 
 # Returns
-- `Union{String, Missing}`: MOL block or missing if conversion fails
+
+  - `Union{String, Missing}`: MOL block or missing if conversion fails
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 molblock = mol_to_molblock(mol)
@@ -179,9 +186,11 @@ end
 Convert a molecule to V3000 MOL block format.
 
 # Returns
-- `Union{String, Missing}`: V3000 MOL block or missing if conversion fails
+
+  - `Union{String, Missing}`: V3000 MOL block or missing if conversion fails
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 v3k_block = mol_to_v3k_molblock(mol)
@@ -203,19 +212,22 @@ end
 Convert a molecule to PDB block format.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `conf_id::Int`: Conformer ID to use (-1 for default)
+
+  - `mol::Molecule`: Input molecule
+  - `conf_id::Int`: Conformer ID to use (-1 for default)
 
 # Returns
-- `Union{String, Missing}`: PDB block or missing if conversion fails
+
+  - `Union{String, Missing}`: PDB block or missing if conversion fails
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 pdb_block = mol_to_pdb_block(mol)
 ```
 """
-function mol_to_pdb_block(mol::Molecule; conf_id::Int=-1)
+function mol_to_pdb_block(mol::Molecule; conf_id::Int = -1)
     !mol.valid && return ""
     try
         return pyconvert(String, _mol_to_pdb_block(mol._rdkit_mol))
@@ -231,9 +243,11 @@ end
 Convert a molecule to XYZ block format.
 
 # Returns
-- `Union{String, Missing}`: XYZ block or missing if conversion fails
+
+  - `Union{String, Missing}`: XYZ block or missing if conversion fails
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 xyz_block = mol_to_xyz_block(mol)
@@ -255,20 +269,23 @@ end
 Write a molecule to a PDB file.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `filename::String`: Output file path
-- `conf_id::Int`: Conformer ID to use (-1 for default)
+
+  - `mol::Molecule`: Input molecule
+  - `filename::String`: Output file path
+  - `conf_id::Int`: Conformer ID to use (-1 for default)
 
 # Returns
-- `Bool`: true if successful, false otherwise
+
+  - `Bool`: true if successful, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 success = mol_to_pdb_file(mol, "ethanol.pdb")
 ```
 """
-function mol_to_pdb_file(mol::Molecule, filename::String; conf_id::Int=-1)
+function mol_to_pdb_file(mol::Molecule, filename::String; conf_id::Int = -1)
     !mol.valid && return false
     try
         _mol_to_pdb_file(mol._rdkit_mol, filename)
@@ -285,13 +302,16 @@ end
 Write a molecule to an XYZ file.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `filename::String`: Output file path
+
+  - `mol::Molecule`: Input molecule
+  - `filename::String`: Output file path
 
 # Returns
-- `Bool`: true if successful, false otherwise
+
+  - `Bool`: true if successful, false otherwise
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 success = mol_to_xyz_file(mol, "ethanol.xyz")

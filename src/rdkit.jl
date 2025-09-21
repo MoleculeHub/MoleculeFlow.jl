@@ -746,33 +746,39 @@ function _reaction_get_reacting_atoms(rxn::Py)
     return rxn.GetReactingAtoms()
 end
 
-function _reaction_fingerprint(rxn::Py, fp_size::Int=2048)
+function _reaction_fingerprint(rxn::Py, fp_size::Int = 2048)
     rdkit_reactions = @pyconst(pyimport("rdkit.Chem.rdChemReactions"))
     params = rdkit_reactions.ReactionFingerprintParams()
     params.fpSize = fp_size
     return rdkit_reactions.CreateDifferenceFingerprintForReaction(rxn, params)
 end
 
-function _reaction_structural_fingerprint(rxn::Py, fp_size::Int=2048)
+function _reaction_structural_fingerprint(rxn::Py, fp_size::Int = 2048)
     rdkit_reactions = @pyconst(pyimport("rdkit.Chem.rdChemReactions"))
     params = rdkit_reactions.ReactionFingerprintParams()
     params.fpSize = fp_size
     return rdkit_reactions.CreateStructuralFingerprintForReaction(rxn, params)
 end
 
-function _compute_reaction_center_fingerprint(rxn::Py, fp_size::Int=2048)
+function _compute_reaction_center_fingerprint(rxn::Py, fp_size::Int = 2048)
     rdkit_reactions = @pyconst(pyimport("rdkit.Chem.rdChemReactions"))
     params = rdkit_reactions.ReactionFingerprintParams()
     params.fpSize = fp_size
     return rdkit_reactions.CreateDifferenceFingerprintForReaction(rxn, params)
 end
 
-function _reaction_run_reactants_inline_properties(rxn::Py, reactants::Vector{Py}, max_products::Int=1000)
+function _reaction_run_reactants_inline_properties(
+    rxn::Py, reactants::Vector{Py}, max_products::Int = 1000
+)
     rxn.RunReactants(pylist(reactants), max_products)
 end
 
-function _reaction_enumerate_library_from_reaction(rxn::Py, reactant_lists::Vector{Vector{Py}})
-    @pyconst(pyimport("rdkit.Chem.AllChem").EnumerateLibraryFromReaction)(rxn, pylist([pylist(r) for r in reactant_lists]))
+function _reaction_enumerate_library_from_reaction(
+    rxn::Py, reactant_lists::Vector{Vector{Py}}
+)
+    @pyconst(pyimport("rdkit.Chem.AllChem").EnumerateLibraryFromReaction)(
+        rxn, pylist([pylist(r) for r in reactant_lists])
+    )
 end
 
 function _reaction_to_smarts(rxn::Py)
@@ -783,16 +789,20 @@ function _reaction_compute_atom_mapping(rxn::Py)
     @pyconst(pyimport("rdkit.Chem.rdChemReactions").ReduceProductToSideChains)(rxn)
 end
 
-function _reaction_sanitize_reaction(rxn::Py, sanitize_ops::Int=15)
+function _reaction_sanitize_reaction(rxn::Py, sanitize_ops::Int = 15)
     @pyconst(pyimport("rdkit.Chem.rdChemReactions").SanitizeRxn)(rxn, sanitize_ops)
 end
 
-function _reaction_remove_unmapped_reactant_templates(rxn::Py, mode::Int=1)
-    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedReactantTemplates)(rxn, mode)
+function _reaction_remove_unmapped_reactant_templates(rxn::Py, mode::Int = 1)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedReactantTemplates)(
+        rxn, mode
+    )
 end
 
-function _reaction_remove_unmapped_product_templates(rxn::Py, mode::Int=1)
-    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedProductTemplates)(rxn, mode)
+function _reaction_remove_unmapped_product_templates(rxn::Py, mode::Int = 1)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedProductTemplates)(
+        rxn, mode
+    )
 end
 
 function _reaction_preprocess(rxn::Py)
@@ -806,7 +816,7 @@ end
 function _get_atom_mapping_numbers(mol::Py)
     atom_map_nums = []
     num_atoms = pyconvert(Int, mol.GetNumAtoms())
-    for i in 0:(num_atoms-1)
+    for i in 0:(num_atoms - 1)
         atom = mol.GetAtomWithIdx(i)
         map_num = pyconvert(Int, atom.GetAtomMapNum())
         push!(atom_map_nums, map_num)

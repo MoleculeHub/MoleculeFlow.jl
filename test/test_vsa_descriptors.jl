@@ -11,8 +11,17 @@ using MoleculeFlow
     @testset "SlogP_VSA Descriptors" begin
         # Test SlogP_VSA2-12 descriptors
         vsa_functions = [
-            slogp_vsa2, slogp_vsa3, slogp_vsa4, slogp_vsa5, slogp_vsa6,
-            slogp_vsa7, slogp_vsa8, slogp_vsa9, slogp_vsa10, slogp_vsa11, slogp_vsa12
+            slogp_vsa2,
+            slogp_vsa3,
+            slogp_vsa4,
+            slogp_vsa5,
+            slogp_vsa6,
+            slogp_vsa7,
+            slogp_vsa8,
+            slogp_vsa9,
+            slogp_vsa10,
+            slogp_vsa11,
+            slogp_vsa12,
         ]
 
         for (i, vsa_func) in enumerate(vsa_functions)
@@ -44,8 +53,16 @@ using MoleculeFlow
     @testset "SMR_VSA Descriptors" begin
         # Test SMR_VSA1-10 descriptors
         vsa_functions = [
-            smr_vsa1, smr_vsa2, smr_vsa3, smr_vsa4, smr_vsa5,
-            smr_vsa6, smr_vsa7, smr_vsa8, smr_vsa9, smr_vsa10
+            smr_vsa1,
+            smr_vsa2,
+            smr_vsa3,
+            smr_vsa4,
+            smr_vsa5,
+            smr_vsa6,
+            smr_vsa7,
+            smr_vsa8,
+            smr_vsa9,
+            smr_vsa10,
         ]
 
         for vsa_func in vsa_functions
@@ -77,8 +94,20 @@ using MoleculeFlow
     @testset "PEOE_VSA Descriptors" begin
         # Test PEOE_VSA1-14 descriptors
         vsa_functions = [
-            peoe_vsa1, peoe_vsa2, peoe_vsa3, peoe_vsa4, peoe_vsa5, peoe_vsa6, peoe_vsa7,
-            peoe_vsa8, peoe_vsa9, peoe_vsa10, peoe_vsa11, peoe_vsa12, peoe_vsa13, peoe_vsa14
+            peoe_vsa1,
+            peoe_vsa2,
+            peoe_vsa3,
+            peoe_vsa4,
+            peoe_vsa5,
+            peoe_vsa6,
+            peoe_vsa7,
+            peoe_vsa8,
+            peoe_vsa9,
+            peoe_vsa10,
+            peoe_vsa11,
+            peoe_vsa12,
+            peoe_vsa13,
+            peoe_vsa14,
         ]
 
         for vsa_func in vsa_functions
@@ -136,8 +165,14 @@ end
     @testset "BCUT2D Descriptors" begin
         # Test all BCUT2D descriptors
         bcut_functions = [
-            bcut2d_mwlow, bcut2d_mwhi, bcut2d_chglow, bcut2d_chghi,
-            bcut2d_logplow, bcut2d_logphi, bcut2d_mrlow, bcut2d_mrhi
+            bcut2d_mwlow,
+            bcut2d_mwhi,
+            bcut2d_chglow,
+            bcut2d_chghi,
+            bcut2d_logplow,
+            bcut2d_logphi,
+            bcut2d_mrlow,
+            bcut2d_mrhi,
         ]
 
         for bcut_func in bcut_functions
@@ -266,7 +301,9 @@ end
 end
 
 @testset "Vectorized Operations for New Descriptors" begin
-    mols = [mol_from_smiles("CCO"), mol_from_smiles("c1ccccc1"), mol_from_smiles("C1CCCCC1")]
+    mols = [
+        mol_from_smiles("CCO"), mol_from_smiles("c1ccccc1"), mol_from_smiles("C1CCCCC1")
+    ]
 
     # Test vectorized VSA descriptors
     slogp2_values = slogp_vsa2.(mols)

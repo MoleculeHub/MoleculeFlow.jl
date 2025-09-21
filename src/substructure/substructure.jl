@@ -626,7 +626,6 @@ function get_functional_groups(mol::Molecule)
     return results
 end
 
-
 """
     is_ring_aromatic(mol::Molecule, ring_atoms::Vector{Int}) -> Union{Bool, Missing}
 

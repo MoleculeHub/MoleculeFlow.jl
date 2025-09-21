@@ -393,12 +393,15 @@ end
 Perform general cleanup operations on a molecule using RDKit's cleanup function.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Molecule`: Cleaned up molecule
+
+  - `Molecule`: Cleaned up molecule
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 clean_mol = cleanup_molecule(mol)
@@ -414,9 +417,7 @@ function cleanup_molecule(mol::Molecule)
 
         if pynot(cleaned_mol)
             return Molecule(;
-                _rdkit_mol = cleaned_mol,
-                valid = false,
-                source = "cleanup_$(mol.source)",
+                _rdkit_mol = cleaned_mol, valid = false, source = "cleanup_$(mol.source)"
             )
         end
 
@@ -438,12 +439,15 @@ end
 Standardize a SMILES string using RDKit's standardization procedures.
 
 # Arguments
-- `smiles::String`: Input SMILES string
+
+  - `smiles::String`: Input SMILES string
 
 # Returns
-- `Union{String, Missing}`: Standardized SMILES string or missing if standardization fails
+
+  - `Union{String, Missing}`: Standardized SMILES string or missing if standardization fails
 
 # Example
+
 ```julia
 std_smiles = standardize_smiles("CC(O)=CC(=O)C.Na")
 ```
@@ -463,12 +467,15 @@ end
 Get the charge parent (neutral form) of a molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Molecule`: Charge parent molecule
+
+  - `Molecule`: Charge parent molecule
 
 # Example
+
 ```julia
 mol = mol_from_smiles("[NH3+]CCO")  # Protonated ethanolamine
 parent = charge_parent(mol)         # Returns neutral form
@@ -508,12 +515,15 @@ end
 Get the fragment parent (largest fragment) of a molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Molecule`: Fragment parent molecule
+
+  - `Molecule`: Fragment parent molecule
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO.Cl")     # Ethanol with chloride
 parent = fragment_parent(mol)       # Returns just ethanol

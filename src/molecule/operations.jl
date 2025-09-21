@@ -8,13 +8,16 @@
 Combine two molecules into a single molecule.
 
 # Arguments
-- `mol1::Molecule`: First molecule
-- `mol2::Molecule`: Second molecule
+
+  - `mol1::Molecule`: First molecule
+  - `mol2::Molecule`: Second molecule
 
 # Returns
-- `Molecule`: Combined molecule
+
+  - `Molecule`: Combined molecule
 
 # Example
+
 ```julia
 mol1 = mol_from_smiles("CCO")
 mol2 = mol_from_smiles("CCC")
@@ -23,15 +26,15 @@ combined = combine_mols(mol1, mol2)
 """
 function combine_mols(mol1::Molecule, mol2::Molecule)
     if !mol1.valid || !mol2.valid
-        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = "combined")
+        return Molecule(; _rdkit_mol = pybuiltins.None, valid = false, source = "combined")
     end
 
     try
         combined_mol = _combine_mols(mol1._rdkit_mol, mol2._rdkit_mol)
-        return Molecule(_rdkit_mol = combined_mol, valid = true, source = "combined")
+        return Molecule(; _rdkit_mol = combined_mol, valid = true, source = "combined")
     catch e
         @warn "Error combining molecules: $e"
-        return Molecule(_rdkit_mol = pybuiltins.None, valid = false, source = "combined")
+        return Molecule(; _rdkit_mol = pybuiltins.None, valid = false, source = "combined")
     end
 end
 
@@ -41,13 +44,16 @@ end
 Delete substructures matching a SMARTS pattern from a molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `query::String`: SMARTS pattern to match and delete
+
+  - `mol::Molecule`: Input molecule
+  - `query::String`: SMARTS pattern to match and delete
 
 # Returns
-- `Molecule`: Molecule with matching substructures removed
+
+  - `Molecule`: Molecule with matching substructures removed
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 # Remove alcohol groups
@@ -67,7 +73,7 @@ function delete_substructs(mol::Molecule, query::String)
         end
 
         modified_mol = _delete_substructs(mol._rdkit_mol, query_mol)
-        return Molecule(_rdkit_mol = modified_mol, valid = true, source = mol.source)
+        return Molecule(; _rdkit_mol = modified_mol, valid = true, source = mol.source)
     catch e
         @warn "Error deleting substructures: $e"
         return mol
@@ -101,12 +107,15 @@ replacements = replace_substructs(mol, "[OH]", "N")
 Get ring information for a molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Py, Missing}`: RingInfo object or missing if molecule is invalid
+
+  - `Union{Py, Missing}`: RingInfo object or missing if molecule is invalid
 
 # Example
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")
 ring_info = get_ring_info(mol)
@@ -118,8 +127,10 @@ function get_ring_info(mol::Molecule)
         ring_info = _get_ring_info(mol._rdkit_mol)
         return Dict(
             :num_rings => pyconvert(Int, ring_info.NumRings()),
-            :atom_rings => [pyconvert(Vector{Int}, ring) .+ 1 for ring in ring_info.AtomRings()],
-            :bond_rings => [pyconvert(Vector{Int}, ring) .+ 1 for ring in ring_info.BondRings()],
+            :atom_rings =>
+                [pyconvert(Vector{Int}, ring) .+ 1 for ring in ring_info.AtomRings()],
+            :bond_rings =>
+                [pyconvert(Vector{Int}, ring) .+ 1 for ring in ring_info.BondRings()],
         )
     catch e
         @warn "Error getting ring info: $e"
@@ -133,12 +144,15 @@ end
 Get canonical atom ranks for a molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Union{Vector{Int}, Missing}`: Vector of atom ranks or missing if molecule is invalid
+
+  - `Union{Vector{Int}, Missing}`: Vector of atom ranks or missing if molecule is invalid
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 ranks = canonical_atom_ranks(mol)
@@ -161,14 +175,17 @@ end
 Find atom environment of specified radius around an atom.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `radius::Int`: Radius to search
-- `atom_idx::Int`: Index of central atom (0-based)
+
+  - `mol::Molecule`: Input molecule
+  - `radius::Int`: Radius to search
+  - `atom_idx::Int`: Index of central atom (0-based)
 
 # Returns
-- `Union{Vector{Int}, Missing}`: Vector of bond indices in environment or missing if invalid
+
+  - `Union{Vector{Int}, Missing}`: Vector of bond indices in environment or missing if invalid
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCCCC")
 env = find_atom_environment(mol, 2, 1)
@@ -191,13 +208,16 @@ end
 Convert a molecular fragment to SMARTS pattern.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `atom_indices::Vector{Int}`: Indices of atoms to include in fragment
+
+  - `mol::Molecule`: Input molecule
+  - `atom_indices::Vector{Int}`: Indices of atoms to include in fragment
 
 # Returns
-- `Union{String, Missing}`: SMARTS pattern or missing if invalid
+
+  - `Union{String, Missing}`: SMARTS pattern or missing if invalid
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCCO")
 smarts = mol_fragment_to_smarts(mol, [0, 1])  # First two carbons
@@ -220,13 +240,16 @@ end
 Convert a molecular fragment to SMILES string.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `atom_indices::Vector{Int}`: Indices of atoms to include in fragment
+
+  - `mol::Molecule`: Input molecule
+  - `atom_indices::Vector{Int}`: Indices of atoms to include in fragment
 
 # Returns
-- `Union{String, Missing}`: SMILES string or missing if invalid
+
+  - `Union{String, Missing}`: SMILES string or missing if invalid
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCCO")
 smiles = mol_fragment_to_smiles(mol, [0, 1])  # First two carbons
@@ -249,13 +272,16 @@ end
 Renumber atoms in a molecule according to a new ordering.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `new_order::Vector{Int}`: New atom ordering (0-based indices)
+
+  - `mol::Molecule`: Input molecule
+  - `new_order::Vector{Int}`: New atom ordering (0-based indices)
 
 # Returns
-- `Molecule`: Molecule with renumbered atoms
+
+  - `Molecule`: Molecule with renumbered atoms
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 # Reverse atom order
@@ -266,7 +292,7 @@ function renumber_atoms(mol::Molecule, new_order::Vector{Int})
     !mol.valid && return mol
     try
         new_mol = _renumber_atoms(mol._rdkit_mol, new_order)
-        return Molecule(_rdkit_mol = new_mol, valid = true, source = mol.source)
+        return Molecule(; _rdkit_mol = new_mol, valid = true, source = mol.source)
     catch e
         @warn "Error renumbering atoms: $e"
         return mol
@@ -279,12 +305,15 @@ end
 Remove stereochemistry information from a molecule (in-place operation).
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Molecule`: Modified molecule
+
+  - `Molecule`: Modified molecule
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C[C@H](O)C")
 remove_stereochemistry!(mol)
@@ -307,12 +336,15 @@ end
 Sanitize a molecule (in-place operation).
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Molecule`: Sanitized molecule
+
+  - `Molecule`: Sanitized molecule
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 sanitize_mol!(mol)
@@ -335,12 +367,15 @@ end
 Find rings in a molecule using the fast algorithm (in-place operation).
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Molecule`: Molecule with ring information computed
+
+  - `Molecule`: Molecule with ring information computed
 
 # Example
+
 ```julia
 mol = mol_from_smiles("c1ccccc1")
 fast_find_rings!(mol)
@@ -363,12 +398,15 @@ end
 Compute 2D coordinates for a molecule (in-place operation).
 
 # Arguments
-- `mol::Molecule`: Input molecule
+
+  - `mol::Molecule`: Input molecule
 
 # Returns
-- `Molecule`: Molecule with 2D coordinates
+
+  - `Molecule`: Molecule with 2D coordinates
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 compute_2d_coords!(mol)
@@ -394,7 +432,8 @@ function replace_substructs(mol::Molecule, query::String, replacement::String)
         query_mol = _mol_from_smarts(query)
         replacement_mol = _mol_from_smiles(replacement)
 
-        if pyconvert(Bool, query_mol === pybuiltins.None) || pyconvert(Bool, replacement_mol === pybuiltins.None)
+        if pyconvert(Bool, query_mol === pybuiltins.None) ||
+            pyconvert(Bool, replacement_mol === pybuiltins.None)
             @warn "Invalid SMARTS/SMILES pattern"
             return [mol]
         end
@@ -404,7 +443,10 @@ function replace_substructs(mol::Molecule, query::String, replacement::String)
         # Convert Python tuple/list to Julia vector
         molecules = Molecule[]
         for rdkit_mol in result_mols
-            push!(molecules, Molecule(_rdkit_mol = rdkit_mol, valid = true, source = mol.source))
+            push!(
+                molecules,
+                Molecule(; _rdkit_mol = rdkit_mol, valid = true, source = mol.source),
+            )
         end
 
         return molecules
@@ -424,26 +466,29 @@ end
 Assign stereochemistry to a molecule in place.
 
 # Arguments
-- `mol::Molecule`: Input molecule (modified in place)
-- `clean_it::Bool`: Whether to clean up the molecule
-- `force::Bool`: Whether to force assignment
+
+  - `mol::Molecule`: Input molecule (modified in place)
+  - `clean_it::Bool`: Whether to clean up the molecule
+  - `force::Bool`: Whether to force assignment
 
 # Returns
-- `Bool`: Success status
+
+  - `Bool`: Success status
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C[C@H](O)C")
 success = assign_stereochemistry!(mol)
 ```
 """
-function assign_stereochemistry!(mol::Molecule; clean_it::Bool=true, force::Bool=false)
+function assign_stereochemistry!(mol::Molecule; clean_it::Bool = true, force::Bool = false)
     if !mol.valid
         return false
     end
 
     try
-        _assign_stereochemistry(mol._rdkit_mol; cleanIt=clean_it, force=force)
+        _assign_stereochemistry(mol._rdkit_mol; cleanIt = clean_it, force = force)
         return true
     catch e
         @warn "Error assigning stereochemistry: $e"
@@ -457,26 +502,31 @@ end
 Find chiral centers in a molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `include_unassigned::Bool`: Whether to include unassigned chiral centers
+
+  - `mol::Molecule`: Input molecule
+  - `include_unassigned::Bool`: Whether to include unassigned chiral centers
 
 # Returns
-- `Vector{Tuple{Int,String}}`: Vector of (atom_index, chirality) tuples
+
+  - `Vector{Tuple{Int,String}}`: Vector of (atom_index, chirality) tuples
 
 # Example
+
 ```julia
 mol = mol_from_smiles("C[C@H](O)C")
 chiral_centers = find_chiral_centers(mol)
 ```
 """
-function find_chiral_centers(mol::Molecule; include_unassigned::Bool=false)
+function find_chiral_centers(mol::Molecule; include_unassigned::Bool = false)
     if !mol.valid
-        return Tuple{Int,String}[]
+        return Tuple{Int, String}[]
     end
 
     try
-        centers = _find_mol_chiral_centers(mol._rdkit_mol; includeUnassigned=include_unassigned)
-        result = Tuple{Int,String}[]
+        centers = _find_mol_chiral_centers(
+            mol._rdkit_mol; includeUnassigned = include_unassigned
+        )
+        result = Tuple{Int, String}[]
 
         for center in centers
             atom_idx = pyconvert(Int, center[0])
@@ -487,14 +537,13 @@ function find_chiral_centers(mol::Molecule; include_unassigned::Bool=false)
         return result
     catch e
         @warn "Error finding chiral centers: $e"
-        return Tuple{Int,String}[]
+        return Tuple{Int, String}[]
     end
 end
 
 #######################################################
 # Ring Analysis
 #######################################################
-
 
 #######################################################
 # Pattern Matching
@@ -506,13 +555,16 @@ end
 Quick check if a molecule matches a SMARTS pattern.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `smarts::String`: SMARTS pattern
+
+  - `mol::Molecule`: Input molecule
+  - `smarts::String`: SMARTS pattern
 
 # Returns
-- `Bool`: Whether the molecule matches the pattern
+
+  - `Bool`: Whether the molecule matches the pattern
 
 # Example
+
 ```julia
 mol = mol_from_smiles("CCO")
 has_alcohol = quick_smarts_match(mol, "[OH]")
@@ -538,15 +590,9 @@ function quick_smarts_match(mol::Molecule, smarts::String)
     end
 end
 
-
-
-
-
 #######################################################
 # Additional Missing Operations
 #######################################################
-
-
 
 """
     split_mol_by_pdb_chain_id(mol::Molecule) -> Union{Vector{Molecule}, Missing}
@@ -554,7 +600,8 @@ end
 Split a PDB molecule by chain ID.
 
 # Returns
-- `Union{Vector{Molecule}, Missing}`: Vector of molecules (one per chain) or missing if operation fails
+
+  - `Union{Vector{Molecule}, Missing}`: Vector of molecules (one per chain) or missing if operation fails
 """
 function split_mol_by_pdb_chain_id(mol::Molecule)
     !mol.valid && return missing
@@ -562,7 +609,12 @@ function split_mol_by_pdb_chain_id(mol::Molecule)
         mol_dict = _split_mol_by_pdb_chain_id(mol._rdkit_mol)
         molecules = Molecule[]
         for (chain_id, rdkit_mol) in mol_dict
-            push!(molecules, Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "PDB_chain_$chain_id"))
+            push!(
+                molecules,
+                Molecule(;
+                    _rdkit_mol = rdkit_mol, valid = true, source = "PDB_chain_$chain_id"
+                ),
+            )
         end
         return molecules
     catch e
@@ -577,7 +629,8 @@ end
 Split a PDB molecule by residues.
 
 # Returns
-- `Union{Vector{Molecule}, Missing}`: Vector of molecules (one per residue) or missing if operation fails
+
+  - `Union{Vector{Molecule}, Missing}`: Vector of molecules (one per residue) or missing if operation fails
 """
 function split_mol_by_pdb_residues(mol::Molecule)
     !mol.valid && return missing
@@ -585,7 +638,10 @@ function split_mol_by_pdb_residues(mol::Molecule)
         mol_list = _split_mol_by_pdb_residues(mol._rdkit_mol)
         molecules = Molecule[]
         for (i, rdkit_mol) in enumerate(mol_list)
-            push!(molecules, Molecule(_rdkit_mol = rdkit_mol, valid = true, source = "PDB_residue_$i"))
+            push!(
+                molecules,
+                Molecule(; _rdkit_mol = rdkit_mol, valid = true, source = "PDB_residue_$i"),
+            )
         end
         return molecules
     catch e
@@ -600,11 +656,13 @@ end
 Assign stereochemistry from 3D coordinates.
 
 # Arguments
-- `mol::Molecule`: Input molecule (modified in place)
-- `conf_id::Int`: Conformer ID to use (-1 for default)
+
+  - `mol::Molecule`: Input molecule (modified in place)
+  - `conf_id::Int`: Conformer ID to use (-1 for default)
 
 # Returns
-- `Bool`: true if successful, false otherwise
+
+  - `Bool`: true if successful, false otherwise
 """
 function assign_stereochemistry_from_3d!(mol::Molecule; conf_id::Int = -1)
     !mol.valid && return false
@@ -623,11 +681,13 @@ end
 Detect the stereochemistry of a specific bond.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `bond_idx::Int`: Bond index
+
+  - `mol::Molecule`: Input molecule
+  - `bond_idx::Int`: Bond index
 
 # Returns
-- `Union{String, Missing}`: Stereochemistry designation or missing if detection fails
+
+  - `Union{String, Missing}`: Stereochemistry designation or missing if detection fails
 """
 function detect_bond_stereochemistry(mol::Molecule, bond_idx::Int)
     !mol.valid && return missing
@@ -645,7 +705,8 @@ end
 Find potential stereo centers in a molecule.
 
 # Returns
-- `Union{Vector, Missing}`: Vector of potential stereo information or missing if detection fails
+
+  - `Union{Vector, Missing}`: Vector of potential stereo information or missing if detection fails
 """
 function find_potential_stereo(mol::Molecule)
     !mol.valid && return missing
@@ -663,7 +724,8 @@ end
 Canonicalize enhanced stereochemistry information.
 
 # Returns
-- `Bool`: true if successful, false otherwise
+
+  - `Bool`: true if successful, false otherwise
 """
 function canonicalize_enhanced_stereo!(mol::Molecule)
     !mol.valid && return false
@@ -682,7 +744,8 @@ end
 Set bond stereochemistry from directional information.
 
 # Returns
-- `Bool`: true if successful, false otherwise
+
+  - `Bool`: true if successful, false otherwise
 """
 function set_bond_stereo_from_directions!(mol::Molecule)
     !mol.valid && return false
@@ -701,11 +764,13 @@ end
 Add wedge information to molecule bonds for visualization.
 
 # Arguments
-- `mol::Molecule`: Input molecule (modified in place)
-- `wedge_bonds::Bool`: Whether to add wedge bonds
+
+  - `mol::Molecule`: Input molecule (modified in place)
+  - `wedge_bonds::Bool`: Whether to add wedge bonds
 
 # Returns
-- `Bool`: true if successful, false otherwise
+
+  - `Bool`: true if successful, false otherwise
 """
 function wedge_mol_bonds!(mol::Molecule; wedge_bonds::Bool = true)
     !mol.valid && return false
@@ -724,7 +789,8 @@ end
 Find ring families in the molecule.
 
 # Returns
-- `Union{Vector, Missing}`: Vector of ring families or missing if operation fails
+
+  - `Union{Vector, Missing}`: Vector of ring families or missing if operation fails
 """
 function find_ring_families(mol::Molecule)
     !mol.valid && return missing
@@ -736,18 +802,19 @@ function find_ring_families(mol::Molecule)
     end
 end
 
-
 """
     canonical_rank_atoms_in_fragment(mol::Molecule, atoms_to_use::Vector{Int}) -> Union{Vector{Int}, Missing}
 
 Get canonical ranking of atoms in a molecular fragment.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `atoms_to_use::Vector{Int}`: Atom indices to include in ranking
+
+  - `mol::Molecule`: Input molecule
+  - `atoms_to_use::Vector{Int}`: Atom indices to include in ranking
 
 # Returns
-- `Union{Vector{Int}, Missing}`: Canonical ranks or missing if operation fails
+
+  - `Union{Vector{Int}, Missing}`: Canonical ranks or missing if operation fails
 """
 function canonical_rank_atoms_in_fragment(mol::Molecule, atoms_to_use::Vector{Int})
     !mol.valid && return missing
@@ -766,12 +833,14 @@ end
 Find atoms within a specified radius of a given atom.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `radius::Int`: Search radius
-- `atom_idx::Int`: Central atom index
+
+  - `mol::Molecule`: Input molecule
+  - `radius::Int`: Search radius
+  - `atom_idx::Int`: Central atom index
 
 # Returns
-- `Union{Vector{Int}, Missing}`: Atom indices within radius or missing if operation fails
+
+  - `Union{Vector{Int}, Missing}`: Atom indices within radius or missing if operation fails
 """
 function find_atom_environment_of_radius_n(mol::Molecule, radius::Int, atom_idx::Int)
     !mol.valid && return missing
@@ -784,19 +853,19 @@ function find_atom_environment_of_radius_n(mol::Molecule, radius::Int, atom_idx:
     end
 end
 
-
-
 """
     get_most_substituted_core_match(mol::Molecule, core::Molecule) -> Union{Vector{Int}, Missing}
 
 Get the most substituted core match in a molecule.
 
 # Arguments
-- `mol::Molecule`: Input molecule
-- `core::Molecule`: Core pattern to match
+
+  - `mol::Molecule`: Input molecule
+  - `core::Molecule`: Core pattern to match
 
 # Returns
-- `Union{Vector{Int}, Missing}`: Atom indices of the match or missing if no match found
+
+  - `Union{Vector{Int}, Missing}`: Atom indices of the match or missing if no match found
 """
 function get_most_substituted_core_match(mol::Molecule, core::Molecule)
     !mol.valid && return missing
@@ -809,6 +878,3 @@ function get_most_substituted_core_match(mol::Molecule, core::Molecule)
         return missing
     end
 end
-
-
-

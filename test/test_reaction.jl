@@ -27,7 +27,7 @@ end
 @testset "Reaction Validation" begin
     # Valid reaction
     rxn_smarts = "[C:1](=O)[O:2][C:3]>>[C:1](=O)[O-].[C:3][O+]"
-    rxn = reaction_from_smarts(rxn_smarts, validate=false)
+    rxn = reaction_from_smarts(rxn_smarts, validate = false)
     @test !rxn.validated
     @test validate_reaction!(rxn)
     @test rxn.validated
@@ -48,7 +48,7 @@ end
     @test all(prodset -> all(prod -> prod isa Molecule, prodset), products)
 
     # Test with max_products limit
-    products_limited = run_reaction(rxn, [reactant], max_products=1)
+    products_limited = run_reaction(rxn, [reactant], max_products = 1)
     @test length(products_limited) <= 1
 end
 
@@ -95,7 +95,7 @@ end
     @test length(fp) == 2048  # Default size
 
     # Test cached fingerprint
-    fp2 = reaction_fingerprint(rxn, use_cache=true)
+    fp2 = reaction_fingerprint(rxn, use_cache = true)
     @test fp == fp2
 
     # Test structural fingerprint
@@ -115,12 +115,12 @@ end
     rxn2 = reaction_from_smarts(rxn2_smarts)
 
     # Test Tanimoto similarity
-    sim_tanimoto = reaction_similarity(rxn1, rxn2, method=:tanimoto)
+    sim_tanimoto = reaction_similarity(rxn1, rxn2, method = :tanimoto)
     @test isa(sim_tanimoto, Float64)
     @test 0.0 <= sim_tanimoto <= 1.0
 
     # Test Dice similarity
-    sim_dice = reaction_similarity(rxn1, rxn2, method=:dice)
+    sim_dice = reaction_similarity(rxn1, rxn2, method = :dice)
     @test isa(sim_dice, Float64)
     @test 0.0 <= sim_dice <= 1.0
 
@@ -179,7 +179,8 @@ end
     # Test reaction classification
     classification = reaction_type_classification(rxn)
     @test isa(classification, Symbol)
-    @test classification in [:decomposition, :combination, :substitution, :rearrangement, :complex]
+    @test classification in
+        [:decomposition, :combination, :substitution, :rearrangement, :complex]
 end
 
 @testset "Reaction Library Enumeration" begin
@@ -210,12 +211,12 @@ end
     reaction_db = [rxn1, rxn2, rxn3]
 
     # Search for similar reactions
-    similar = find_similar_reactions(rxn1, reaction_db, threshold=0.1)
+    similar = find_similar_reactions(rxn1, reaction_db, threshold = 0.1)
     @test isa(similar, Vector{Tuple{Reaction, Float64}})
     @test length(similar) >= 1  # Should at least find itself
 
     # Check that similarities are sorted
     if length(similar) > 1
-        @test all(i -> similar[i][2] >= similar[i+1][2], 1:(length(similar)-1))
+        @test all(i -> similar[i][2] >= similar[i + 1][2], 1:(length(similar) - 1))
     end
 end

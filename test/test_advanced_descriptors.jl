@@ -226,7 +226,6 @@ end
         @test pmi3(invalid_mol) === missing
     end
 
-
     @testset "3D Descriptors with Generated Conformers" begin
         # Skip this test if conformer generation is not available
         try

@@ -21,12 +21,41 @@ using MoleculeFlow
 
             # Test all new VSA descriptors
             vsa_descriptors = [
-                slogp_vsa2, slogp_vsa3, slogp_vsa4, slogp_vsa5, slogp_vsa6,
-                slogp_vsa7, slogp_vsa8, slogp_vsa9, slogp_vsa10, slogp_vsa11, slogp_vsa12,
-                smr_vsa1, smr_vsa2, smr_vsa3, smr_vsa4, smr_vsa5,
-                smr_vsa6, smr_vsa7, smr_vsa8, smr_vsa9, smr_vsa10,
-                peoe_vsa1, peoe_vsa2, peoe_vsa3, peoe_vsa4, peoe_vsa5, peoe_vsa6, peoe_vsa7,
-                peoe_vsa8, peoe_vsa9, peoe_vsa10, peoe_vsa11, peoe_vsa12, peoe_vsa13, peoe_vsa14,
+                slogp_vsa2,
+                slogp_vsa3,
+                slogp_vsa4,
+                slogp_vsa5,
+                slogp_vsa6,
+                slogp_vsa7,
+                slogp_vsa8,
+                slogp_vsa9,
+                slogp_vsa10,
+                slogp_vsa11,
+                slogp_vsa12,
+                smr_vsa1,
+                smr_vsa2,
+                smr_vsa3,
+                smr_vsa4,
+                smr_vsa5,
+                smr_vsa6,
+                smr_vsa7,
+                smr_vsa8,
+                smr_vsa9,
+                smr_vsa10,
+                peoe_vsa1,
+                peoe_vsa2,
+                peoe_vsa3,
+                peoe_vsa4,
+                peoe_vsa5,
+                peoe_vsa6,
+                peoe_vsa7,
+                peoe_vsa8,
+                peoe_vsa9,
+                peoe_vsa10,
+                peoe_vsa11,
+                peoe_vsa12,
+                peoe_vsa13,
+                peoe_vsa14,
             ]
 
             for desc_func in vsa_descriptors
@@ -39,8 +68,14 @@ using MoleculeFlow
 
             # Test all new BCUT descriptors
             bcut_descriptors = [
-                bcut2d_mwlow, bcut2d_mwhi, bcut2d_chglow, bcut2d_chghi,
-                bcut2d_logplow, bcut2d_logphi, bcut2d_mrlow, bcut2d_mrhi,
+                bcut2d_mwlow,
+                bcut2d_mwhi,
+                bcut2d_chglow,
+                bcut2d_chghi,
+                bcut2d_logplow,
+                bcut2d_logphi,
+                bcut2d_mrlow,
+                bcut2d_mrhi,
             ]
 
             for desc_func in bcut_descriptors
@@ -57,9 +92,14 @@ using MoleculeFlow
 
             # Test additional structure count descriptors
             structure_descriptors = [
-                num_aliphatic_heterocycles, num_saturated_heterocycles, num_saturated_carbocycles,
-                num_unspecified_atom_stereo_centers, num_spiro_atoms, num_bridgehead_atoms,
-                num_aliphatic_rings, num_heterocycles,
+                num_aliphatic_heterocycles,
+                num_saturated_heterocycles,
+                num_saturated_carbocycles,
+                num_unspecified_atom_stereo_centers,
+                num_spiro_atoms,
+                num_bridgehead_atoms,
+                num_aliphatic_rings,
+                num_heterocycles,
             ]
 
             for desc_func in structure_descriptors
@@ -72,8 +112,10 @@ using MoleculeFlow
 
             # Test additional descriptors
             @test isa(hall_kier_alpha(mol), Float64) || hall_kier_alpha(mol) === missing
-            @test isa(max_absolute_e_state_index(mol), Float64) || max_absolute_e_state_index(mol) === missing
-            @test isa(min_absolute_e_state_index(mol), Float64) || min_absolute_e_state_index(mol) === missing
+            @test isa(max_absolute_e_state_index(mol), Float64) ||
+                max_absolute_e_state_index(mol) === missing
+            @test isa(min_absolute_e_state_index(mol), Float64) ||
+                min_absolute_e_state_index(mol) === missing
         end
     end
 
@@ -221,11 +263,18 @@ using MoleculeFlow
 
         # Calculate many descriptors in sequence
         descriptors = [
-            slogp_vsa2, slogp_vsa5, slogp_vsa10,
-            smr_vsa3, smr_vsa7,
-            peoe_vsa2, peoe_vsa8, peoe_vsa14,
-            bcut2d_mwlow, bcut2d_logphi,
-            num_aliphatic_rings, num_heterocycles,
+            slogp_vsa2,
+            slogp_vsa5,
+            slogp_vsa10,
+            smr_vsa3,
+            smr_vsa7,
+            peoe_vsa2,
+            peoe_vsa8,
+            peoe_vsa14,
+            bcut2d_mwlow,
+            bcut2d_logphi,
+            num_aliphatic_rings,
+            num_heterocycles,
             hall_kier_alpha,
         ]
 
