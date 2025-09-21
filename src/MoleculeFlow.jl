@@ -115,6 +115,7 @@ export max_absolute_e_state_index, min_absolute_e_state_index
 # 3D descriptors
 export asphericity,
     radius_of_gyration, pmi1, pmi2, pmi3, eccentricity, inertial_shape_factor
+export spherocity_index, getaway_descriptors, whim_descriptors, rdf_descriptors, morse_descriptors
 
 # Fingerprints
 export morgan_fingerprint, rdk_fingerprint, maccs_fingerprint

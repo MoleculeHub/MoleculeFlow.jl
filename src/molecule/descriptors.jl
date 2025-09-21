@@ -1838,6 +1838,213 @@ function pmi3(mol::Union{Molecule, Missing}; conf_id::Int = -1)
     end
 end
 
+"""
+    spherocity_index(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the spherocity index, a measure of molecular shape.
+Lower values indicate more linear molecules, higher values indicate more spherical molecules.
+
+# Arguments
+- `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+- `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+
+# Returns
+- `Union{Float64, Missing}`: Spherocity index value, or missing if molecule is invalid or lacks 3D coordinates
+
+# Example
+```julia
+mol = mol_from_smiles("CCCCCCC")  # Linear alkane
+result = generate_3d_conformers(mol; num_conformers=1)
+if result.success
+    spherocity = spherocity_index(result.molecules[1])  # Should be low (linear)
+end
+```
+
+# Notes
+- Requires 3D coordinates to be present
+- Values range from 0 (linear) to 1 (spherical)
+"""
+function spherocity_index(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _spherocity_index(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating spherocity index: $e"
+        return missing
+    end
+end
+
+"""
+    getaway_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, precision::Int = 2, custom_atom_property::String = "") -> Union{Vector{Float64}, Missing}
+
+Calculate GETAWAY (GEometry, Topology, and Atom-Weights AssemblY) descriptors.
+These are 3D molecular descriptors that encode information about molecular geometry,
+topology, and atomic properties.
+
+# Arguments
+- `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+- `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+- `precision::Int = 2`: Precision for floating point calculations
+- `custom_atom_property::String = ""`: Custom atomic property to use (empty string for default)
+
+# Returns
+- `Union{Vector{Float64}, Missing}`: Vector of GETAWAY descriptor values, or missing if molecule is invalid
+
+# Example
+```julia
+mol = mol_from_smiles("CCO")
+result = generate_3d_conformers(mol; num_conformers=1)
+if result.success
+    getaway_desc = getaway_descriptors(result.molecules[1])
+    println("Number of GETAWAY descriptors: ", length(getaway_desc))
+end
+```
+
+# Notes
+- Returns a vector of descriptors (typically 273 values)
+- Requires 3D coordinates to be present
+- GETAWAY descriptors combine geometric, topological, and chemical information
+"""
+function getaway_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, precision::Int = 2, custom_atom_property::String = "")
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        result = _calc_getaway(mol._rdkit_mol; confId = conf_id, precision = precision, custom_atom_property = custom_atom_property)
+        return pyconvert(Vector{Float64}, result)
+    catch e
+        @warn "Error calculating GETAWAY descriptors: $e"
+        return missing
+    end
+end
+
+"""
+    whim_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, thresh::Float64 = 0.001, custom_atom_property::String = "") -> Union{Vector{Float64}, Missing}
+
+Calculate WHIM (Weighted Holistic Invariant Molecular) descriptors.
+These descriptors capture information about molecular shape and atomic distributions
+in 3D space using principal component analysis.
+
+# Arguments
+- `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+- `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+- `thresh::Float64 = 0.001`: Threshold for eigenvalue calculation
+- `custom_atom_property::String = ""`: Custom atomic property to use (empty string for default)
+
+# Returns
+- `Union{Vector{Float64}, Missing}`: Vector of WHIM descriptor values, or missing if molecule is invalid
+
+# Example
+```julia
+mol = mol_from_smiles("c1ccccc1")  # Benzene
+result = generate_3d_conformers(mol; num_conformers=1)
+if result.success
+    whim_desc = whim_descriptors(result.molecules[1])
+    println("Number of WHIM descriptors: ", length(whim_desc))
+end
+```
+
+# Notes
+- Returns a vector of descriptors (typically 114 values)
+- Requires 3D coordinates to be present
+- WHIM descriptors are rotationally invariant
+"""
+function whim_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, thresh::Float64 = 0.001, custom_atom_property::String = "")
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        result = _calc_whim(mol._rdkit_mol; confId = conf_id, thresh = thresh, custom_atom_property = custom_atom_property)
+        return pyconvert(Vector{Float64}, result)
+    catch e
+        @warn "Error calculating WHIM descriptors: $e"
+        return missing
+    end
+end
+
+"""
+    rdf_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, custom_atom_property::String = "") -> Union{Vector{Float64}, Missing}
+
+Calculate RDF (Radial Distribution Function) descriptors.
+These descriptors encode the distribution of atoms as a function of distance
+from a central point in the molecule.
+
+# Arguments
+- `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+- `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+- `custom_atom_property::String = ""`: Custom atomic property to use (empty string for default)
+
+# Returns
+- `Union{Vector{Float64}, Missing}`: Vector of RDF descriptor values, or missing if molecule is invalid
+
+# Example
+```julia
+mol = mol_from_smiles("CCCCCC")  # Hexane
+result = generate_3d_conformers(mol; num_conformers=1)
+if result.success
+    rdf_desc = rdf_descriptors(result.molecules[1])
+    println("Number of RDF descriptors: ", length(rdf_desc))
+end
+```
+
+# Notes
+- Returns a vector of descriptors (typically 210 values)
+- Requires 3D coordinates to be present
+- RDF descriptors capture radial atomic distribution patterns
+"""
+function rdf_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, custom_atom_property::String = "")
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        result = _calc_rdf(mol._rdkit_mol; confId = conf_id, custom_atom_property = custom_atom_property)
+        return pyconvert(Vector{Float64}, result)
+    catch e
+        @warn "Error calculating RDF descriptors: $e"
+        return missing
+    end
+end
+
+"""
+    morse_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, custom_atom_property::String = "") -> Union{Vector{Float64}, Missing}
+
+Calculate MORSE (Molecule Representation of Structures based on Electron diffraction) descriptors.
+These 3D descriptors are based on the idea of electron diffraction and encode
+3D structural information as a function of scattering angle.
+
+# Arguments
+- `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+- `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+- `custom_atom_property::String = ""`: Custom atomic property to use (empty string for default)
+
+# Returns
+- `Union{Vector{Float64}, Missing}`: Vector of MORSE descriptor values, or missing if molecule is invalid
+
+# Example
+```julia
+mol = mol_from_smiles("CC(C)C")  # Isobutane
+result = generate_3d_conformers(mol; num_conformers=1)
+if result.success
+    morse_desc = morse_descriptors(result.molecules[1])
+    println("Number of MORSE descriptors: ", length(morse_desc))
+end
+```
+
+# Notes
+- Returns a vector of descriptors (typically 224 values)
+- Requires 3D coordinates to be present
+- MORSE descriptors are based on electron diffraction theory
+"""
+function morse_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, custom_atom_property::String = "")
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        result = _calc_morse(mol._rdkit_mol; confId = conf_id, custom_atom_property = custom_atom_property)
+        return pyconvert(Vector{Float64}, result)
+    catch e
+        @warn "Error calculating MORSE descriptors: $e"
+        return missing
+    end
+end
+
 # VSA descriptors (SlogP_VSA series)
 """
     slogp_vsa2(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}

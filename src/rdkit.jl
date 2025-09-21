@@ -168,6 +168,43 @@ function _inertial_shape_factor(mol::Py; confId::Int = -1)
     @pyconst(pyimport("rdkit.Chem.Descriptors3D").InertialShapeFactor)(mol; confId = confId)
 end
 
+# Advanced 3D descriptors
+function _spherocity_index(mol::Py; confId::Int = -1)
+    @pyconst(pyimport("rdkit.Chem.Descriptors3D").SpherocityIndex)(mol; confId = confId)
+end
+
+function _calc_getaway(mol::Py; confId::Int = -1, precision::Int = 2, custom_atom_property::String = "")
+    if custom_atom_property == ""
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcGETAWAY)(mol; confId = confId, precision = precision)
+    else
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcGETAWAY)(mol; confId = confId, precision = precision, CustomAtomProperty = custom_atom_property)
+    end
+end
+
+function _calc_whim(mol::Py; confId::Int = -1, thresh::Float64 = 0.001, custom_atom_property::String = "")
+    if custom_atom_property == ""
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcWHIM)(mol; confId = confId, thresh = thresh)
+    else
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcWHIM)(mol; confId = confId, thresh = thresh, CustomAtomProperty = custom_atom_property)
+    end
+end
+
+function _calc_rdf(mol::Py; confId::Int = -1, custom_atom_property::String = "")
+    if custom_atom_property == ""
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcRDF)(mol; confId = confId)
+    else
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcRDF)(mol; confId = confId, CustomAtomProperty = custom_atom_property)
+    end
+end
+
+function _calc_morse(mol::Py; confId::Int = -1, custom_atom_property::String = "")
+    if custom_atom_property == ""
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcMORSE)(mol; confId = confId)
+    else
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcMORSE)(mol; confId = confId, CustomAtomProperty = custom_atom_property)
+    end
+end
+
 # Synthetic Accessibility Score
 function _sascore(mol::Py)
     @pyconst(pyimport("rdkit.Contrib.SA_Score.sascorer").calculateScore)(mol)
