@@ -231,6 +231,36 @@ pmi2
 pmi3
 ```
 
+## Spherocity Index
+
+```@docs
+spherocity_index
+```
+
+## GETAWAY Descriptors
+
+```@docs
+getaway_descriptors
+```
+
+## WHIM Descriptors
+
+```@docs
+whim_descriptors
+```
+
+## RDF Descriptors
+
+```@docs
+rdf_descriptors
+```
+
+## MORSE Descriptors
+
+```@docs
+morse_descriptors
+```
+
 ## Chi Connectivity Indices
 
 ```@docs
