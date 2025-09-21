@@ -134,7 +134,7 @@ if !isempty(conformers_3d)
 
     println("3D Pharmacophore points:")
     for (family, position) in ph4_points
-        println(family, position)
+        println("$(family) at [$(position[1]), $(position[2]), $(position[3])]")           
     end
 end
 ```

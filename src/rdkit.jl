@@ -949,7 +949,7 @@ function _explicit_pharmacophore_from_mol(mol::Py, feature_factory::Py; conf_id:
     features = _get_features_for_mol(feature_factory, mol; conf_id = conf_id)
 
     # Extract feature information
-    feature_list = []
+    feature_list = Tuple{String, Vector{Float64}}[]
     for feature in features
         family = pyconvert(String, feature.GetFamily())
         pos_obj = feature.GetPos()

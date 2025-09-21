@@ -40,32 +40,46 @@ using MoleculeFlow
 
         factory = create_feature_factory()
 
-        # Test feature extraction
-        ethanol_features = get_mol_features(ethanol, factory)
-        @test ethanol_features isa Vector{ChemicalFeature}
+        # Test feature extraction without conformers (should return empty)
+        ethanol_features_no_conf = get_mol_features(ethanol, factory)
+        @test ethanol_features_no_conf isa Vector{ChemicalFeature}
+        @test isempty(ethanol_features_no_conf)  # No features without conformers
 
-        phenol_features = get_mol_features(phenol, factory)
-        @test phenol_features isa Vector{ChemicalFeature}
-        @test length(phenol_features) >= length(ethanol_features)  # Phenol should have more features
+        # Test feature extraction with 2D conformers
+        ethanol_2d = generate_2d_conformers(ethanol)
+        phenol_2d = generate_2d_conformers(phenol)
 
-        # Test that features have valid properties
-        if !isempty(ethanol_features)
-            feature = ethanol_features[1]
-            @test feature.family isa String
-            @test feature.type isa String
-            @test feature.atom_ids isa Vector{Int}
-            @test feature.position isa Vector{Float64}
-            @test feature.id isa Int
-            @test length(feature.position) == 3  # 3D coordinates
-            @test all(id -> id > 0, feature.atom_ids)  # 1-based indexing
+        if !isempty(ethanol_2d) && !isempty(phenol_2d)
+            ethanol_mol_2d = ethanol_2d[1].molecule
+            phenol_mol_2d = phenol_2d[1].molecule
+
+            ethanol_features = get_mol_features(ethanol_mol_2d, factory)
+            @test ethanol_features isa Vector{ChemicalFeature}
+            @test !isempty(ethanol_features)  # Should have features with conformers
+
+            phenol_features = get_mol_features(phenol_mol_2d, factory)
+            @test phenol_features isa Vector{ChemicalFeature}
+            @test length(phenol_features) >= length(ethanol_features)  # Phenol should have more features
+
+            # Test that features have valid properties
+            if !isempty(ethanol_features)
+                feature = ethanol_features[1]
+                @test feature.family isa String
+                @test feature.type isa String
+                @test feature.atom_ids isa Vector{Int}
+                @test feature.position isa Vector{Float64}
+                @test feature.id isa Int
+                @test length(feature.position) == 3  # 3D coordinates
+                @test all(id -> id > 0, feature.atom_ids)  # 1-based indexing
+            end
+
+            # Test vectorized operation
+            molecules_2d = [ethanol_mol_2d, phenol_mol_2d]
+            all_features = get_mol_features(molecules_2d, factory)
+            @test length(all_features) == 2
+            @test all_features[1] isa Vector{ChemicalFeature}
+            @test all_features[2] isa Vector{ChemicalFeature}
         end
-
-        # Test vectorized operation
-        molecules = [ethanol, phenol]
-        all_features = get_mol_features(molecules, factory)
-        @test length(all_features) == 2
-        @test all_features[1] isa Vector{ChemicalFeature}
-        @test all_features[2] isa Vector{ChemicalFeature}
 
         # Test with invalid molecule
         invalid_mol = mol_from_smiles("invalid_smiles")
@@ -76,20 +90,26 @@ using MoleculeFlow
     @testset "Feature Filtering" begin
         mol = mol_from_smiles("CCO")  # Ethanol: has donor and acceptor
         factory = create_feature_factory()
-        features = get_mol_features(mol, factory)
 
-        if !isempty(features)
-            # Test filtering by family
-            families = unique([f.family for f in features])
-            if !isempty(families)
-                first_family = families[1]
-                filtered = filter_features_by_family(features, first_family)
-                @test all(f -> f.family == first_family, filtered)
+        # Generate conformer for feature extraction
+        conformers_2d = generate_2d_conformers(mol)
+        if !isempty(conformers_2d)
+            mol_2d = conformers_2d[1].molecule
+            features = get_mol_features(mol_2d, factory)
+
+            if !isempty(features)
+                # Test filtering by family
+                families = unique([f.family for f in features])
+                if !isempty(families)
+                    first_family = families[1]
+                    filtered = filter_features_by_family(features, first_family)
+                    @test all(f -> f.family == first_family, filtered)
+                end
+
+                # Test filtering for non-existent family
+                empty_filtered = filter_features_by_family(features, "NonExistentFamily")
+                @test isempty(empty_filtered)
             end
-
-            # Test filtering for non-existent family
-            empty_filtered = filter_features_by_family(features, "NonExistentFamily")
-            @test isempty(empty_filtered)
         end
     end
 
@@ -128,15 +148,16 @@ using MoleculeFlow
         mol = mol_from_smiles("CCO")
         factory = create_feature_factory()
 
-        # Test without 3D coordinates (should work but may have limited positioning)
-        ph4_2d = get_pharmacophore_3d(mol, factory)
-        @test ph4_2d isa Vector{Tuple{String, Vector{Float64}}}
+        # Test without 3D coordinates (should return empty)
+        ph4_no_coords = get_pharmacophore_3d(mol, factory)
+        @test ph4_no_coords isa Vector{Tuple{String, Vector{Float64}}}
+        @test isempty(ph4_no_coords)  # No 3D features without conformers
 
         # Test with 3D coordinates if conformer generation is available
         try
-            result = generate_3d_conformers(mol; num_conformers = 1)
-            if result.success && !isempty(result.molecules)
-                mol_3d = result.molecules[1]
+            conformers_3d = generate_3d_conformers(mol, 1)
+            if !isempty(conformers_3d)
+                mol_3d = conformers_3d[1].molecule
                 ph4_3d = get_pharmacophore_3d(mol_3d, factory)
 
                 @test ph4_3d isa Vector{Tuple{String, Vector{Float64}}}
