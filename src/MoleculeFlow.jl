@@ -115,7 +115,8 @@ export max_absolute_e_state_index, min_absolute_e_state_index
 # 3D descriptors
 export asphericity,
     radius_of_gyration, pmi1, pmi2, pmi3, eccentricity, inertial_shape_factor
-export spherocity_index, getaway_descriptors, whim_descriptors, rdf_descriptors, morse_descriptors
+export spherocity_index,
+    getaway_descriptors, whim_descriptors, rdf_descriptors, morse_descriptors
 
 # Fingerprints
 export morgan_fingerprint, rdk_fingerprint, maccs_fingerprint
@@ -181,6 +182,11 @@ export is_balanced, get_atom_mapping_numbers, set_atom_mapping_numbers!
 export remove_unmapped_reactant_templates!, remove_unmapped_product_templates!
 export preprocess_reaction!, compute_atom_mapping!, is_template_molecule_agent
 
+# Pharmacophore features
+export FeatureFactory, ChemicalFeature
+export create_feature_factory, get_mol_features, pharmacophore_fingerprint
+export get_feature_families, filter_features_by_family, get_pharmacophore_3d
+
 include("./config.jl")
 include("./utils.jl")
 include("./rdkit.jl")
@@ -202,5 +208,6 @@ include("./standardization/standardization.jl")
 include("./fragmentation/fragmentation.jl")
 include("./progress.jl")
 include("./reaction/reaction.jl")
+include("./pharmacophore/pharmacophore.jl")
 
 end

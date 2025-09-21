@@ -173,19 +173,34 @@ function _spherocity_index(mol::Py; confId::Int = -1)
     @pyconst(pyimport("rdkit.Chem.Descriptors3D").SpherocityIndex)(mol; confId = confId)
 end
 
-function _calc_getaway(mol::Py; confId::Int = -1, precision::Int = 2, custom_atom_property::String = "")
+function _calc_getaway(
+    mol::Py; confId::Int = -1, precision::Int = 2, custom_atom_property::String = ""
+)
     if custom_atom_property == ""
-        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcGETAWAY)(mol; confId = confId, precision = precision)
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcGETAWAY)(
+            mol; confId = confId, precision = precision
+        )
     else
-        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcGETAWAY)(mol; confId = confId, precision = precision, CustomAtomProperty = custom_atom_property)
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcGETAWAY)(
+            mol;
+            confId = confId,
+            precision = precision,
+            CustomAtomProperty = custom_atom_property,
+        )
     end
 end
 
-function _calc_whim(mol::Py; confId::Int = -1, thresh::Float64 = 0.001, custom_atom_property::String = "")
+function _calc_whim(
+    mol::Py; confId::Int = -1, thresh::Float64 = 0.001, custom_atom_property::String = ""
+)
     if custom_atom_property == ""
-        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcWHIM)(mol; confId = confId, thresh = thresh)
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcWHIM)(
+            mol; confId = confId, thresh = thresh
+        )
     else
-        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcWHIM)(mol; confId = confId, thresh = thresh, CustomAtomProperty = custom_atom_property)
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcWHIM)(
+            mol; confId = confId, thresh = thresh, CustomAtomProperty = custom_atom_property
+        )
     end
 end
 
@@ -193,7 +208,9 @@ function _calc_rdf(mol::Py; confId::Int = -1, custom_atom_property::String = "")
     if custom_atom_property == ""
         @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcRDF)(mol; confId = confId)
     else
-        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcRDF)(mol; confId = confId, CustomAtomProperty = custom_atom_property)
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcRDF)(
+            mol; confId = confId, CustomAtomProperty = custom_atom_property
+        )
     end
 end
 
@@ -201,7 +218,9 @@ function _calc_morse(mol::Py; confId::Int = -1, custom_atom_property::String = "
     if custom_atom_property == ""
         @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcMORSE)(mol; confId = confId)
     else
-        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcMORSE)(mol; confId = confId, CustomAtomProperty = custom_atom_property)
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcMORSE)(
+            mol; confId = confId, CustomAtomProperty = custom_atom_property
+        )
     end
 end
 
@@ -866,4 +885,77 @@ function _set_atom_mapping_numbers(mol::Py, map_nums::Vector{Int})
         atom = mol.GetAtomWithIdx(i-1)
         atom.SetAtomMapNum(map_num)
     end
+end
+
+# Pharmacophore and Chemical Features
+function _build_feature_factory(filename::String)
+    @pyconst(pyimport("rdkit.Chem.ChemicalFeatures").BuildFeatureFactory)(filename)
+end
+
+function _build_feature_factory_from_string(fdef_string::String)
+    @pyconst(pyimport("rdkit.Chem.ChemicalFeatures").BuildFeatureFactoryFromString)(
+        fdef_string
+    )
+end
+
+function _get_features_for_mol(factory::Py, mol::Py; conf_id::Int = -1)
+    if conf_id == -1
+        factory.GetFeaturesForMol(mol)
+    else
+        factory.GetFeaturesForMol(mol; confId = conf_id)
+    end
+end
+
+function _get_feature_families(factory::Py)
+    factory.GetFeatureFamilies()
+end
+
+function _get_feature_defs(factory::Py)
+    factory.GetFeatureDefs()
+end
+
+function _get_num_feature_defs(factory::Py)
+    factory.GetNumFeatureDefs()
+end
+
+function _mol_from_ph4(pharmacophore::Py)
+    @pyconst(pyimport("rdkit.Chem.Pharm3D.EmbedLib").EmbedMol)(pharmacophore)
+end
+
+function _get_pharmacophore_fingerprint(mol::Py, factory::Py, sig_factory::Py)
+    @pyconst(pyimport("rdkit.Chem.Pharm2D.Generate").Gen2DFingerprint)(mol, sig_factory)
+end
+
+function _create_sig_factory(
+    factory::Py; min_point_count::Int = 2, max_point_count::Int = 3
+)
+    sig_factory = @pyconst(pyimport("rdkit.Chem.Pharm2D.SigFactory").SigFactory)(factory, min_point_count, max_point_count)
+    # Use non-overlapping distance bins that avoid boundary issues
+    sig_factory.SetBins([(0, 2), (2, 6), (6, 12)])
+    sig_factory.Init()
+    return sig_factory
+end
+
+function _get_rdconfig_data_dir()
+    @pyconst(pyimport("rdkit.RDConfig").RDDataDir)
+end
+
+# 3D Pharmacophore functions
+function _pharmacophore_from_mol(mol::Py, feature_factory::Py; conf_id::Int = -1)
+    @pyconst(pyimport("rdkit.Chem.Pharm3D.Pharmacophore").Pharmacophore)()
+end
+
+function _explicit_pharmacophore_from_mol(mol::Py, feature_factory::Py; conf_id::Int = -1)
+    features = _get_features_for_mol(feature_factory, mol; conf_id = conf_id)
+
+    # Extract feature information
+    feature_list = []
+    for feature in features
+        family = pyconvert(String, feature.GetFamily())
+        pos_obj = feature.GetPos()
+        pos = [pyconvert(Float64, pos_obj.x), pyconvert(Float64, pos_obj.y), pyconvert(Float64, pos_obj.z)]
+        push!(feature_list, (family, pos))
+    end
+
+    return feature_list
 end
