@@ -435,6 +435,35 @@ function compute_2d_coords!(mol::Molecule)
     end
 end
 
+"""
+    replace_substructs(mol::Molecule, query::String, replacement::String) -> Vector{Molecule}
+
+Replace substructures in a molecule based on a SMARTS query pattern.
+
+# Arguments
+
+  - `mol::Molecule`: Input molecule
+  - `query::String`: SMARTS pattern for substructure to replace
+  - `replacement::String`: SMILES pattern for replacement substructure
+
+# Returns
+
+  - `Vector{Molecule}`: Vector of molecules with replaced substructures
+
+# Example
+
+```julia
+mol = mol_from_smiles("CCc1ccccc1")  # Ethylbenzene
+# Replace benzene ring with pyridine
+results = replace_substructs(mol, "c1ccccc1", "c1ccncc1")
+```
+
+# Notes
+
+- Returns original molecule in vector if replacement fails
+- Uses SMARTS pattern matching for query identification
+- Can generate multiple products if multiple matches exist
+"""
 function replace_substructs(mol::Molecule, query::String, replacement::String)
     if !mol.valid
         return [mol]
