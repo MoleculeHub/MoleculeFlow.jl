@@ -4,10 +4,10 @@ using LinearAlgebra
 
 @testset "Molecular Alignment Functions" begin
     # Helper function to create molecules with 3D conformers
-    function create_mol_with_3d(smiles::String; optimize::Bool=true)
+    function create_mol_with_3d(smiles::String; optimize::Bool = true)
         mol_base = mol_from_smiles(smiles)
         @test mol_base.valid  # Fail the test if molecule creation fails
-        conformers = generate_3d_conformers(mol_base, 1; optimize=optimize)
+        conformers = generate_3d_conformers(mol_base, 1; optimize = optimize)
         @test !isempty(conformers)  # Fail the test if conformer generation fails
         return conformers[1].molecule
     end
@@ -32,13 +32,13 @@ using LinearAlgebra
 
             # Test with weights instead of atom mapping
             weights = [1.0, 2.0, 1.0]  # Give more weight to second atom (ethanol: C-C-O)
-            rmsd3 = align_mol(mol1, mol2; weights=weights)
+            rmsd3 = align_mol(mol1, mol2; weights = weights)
             @test rmsd3 isa Float64
             @test rmsd3 >= 0.0
             @test isfinite(rmsd3)
 
             # Test with reflection
-            rmsd4 = align_mol(mol1, mol2; reflect=true)
+            rmsd4 = align_mol(mol1, mol2; reflect = true)
             @test rmsd4 isa Float64
             @test rmsd4 >= 0.0
             @test isfinite(rmsd4)
@@ -56,7 +56,7 @@ using LinearAlgebra
             @test isfinite(rms)
 
             # Calculate RMS with transformation
-            rms_transform = calc_rms(mol1, mol2; transform_probe=true)
+            rms_transform = calc_rms(mol1, mol2; transform_probe = true)
             @test rms_transform isa Float64
             @test rms_transform >= 0.0
             @test isfinite(rms_transform)
@@ -64,7 +64,7 @@ using LinearAlgebra
 
             # Test with weights (ethanol has 3 atoms: C-C-O)
             weights = [1.0, 1.0, 2.0]  # Give more weight to the oxygen (3rd atom)
-            rms_weighted = calc_rms(mol1, mol2; weights=weights)
+            rms_weighted = calc_rms(mol1, mol2; weights = weights)
             @test rms_weighted isa Float64
             @test rms_weighted >= 0.0
             @test isfinite(rms_weighted)
@@ -88,7 +88,7 @@ using LinearAlgebra
             # Create reasonable weights for all atoms
             weights = ones(6)   # Equal weights for all 6 carbon atoms
             weights[1] = 2.0    # More weight on first carbon
-            best_rms_weighted = get_best_rms(mol1, mol2; weights=weights)
+            best_rms_weighted = get_best_rms(mol1, mol2; weights = weights)
             @test best_rms_weighted isa Float64
             @test best_rms_weighted >= 0.0
             @test isfinite(best_rms_weighted)
@@ -105,7 +105,7 @@ using LinearAlgebra
             @test all(isfinite, transform)
 
             # Test with reflection
-            transform_reflect = get_alignment_transform(mol1, mol2; reflect=true)
+            transform_reflect = get_alignment_transform(mol1, mol2; reflect = true)
             @test transform_reflect isa Matrix{Float64}
             @test size(transform_reflect) == (4, 4)
             @test all(isfinite, transform_reflect)
@@ -113,7 +113,7 @@ using LinearAlgebra
             # Test with weights (ethanol has 3 atoms: 2 carbons, 1 oxygen, no explicit hydrogens)
             weights = ones(3)  # Equal weights for all 3 atoms
             weights[3] = 2.0   # More weight on oxygen atom (3rd atom)
-            transform_weighted = get_alignment_transform(mol1, mol2; weights=weights)
+            transform_weighted = get_alignment_transform(mol1, mol2; weights = weights)
             @test transform_weighted isa Matrix{Float64}
             @test size(transform_weighted) == (4, 4)
             @test all(isfinite, transform_weighted)
@@ -124,13 +124,13 @@ using LinearAlgebra
             mol = create_mol_with_3d("CCO")
 
             # Apply random transformation
-            transformed_mol = random_transform(mol; seed=42)
+            transformed_mol = random_transform(mol; seed = 42)
             @test transformed_mol === mol  # Should return the same object
             @test transformed_mol.valid
 
             # Test with different seed
             mol2 = create_mol_with_3d("CCO")
-            transformed_mol2 = random_transform(mol2; seed=123)
+            transformed_mol2 = random_transform(mol2; seed = 123)
             @test transformed_mol2.valid
         end
 
@@ -151,7 +151,6 @@ using LinearAlgebra
             @test transformed_mol2.valid
         end
     end
-
 
     @testset "O3A Alignment Functions" begin
         @testset "O3AResult structure" begin
@@ -180,11 +179,12 @@ using LinearAlgebra
             @test result.rmsd isa Float64
             @test result.rmsd >= 0.0 || result.rmsd == Inf
             @test size(result.transform) == (4, 4)
-            @test result.matched_atoms isa Vector{Tuple{Int,Int}}
-            @test all(isfinite, result.transform) || result.transform == Matrix{Float64}(I, 4, 4)
+            @test result.matched_atoms isa Vector{Tuple{Int, Int}}
+            @test all(isfinite, result.transform) ||
+                result.transform == Matrix{Float64}(I, 4, 4)
 
             # Test with different parameters
-            result2 = get_o3a(mol1, mol2; reflect=true, accuracy=0.001)
+            result2 = get_o3a(mol1, mol2; reflect = true, accuracy = 0.001)
             @test result2 isa O3AResult
             @test isfinite(result2.score) || result2.score == -1.0  # May fail and return -1.0
             @test isfinite(result2.rmsd) || result2.rmsd == Inf  # May fail and return Inf
@@ -201,11 +201,12 @@ using LinearAlgebra
             @test result.rmsd isa Float64
             @test result.rmsd >= 0.0 || result.rmsd == Inf  # May fail
             @test size(result.transform) == (4, 4)
-            @test result.matched_atoms isa Vector{Tuple{Int,Int}}
-            @test all(isfinite, result.transform) || result.transform == Matrix{Float64}(I, 4, 4)
+            @test result.matched_atoms isa Vector{Tuple{Int, Int}}
+            @test all(isfinite, result.transform) ||
+                result.transform == Matrix{Float64}(I, 4, 4)
 
             # Test with different parameters
-            result2 = get_crippen_o3a(mol1, mol2; attempt_generic_features=false)
+            result2 = get_crippen_o3a(mol1, mol2; attempt_generic_features = false)
             @test result2 isa O3AResult
             @test isfinite(result2.score) || result2.score == -1.0
             @test isfinite(result2.rmsd) || result2.rmsd == Inf
@@ -253,7 +254,9 @@ using LinearAlgebra
             @test_throws ArgumentError get_best_rms(invalid_mol, valid_mol)
             @test_throws ArgumentError get_alignment_transform(invalid_mol, valid_mol)
             @test_throws ArgumentError random_transform(invalid_mol)
-            @test_throws ArgumentError apply_transform(invalid_mol, Matrix{Float64}(I, 4, 4))
+            @test_throws ArgumentError apply_transform(
+                invalid_mol, Matrix{Float64}(I, 4, 4)
+            )
             @test_throws ArgumentError get_o3a(invalid_mol, valid_mol)
             @test_throws ArgumentError get_crippen_o3a(invalid_mol, valid_mol)
         end
@@ -296,8 +299,8 @@ using LinearAlgebra
             mol1_base = mol_from_smiles("CCO")
             mol2_base = mol_from_smiles("CCO")
             @test mol1_base.valid && mol2_base.valid
-            conformers1 = generate_3d_conformers(mol1_base, 1; random_seed=42)
-            conformers2 = generate_3d_conformers(mol2_base, 1; random_seed=42)  # Same seed for identical conformers
+            conformers1 = generate_3d_conformers(mol1_base, 1; random_seed = 42)
+            conformers2 = generate_3d_conformers(mol2_base, 1; random_seed = 42)  # Same seed for identical conformers
             @test !isempty(conformers1) && !isempty(conformers2)
 
             mol1 = conformers1[1].molecule
@@ -332,15 +335,15 @@ using LinearAlgebra
             mol2 = create_mol_with_3d("CCC")
 
             # Test with valid conformer IDs (0-based in RDKit)
-            rmsd1 = align_mol(mol1, mol2; probe_conf_id=0, ref_conf_id=0)
+            rmsd1 = align_mol(mol1, mol2; probe_conf_id = 0, ref_conf_id = 0)
             @test rmsd1 isa Float64
 
             # Test with -1 (default)
-            rmsd2 = align_mol(mol1, mol2; probe_conf_id=-1, ref_conf_id=-1)
+            rmsd2 = align_mol(mol1, mol2; probe_conf_id = -1, ref_conf_id = -1)
             @test rmsd2 isa Float64
 
             # Test with invalid conformer IDs (should handle gracefully)
-            rmsd3 = align_mol(mol1, mol2; probe_conf_id=999, ref_conf_id=999)
+            rmsd3 = align_mol(mol1, mol2; probe_conf_id = 999, ref_conf_id = 999)
             @test rmsd3 isa Float64  # May be Inf but should not crash
         end
 
@@ -349,16 +352,16 @@ using LinearAlgebra
             mol2 = create_mol_with_3d("CCO")
 
             # Test with different max_iterations values
-            rmsd1 = align_mol(mol1, mol2; max_iterations=10)
+            rmsd1 = align_mol(mol1, mol2; max_iterations = 10)
             @test rmsd1 isa Float64
             @test rmsd1 >= 0.0
 
-            rmsd2 = align_mol(mol1, mol2; max_iterations=100)
+            rmsd2 = align_mol(mol1, mol2; max_iterations = 100)
             @test rmsd2 isa Float64
             @test rmsd2 >= 0.0
 
             # Test with minimal iterations
-            rmsd3 = align_mol(mol1, mol2; max_iterations=1)
+            rmsd3 = align_mol(mol1, mol2; max_iterations = 1)
             @test rmsd3 isa Float64
             @test rmsd3 >= 0.0
         end
@@ -370,31 +373,31 @@ using LinearAlgebra
             # Test align_mol with valid weights for all atoms
             weights = ones(3)  # Equal weights for all 3 atoms
             weights[3] = 2.0   # More weight on oxygen (3rd atom)
-            rmsd1 = align_mol(mol1, mol2; weights=weights)
+            rmsd1 = align_mol(mol1, mol2; weights = weights)
             @test rmsd1 isa Float64
 
             # Test calc_rms with valid weights
-            rms1 = calc_rms(mol1, mol2; weights=weights)
+            rms1 = calc_rms(mol1, mol2; weights = weights)
             @test rms1 isa Float64
 
             # Test get_best_rms with valid weights
-            best_rms1 = get_best_rms(mol1, mol2; weights=weights)
+            best_rms1 = get_best_rms(mol1, mol2; weights = weights)
             @test best_rms1 isa Float64
 
             # Test get_alignment_transform with valid weights
-            transform1 = get_alignment_transform(mol1, mol2; weights=weights)
+            transform1 = get_alignment_transform(mol1, mol2; weights = weights)
             @test transform1 isa Matrix{Float64}
             @test size(transform1) == (4, 4)
 
             # Test with empty weights (should work)
             empty_weights = Float64[]
-            rmsd2 = align_mol(mol1, mol2; weights=empty_weights)
+            rmsd2 = align_mol(mol1, mol2; weights = empty_weights)
             @test rmsd2 isa Float64
 
-            rms2 = calc_rms(mol1, mol2; weights=empty_weights)
+            rms2 = calc_rms(mol1, mol2; weights = empty_weights)
             @test rms2 isa Float64
 
-            best_rms2 = get_best_rms(mol1, mol2; weights=empty_weights)
+            best_rms2 = get_best_rms(mol1, mol2; weights = empty_weights)
             @test best_rms2 isa Float64
         end
     end
