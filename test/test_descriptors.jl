@@ -3,6 +3,7 @@ using MoleculeFlow
 
 @testset "Molecular Descriptors" begin
     mol = mol_from_smiles("CC(C)O")
+    @test mol.valid
 
     @test molecular_weight(mol) ≈ 60.096 atol = 0.01
     @test heavy_atom_count(mol) == 4
@@ -24,6 +25,8 @@ end
     @testset "Chi Connectivity Indices" begin
         ethanol = mol_from_smiles("CCO")
         benzene = mol_from_smiles("c1ccccc1")
+        @test ethanol.valid
+        @test benzene.valid
 
         # Test Chi0n series
         @test isa(chi0n(ethanol), Float64)
@@ -54,6 +57,8 @@ end
     @testset "Kappa Shape Descriptors" begin
         ethanol = mol_from_smiles("CCO")
         benzene = mol_from_smiles("c1ccccc1")
+        @test ethanol.valid
+        @test benzene.valid
 
         @test isa(kappa2(ethanol), Float64)
         @test isa(kappa3(ethanol), Float64)
@@ -68,6 +73,7 @@ end
 
     @testset "E-State Descriptors" begin
         ethanol = mol_from_smiles("CCO")
+        @test ethanol.valid
 
         max_estate = max_e_state_index(ethanol)
         min_estate = min_e_state_index(ethanol)
@@ -87,6 +93,10 @@ end
         chloroform = mol_from_smiles("CCl")  # CH3Cl
         pyridine = mol_from_smiles("c1cccnc1")  # C5H5N
         dmso = mol_from_smiles("CS(=O)C")  # C2H6OS
+        @test ethanol.valid
+        @test chloroform.valid
+        @test pyridine.valid
+        @test dmso.valid
 
         # Test carbon counts
         @test num_carbons(ethanol) == 2
@@ -119,6 +129,8 @@ end
     @testset "Information Content (IPC)" begin
         ethanol = mol_from_smiles("CCO")
         benzene = mol_from_smiles("c1ccccc1")
+        @test ethanol.valid
+        @test benzene.valid
 
         @test isa(ipc(ethanol), Float64)
         @test isa(ipc(benzene), Float64)

@@ -3,6 +3,7 @@ using MoleculeFlow
 
 @testset "Atom Operations" begin
     mol = mol_from_smiles("CCO")
+    @test mol.valid
 
     # Test getting atoms
     atoms = get_atoms(mol)
@@ -23,4 +24,10 @@ using MoleculeFlow
     oxygen = get_atom(mol, 3)
     @test get_symbol(oxygen) == "O"
     @test get_atomic_number(oxygen) == 8
+
+    # Test with invalid molecule
+    invalid_mol = mol_from_smiles("invalid_smiles")
+    @test !invalid_mol.valid
+    @test get_atoms(invalid_mol) === missing
+    @test get_atom(invalid_mol, 1) === missing
 end

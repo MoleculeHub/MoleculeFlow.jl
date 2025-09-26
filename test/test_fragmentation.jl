@@ -4,6 +4,7 @@ using MoleculeFlow
 @testset "Molecular Fragmentation" begin
     @testset "BRICS Decomposition" begin
         mol = mol_from_smiles("CCCOCCc1ccccc1")
+        @test mol.valid
         fragments = brics_decompose(mol)
 
         @test isa(fragments, Vector{String})
@@ -20,6 +21,7 @@ using MoleculeFlow
 
     @testset "RECAP Decomposition" begin
         mol = mol_from_smiles("CC(=O)NCCc1ccccc1")
+        @test mol.valid
         fragments = recap_decompose(mol)
 
         @test isa(fragments, Vector{String})
@@ -33,6 +35,7 @@ using MoleculeFlow
 
     @testset "Murcko Scaffolds" begin
         mol = mol_from_smiles("CCCOCCc1ccccc1")
+        @test mol.valid
         scaffold = get_murcko_scaffold(mol)
 
         @test isa(scaffold, String)
@@ -53,6 +56,7 @@ using MoleculeFlow
 
     @testset "Fragment Counting and Splitting" begin
         mol = mol_from_smiles("CCO.CCC")
+        @test mol.valid
 
         count = get_fragment_count(mol)
         @test count == 2
@@ -88,6 +92,7 @@ using MoleculeFlow
 
     @testset "Bond-based Fragmentation" begin
         mol = mol_from_smiles("CCCC")
+        @test mol.valid
 
         # Fragment at bond index 1 (second bond, 0-based indexing)
         fragments = fragment_by_bonds(mol, [1])

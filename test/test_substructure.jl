@@ -101,20 +101,14 @@ end
 end
 
 @testset "Phosphorus-Containing Groups" begin
-    # Test phosphorus groups (if molecules can be created)
-    try
-        phosphine = mol_from_smiles("CP(C)C")
-        @test has_functional_group(phosphine, :phosphine)
-    catch
-        @test_skip "Phosphine test skipped - molecule creation failed"
-    end
+    # Test phosphorus groups
+    phosphine = mol_from_smiles("CP(C)C")
+    @test phosphine.valid
+    @test has_functional_group(phosphine, :phosphine)
 
-    try
-        phosphine_oxide = mol_from_smiles("CP(=O)(C)C")
-        @test has_functional_group(phosphine_oxide, :phosphine_oxide)
-    catch
-        @test_skip "Phosphine oxide test skipped - molecule creation failed"
-    end
+    phosphine_oxide = mol_from_smiles("CP(=O)(C)C")
+    @test phosphine_oxide.valid
+    @test has_functional_group(phosphine_oxide, :phosphine_oxide)
 end
 
 @testset "Halogen-Containing Groups" begin
@@ -142,12 +136,9 @@ end
     @test has_functional_group(nitro, :nitro)
 
     # Azide
-    try
-        azide = mol_from_smiles("CC[N-][N+]#N")
-        @test has_functional_group(azide, :azide)
-    catch
-        @test_skip "Azide test skipped - molecule creation failed"
-    end
+    azide = mol_from_smiles("CC[N-][N+]#N")
+    @test azide.valid
+    @test has_functional_group(azide, :azide)
 
     # Imine
     imine = mol_from_smiles("CC=N")
@@ -325,12 +316,9 @@ end
     @test aspirin_groups[:benzene]
 
     # Simple antibiotic-like β-lactam
-    try
-        beta_lactam = mol_from_smiles("C1CN(C1=O)C")
-        @test has_functional_group(beta_lactam, :beta_lactam)
-    catch
-        @test_skip "β-lactam test skipped - molecule creation failed"
-    end
+    beta_lactam = mol_from_smiles("C1CN(C1=O)C")
+    @test beta_lactam.valid
+    @test has_functional_group(beta_lactam, :beta_lactam)
 end
 
 @testset "FUNCTIONAL_GROUPS Dictionary" begin
