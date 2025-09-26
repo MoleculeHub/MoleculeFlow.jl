@@ -187,6 +187,11 @@ export FeatureFactory, ChemicalFeature
 export create_feature_factory, get_mol_features, pharmacophore_fingerprint
 export get_feature_families, filter_features_by_family, get_pharmacophore_3d
 
+# Molecular alignment functions
+export align_mol, calc_rms, get_best_rms
+export get_alignment_transform, random_transform, apply_transform
+export O3AResult, get_o3a, get_crippen_o3a, o3a_align!
+
 include("./config.jl")
 include("./utils.jl")
 include("./rdkit.jl")
@@ -197,6 +202,7 @@ include("./molecule/fingerprints.jl")
 include("./molecule/similarity.jl")
 include("./molecule/graph.jl")
 include("./molecule/conformers.jl")
+include("./molecule/alignment.jl")
 include("./atom/atom.jl")
 include("./atom/descriptors.jl")
 include("./bond/bond.jl")
