@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Pharmacophore Features · MoleculeFlow.jl</title><meta name="title" content="Pharmacophore Features · MoleculeFlow.jl"/><meta property="og:title" content="Pharmacophore Features · MoleculeFlow.jl"/><meta property="twitter:title" content="Pharmacophore Features · MoleculeFlow.jl"/><meta name="description" content="Documentation for MoleculeFlow.jl."/><meta property="og:description" content="Documentation for MoleculeFlow.jl."/><meta property="twitter:description" content="Documentation for MoleculeFlow.jl."/><meta property="og:url" content="https://moleculehub.github.io/MoleculeFlow.jl/api/pharmacophore/"/><meta property="twitter:url" content="https://moleculehub.github.io/MoleculeFlow.jl/api/pharmacophore/"/><link rel="canonical" href="https://moleculehub.github.io/MoleculeFlow.jl/api/pharmacophore/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="MoleculeFlow.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">MoleculeFlow.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../getting-started/">Getting Started</a></li><li><a class="tocitem" href="../../examples/">Practical Examples</a></li><li><span class="tocitem">API Reference</span><ul><li><a class="tocitem" href="../io/">Basic I/O</a></li><li><a class="tocitem" href="../operations/">Molecular Operations</a></li><li><a class="tocitem" href="../reactions/">Chemical Reactions</a></li><li><a class="tocitem" href="../drawing/">Drawing &amp; Visualization</a></li><li><a class="tocitem" href="../descriptors/">Molecular Descriptors</a></li><li><a class="tocitem" href="../fingerprints/">Fingerprints</a></li><li class="is-active"><a class="tocitem" href>Pharmacophore Features</a><ul class="internal"><li><a class="tocitem" href="#Overview"><span>Overview</span></a></li><li><a class="tocitem" href="#Types"><span>Types</span></a></li><li><a class="tocitem" href="#Factory-Creation"><span>Factory Creation</span></a></li><li><a class="tocitem" href="#Feature-Extraction"><span>Feature Extraction</span></a></li><li><a class="tocitem" href="#Pharmacophore-Analysis"><span>Pharmacophore Analysis</span></a></li><li><a class="tocitem" href="#Usage-Examples"><span>Usage Examples</span></a></li><li><a class="tocitem" href="#Available-Feature-Families"><span>Available Feature Families</span></a></li><li><a class="tocitem" href="#Notes"><span>Notes</span></a></li></ul></li><li><a class="tocitem" href="../substructure/">Substructure Search</a></li><li><a class="tocitem" href="../atoms/">Atom Operations</a></li><li><a class="tocitem" href="../bonds/">Bond Operations</a></li><li><a class="tocitem" href="../similarity/">Similarity</a></li><li><a class="tocitem" href="../standardization/">Standardization</a></li><li><a class="tocitem" href="../conformers/">Conformers</a></li><li><a class="tocitem" href="../fragmentation/">Fragmentation</a></li><li><a class="tocitem" href="../graph/">Graph Operations</a></li><li><a class="tocitem" href="../progress/">Progress Tracking</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">API Reference</a></li><li class="is-active"><a href>Pharmacophore Features</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Pharmacophore Features</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/main/docs/src/api/pharmacophore.md#" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Pharmacophore-Features"><a class="docs-heading-anchor" href="#Pharmacophore-Features">Pharmacophore Features</a><a id="Pharmacophore-Features-1"></a><a class="docs-heading-anchor-permalink" href="#Pharmacophore-Features" title="Permalink"></a></h1><p>Functions for pharmacophore analysis, chemical feature identification, and pharmacophore fingerprint generation.</p><h2 id="Overview"><a class="docs-heading-anchor" href="#Overview">Overview</a><a id="Overview-1"></a><a class="docs-heading-anchor-permalink" href="#Overview" title="Permalink"></a></h2><p>Pharmacophores represent the spatial arrangement of chemical features that are essential for molecular recognition. MoleculeFlow provides comprehensive pharmacophore functionality including:</p><ul><li>Chemical feature identification (donors, acceptors, aromatic rings, etc.)</li><li>3D pharmacophore point extraction</li><li>Pharmacophore fingerprint generation</li><li>Feature-based molecular analysis</li></ul><h2 id="Types"><a class="docs-heading-anchor" href="#Types">Types</a><a id="Types-1"></a><a class="docs-heading-anchor-permalink" href="#Types" title="Permalink"></a></h2><h3 id="FeatureFactory"><a class="docs-heading-anchor" href="#FeatureFactory">FeatureFactory</a><a id="FeatureFactory-1"></a><a class="docs-heading-anchor-permalink" href="#FeatureFactory" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MoleculeFlow.FeatureFactory" href="#MoleculeFlow.FeatureFactory"><code>MoleculeFlow.FeatureFactory</code></a> — <span class="docstring-category">Type</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">FeatureFactory</code></pre><p>Struct to hold a chemical feature factory for pharmacophore analysis.</p><p><strong>Fields</strong></p><ul><li><code>_rdkit_factory::Py</code>: The underlying RDKit feature factory object</li><li><code>feature_families::Vector{String}</code>: List of available feature families</li><li><code>num_definitions::Int</code>: Number of feature definitions</li></ul><p><strong>Example</strong></p><pre><code class="language-julia hljs">factory = create_feature_factory()
+println(&quot;Available families: &quot;, factory.feature_families)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/ac514535319bb647f781b88f6b6f3dd4d790753b/src/pharmacophore/pharmacophore.jl#L5-L20">source</a></section></article><h3 id="ChemicalFeature"><a class="docs-heading-anchor" href="#ChemicalFeature">ChemicalFeature</a><a id="ChemicalFeature-1"></a><a class="docs-heading-anchor-permalink" href="#ChemicalFeature" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MoleculeFlow.ChemicalFeature" href="#MoleculeFlow.ChemicalFeature"><code>MoleculeFlow.ChemicalFeature</code></a> — <span class="docstring-category">Type</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">ChemicalFeature</code></pre><p>Represents a chemical feature identified in a molecule.</p><p><strong>Fields</strong></p><ul><li><code>family::String</code>: Feature family (e.g., &quot;Donor&quot;, &quot;Acceptor&quot;, &quot;Aromatic&quot;)</li><li><code>type::String</code>: Specific feature type</li><li><code>atom_ids::Vector{Int}</code>: Atom indices involved in the feature (1-based)</li><li><code>position::Vector{Float64}</code>: 3D coordinates of the feature center</li><li><code>id::Int</code>: Feature identifier</li></ul><p><strong>Example</strong></p><pre><code class="language-julia hljs">features = get_mol_features(mol, factory)
+for feature in features
+    println(&quot;Feature: &quot;, feature.family, &quot; at position &quot;, feature.position)
+end</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/ac514535319bb647f781b88f6b6f3dd4d790753b/src/pharmacophore/pharmacophore.jl#L49-L68">source</a></section></article><h2 id="Factory-Creation"><a class="docs-heading-anchor" href="#Factory-Creation">Factory Creation</a><a id="Factory-Creation-1"></a><a class="docs-heading-anchor-permalink" href="#Factory-Creation" title="Permalink"></a></h2><h3 id="Default-Feature-Factory"><a class="docs-heading-anchor" href="#Default-Feature-Factory">Default Feature Factory</a><a id="Default-Feature-Factory-1"></a><a class="docs-heading-anchor-permalink" href="#Default-Feature-Factory" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MoleculeFlow.create_feature_factory" href="#MoleculeFlow.create_feature_factory"><code>MoleculeFlow.create_feature_factory</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">create_feature_factory(;use_default::Bool = true, fdef_file::Union{String, Nothing} = nothing, fdef_string::Union{String, Nothing} = nothing) -&gt; FeatureFactory</code></pre><p>Create a chemical feature factory for pharmacophore analysis.</p><p><strong>Arguments</strong></p><ul><li><code>use_default::Bool = true</code>: Whether to use RDKit&#39;s default feature definitions</li><li><code>fdef_file::Union{String, Nothing} = nothing</code>: Path to custom feature definition file</li><li><code>fdef_string::Union{String, Nothing} = nothing</code>: Custom feature definition string</li></ul><p><strong>Returns</strong></p><ul><li><code>FeatureFactory</code>: A feature factory for identifying molecular features</li></ul><p><strong>Examples</strong></p><pre><code class="language-julia hljs"># Use default RDKit feature definitions
+factory = create_feature_factory()
+
+# Use custom feature definition file
+factory = create_feature_factory(use_default=false, fdef_file=&quot;custom.fdef&quot;)
+
+# Use custom feature definition string
+fdef = &quot;&quot;&quot;
+DefineFeature HAcceptor1 [N,O;H0]
+   Family HBondAcceptor
+   Weights 1.0
+EndFeature
+&quot;&quot;&quot;
+factory = create_feature_factory(use_default=false, fdef_string=fdef)</code></pre><p><strong>Notes</strong></p><ul><li>Default factory includes: Donor, Acceptor, NegIonizable, PosIonizable, ZnBinder, Aromatic, Hydrophobe, LumpedHydrophobe</li><li>Custom definitions use SMARTS patterns</li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/ac514535319bb647f781b88f6b6f3dd4d790753b/src/pharmacophore/pharmacophore.jl#L77-L111">source</a></section></article><h2 id="Feature-Extraction"><a class="docs-heading-anchor" href="#Feature-Extraction">Feature Extraction</a><a id="Feature-Extraction-1"></a><a class="docs-heading-anchor-permalink" href="#Feature-Extraction" title="Permalink"></a></h2><h3 id="Molecular-Features"><a class="docs-heading-anchor" href="#Molecular-Features">Molecular Features</a><a id="Molecular-Features-1"></a><a class="docs-heading-anchor-permalink" href="#Molecular-Features" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MoleculeFlow.get_mol_features" href="#MoleculeFlow.get_mol_features"><code>MoleculeFlow.get_mol_features</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">get_mol_features(mol::Molecule, factory::FeatureFactory; conf_id::Int = -1) -&gt; Vector{ChemicalFeature}</code></pre><p>Extract chemical features from a molecule using the specified feature factory.</p><p><strong>Arguments</strong></p><ul><li><code>mol::Molecule</code>: Input molecule (must have 2D or 3D conformer with coordinates)</li><li><code>factory::FeatureFactory</code>: Feature factory for feature identification</li><li><code>conf_id::Int = -1</code>: Conformer ID to use (-1 for default)</li></ul><p><strong>Returns</strong></p><ul><li><code>Vector{ChemicalFeature}</code>: List of identified chemical features</li></ul><p><strong>Examples</strong></p><pre><code class="language-julia hljs">mol = mol_from_smiles(&quot;CCO&quot;)  # Ethanol
+factory = create_feature_factory()
+
+# Generate coordinates (required for feature extraction)
+conformers_2d = generate_2d_conformers(mol)
+if !isempty(conformers_2d)
+    mol_2d = conformers_2d[1].molecule
+    features = get_mol_features(mol_2d, factory)
+
+    println(&quot;Found &quot;, length(features), &quot; features:&quot;)
+    for feature in features
+        println(&quot;  &quot;, feature.family, &quot; at atoms &quot;, feature.atom_ids)
+    end
+end</code></pre><p><strong>Notes</strong></p><ul><li><strong>Coordinate Requirement</strong>: Molecule must have 2D or 3D conformer coordinates. Use <code>generate_2d_conformers()</code> or <code>generate_3d_conformers()</code> first.</li><li>Returns empty vector for molecules without conformers or invalid molecules</li><li>3D coordinates provide more accurate feature positioning than 2D</li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/ac514535319bb647f781b88f6b6f3dd4d790753b/src/pharmacophore/pharmacophore.jl#L146-L181">source</a></section></article><h3 id="Feature-Families"><a class="docs-heading-anchor" href="#Feature-Families">Feature Families</a><a id="Feature-Families-1"></a><a class="docs-heading-anchor-permalink" href="#Feature-Families" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MoleculeFlow.get_feature_families" href="#MoleculeFlow.get_feature_families"><code>MoleculeFlow.get_feature_families</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">get_feature_families(factory::FeatureFactory) -&gt; Vector{String}</code></pre><p>Get the list of feature families defined in the feature factory.</p><p><strong>Arguments</strong></p><ul><li><code>factory::FeatureFactory</code>: The feature factory</li></ul><p><strong>Returns</strong></p><ul><li><code>Vector{String}</code>: List of feature family names</li></ul><p><strong>Example</strong></p><pre><code class="language-julia hljs">factory = create_feature_factory()
+families = get_feature_families(factory)
+println(&quot;Available families: &quot;, families)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/ac514535319bb647f781b88f6b6f3dd4d790753b/src/pharmacophore/pharmacophore.jl#L284-L301">source</a></section></article><h3 id="Feature-Filtering"><a class="docs-heading-anchor" href="#Feature-Filtering">Feature Filtering</a><a id="Feature-Filtering-1"></a><a class="docs-heading-anchor-permalink" href="#Feature-Filtering" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MoleculeFlow.filter_features_by_family" href="#MoleculeFlow.filter_features_by_family"><code>MoleculeFlow.filter_features_by_family</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">filter_features_by_family(features::Vector{ChemicalFeature}, family::String) -&gt; Vector{ChemicalFeature}</code></pre><p>Filter chemical features by their family type.</p><p><strong>Arguments</strong></p><ul><li><code>features::Vector{ChemicalFeature}</code>: List of chemical features (from <code>get_mol_features</code>)</li><li><code>family::String</code>: Feature family to filter by (e.g., &quot;Donor&quot;, &quot;Acceptor&quot;)</li></ul><p><strong>Returns</strong></p><ul><li><code>Vector{ChemicalFeature}</code>: Filtered list of features</li></ul><p><strong>Example</strong></p><pre><code class="language-julia hljs">mol = mol_from_smiles(&quot;CCO&quot;)
+factory = create_feature_factory()
+
+# Generate coordinates for feature extraction
+conformers_2d = generate_2d_conformers(mol)
+if !isempty(conformers_2d)
+    mol_2d = conformers_2d[1].molecule
+    features = get_mol_features(mol_2d, factory)
+
+    # Get only hydrogen bond donors
+    donors = filter_features_by_family(features, &quot;Donor&quot;)
+    println(&quot;Found &quot;, length(donors), &quot; hydrogen bond donors&quot;)
+end</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/ac514535319bb647f781b88f6b6f3dd4d790753b/src/pharmacophore/pharmacophore.jl#L306-L334">source</a></section></article><h2 id="Pharmacophore-Analysis"><a class="docs-heading-anchor" href="#Pharmacophore-Analysis">Pharmacophore Analysis</a><a id="Pharmacophore-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Pharmacophore-Analysis" title="Permalink"></a></h2><h3 id="3D-Pharmacophore-Points"><a class="docs-heading-anchor" href="#3D-Pharmacophore-Points">3D Pharmacophore Points</a><a id="3D-Pharmacophore-Points-1"></a><a class="docs-heading-anchor-permalink" href="#3D-Pharmacophore-Points" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MoleculeFlow.get_pharmacophore_3d" href="#MoleculeFlow.get_pharmacophore_3d"><code>MoleculeFlow.get_pharmacophore_3d</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">get_pharmacophore_3d(mol::Molecule, factory::FeatureFactory; conf_id::Int = -1) -&gt; Vector{Tuple{String, Vector{Float64}}}</code></pre><p>Extract 3D pharmacophore points from a molecule.</p><p><strong>Arguments</strong></p><ul><li><code>mol::Molecule</code>: Input molecule (must have 3D conformer with coordinates)</li><li><code>factory::FeatureFactory</code>: Feature factory for feature identification</li><li><code>conf_id::Int = -1</code>: Conformer ID to use (-1 for default)</li></ul><p><strong>Returns</strong></p><ul><li><code>Vector{Tuple{String, Vector{Float64}}}</code>: List of (feature<em>family, 3d</em>position) tuples</li></ul><p><strong>Example</strong></p><pre><code class="language-julia hljs">mol = mol_from_smiles(&quot;CCO&quot;)
+conformers_3d = generate_3d_conformers(mol, 1)
+if !isempty(conformers_3d)
+    mol_3d = conformers_3d[1].molecule
+    factory = create_feature_factory()
+    ph4_points = get_pharmacophore_3d(mol_3d, factory)
+
+    for (family, pos) in ph4_points
+        println(&quot;  $(family) at position [$(pos[1]), $(pos[2]), $(pos[3])]&quot;)
+    end
+end</code></pre><p><strong>Notes</strong></p><ul><li><strong>3D Conformer Required</strong>: Molecule must have 3D coordinates. Use <code>generate_3d_conformers()</code> first.</li><li>Returns empty vector for molecules without 3D conformers</li><li>Provides spatial positioning of pharmacophore features for 3D analysis</li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/ac514535319bb647f781b88f6b6f3dd4d790753b/src/pharmacophore/pharmacophore.jl#L339-L371">source</a></section></article><h3 id="Pharmacophore-Fingerprints"><a class="docs-heading-anchor" href="#Pharmacophore-Fingerprints">Pharmacophore Fingerprints</a><a id="Pharmacophore-Fingerprints-1"></a><a class="docs-heading-anchor-permalink" href="#Pharmacophore-Fingerprints" title="Permalink"></a></h3><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MoleculeFlow.pharmacophore_fingerprint" href="#MoleculeFlow.pharmacophore_fingerprint"><code>MoleculeFlow.pharmacophore_fingerprint</code></a> — <span class="docstring-category">Function</span><span class="is-flex-grow-1 docstring-article-toggle-button" title="Collapse docstring"></span></header><section><div><pre><code class="language-julia hljs">pharmacophore_fingerprint(mol::Molecule; min_points::Int = 2, max_points::Int = 3, factory::Union{FeatureFactory, Nothing} = nothing) -&gt; Union{Vector{Bool}, Missing}</code></pre><p>Generate a pharmacophore fingerprint for a molecule.</p><p><strong>Arguments</strong></p><ul><li><code>mol::Molecule</code>: Input molecule (no conformer coordinates required)</li><li><code>min_points::Int = 2</code>: Minimum number of pharmacophore points</li><li><code>max_points::Int = 3</code>: Maximum number of pharmacophore points</li><li><code>factory::Union{FeatureFactory, Nothing} = nothing</code>: Feature factory (default will be created if not provided)</li></ul><p><strong>Returns</strong></p><ul><li><code>Union{Vector{Bool}, Missing}</code>: Binary pharmacophore fingerprint, or missing if molecule is invalid</li></ul><p><strong>Examples</strong></p><pre><code class="language-julia hljs">mol = mol_from_smiles(&quot;c1ccccc1O&quot;)  # Phenol
+fp = pharmacophore_fingerprint(mol)
+
+# Custom parameters
+fp = pharmacophore_fingerprint(mol; min_points=2, max_points=4)</code></pre><p><strong>Notes</strong></p><ul><li><strong>No Conformer Required</strong>: Works directly with molecular structure using 2D topological distances</li><li>Combines chemical features with distance information</li><li>Fingerprint length depends on feature combinations and distance bins</li><li>More efficient than 3D approaches as no coordinate generation is needed</li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/ac514535319bb647f781b88f6b6f3dd4d790753b/src/pharmacophore/pharmacophore.jl#L221-L249">source</a></section></article><h2 id="Usage-Examples"><a class="docs-heading-anchor" href="#Usage-Examples">Usage Examples</a><a id="Usage-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Usage-Examples" title="Permalink"></a></h2><h3 id="Basic-Feature-Identification"><a class="docs-heading-anchor" href="#Basic-Feature-Identification">Basic Feature Identification</a><a id="Basic-Feature-Identification-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Feature-Identification" title="Permalink"></a></h3><pre><code class="language-julia hljs">using MoleculeFlow
+
+# Create a feature factory with default definitions
+factory = create_feature_factory()
+
+# Analyze a molecule (features require coordinates)
+mol = mol_from_smiles(&quot;c1ccccc1O&quot;)  # Phenol
+conformers_2d = generate_2d_conformers(mol)  # Generate 2D coordinates
+
+if !isempty(conformers_2d)
+    mol_2d = conformers_2d[1].molecule
+    features = get_mol_features(mol_2d, factory)
+
+    println(&quot;Found $(length(features)) features:&quot;)
+    for feature in features
+        println(&quot;  $(feature.family) at atoms $(feature.atom_ids)&quot;)
+    end
+end</code></pre><h3 id="Pharmacophore-Fingerprints-2"><a class="docs-heading-anchor" href="#Pharmacophore-Fingerprints-2">Pharmacophore Fingerprints</a><a class="docs-heading-anchor-permalink" href="#Pharmacophore-Fingerprints-2" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate pharmacophore fingerprints for multiple molecules
+molecules = [
+    mol_from_smiles(&quot;CCO&quot;),           # Ethanol
+    mol_from_smiles(&quot;c1ccccc1O&quot;),     # Phenol
+    mol_from_smiles(&quot;CC(=O)N&quot;)        # Acetamide
+]
+
+# Note: Pharmacophore fingerprints work with molecules as-is
+# (they generate 2D topological features)
+fingerprints = pharmacophore_fingerprint(molecules)
+
+for (i, fp) in enumerate(fingerprints)
+    if fp !== missing
+        println(&quot;Molecule $(i): $(count(fp)) bits set in fingerprint of length $(length(fp))&quot;)
+    end
+end</code></pre><h3 id="3D-Pharmacophore-Analysis"><a class="docs-heading-anchor" href="#3D-Pharmacophore-Analysis">3D Pharmacophore Analysis</a><a id="3D-Pharmacophore-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#3D-Pharmacophore-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Analyze 3D pharmacophore points (requires 3D coordinates)
+mol = mol_from_smiles(&quot;c1ccccc1O&quot;)  # Phenol
+
+# Generate 3D conformer
+conformers_3d = generate_3d_conformers(mol, 1)
+if !isempty(conformers_3d)
+    mol_3d = conformers_3d[1].molecule
+    factory = create_feature_factory()
+
+    # Extract 3D pharmacophore points
+    ph4_points = get_pharmacophore_3d(mol_3d, factory)
+
+    println(&quot;3D Pharmacophore points:&quot;)
+    for (family, position) in ph4_points
+        println(&quot;$(family) at [$(position[1]), $(position[2]), $(position[3])]&quot;)           
+    end
+end</code></pre><h3 id="Feature-Family-Analysis"><a class="docs-heading-anchor" href="#Feature-Family-Analysis">Feature Family Analysis</a><a id="Feature-Family-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Feature-Family-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Analyze specific feature families
+mol = mol_from_smiles(&quot;CC(=O)Nc1ccccc1O&quot;)  # N-acetyl-p-hydroxybenzamide
+
+# Generate 3D conformer for accurate feature positioning
+conformers = generate_3d_conformers(mol, 1)
+if !isempty(conformers)
+    mol_3d = conformers[1].molecule
+    factory = create_feature_factory()
+    features = get_mol_features(mol_3d, factory)
+
+    # Get all hydrogen bond donors
+    donors = filter_features_by_family(features, &quot;Donor&quot;)
+    println(&quot;Hydrogen bond donors: $(length(donors))&quot;)
+
+    # Get all hydrogen bond acceptors
+    acceptors = filter_features_by_family(features, &quot;Acceptor&quot;)
+    println(&quot;Hydrogen bond acceptors: $(length(acceptors))&quot;)
+
+    # Get all aromatic features
+    aromatics = filter_features_by_family(features, &quot;Aromatic&quot;)
+    println(&quot;Aromatic rings: $(length(aromatics))&quot;)
+end</code></pre><h3 id="Custom-Feature-Definitions"><a class="docs-heading-anchor" href="#Custom-Feature-Definitions">Custom Feature Definitions</a><a id="Custom-Feature-Definitions-1"></a><a class="docs-heading-anchor-permalink" href="#Custom-Feature-Definitions" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Define custom pharmacophore features
+custom_fdef = raw&quot;&quot;&quot;
+DefineFeature Carboxyl [CX3](=O)[OX2H1]
+   Family AcidicGroup
+   Weights 1.0,1.0,1.0
+EndFeature
+
+DefineFeature Amine [NX3;H2,H1;!$(NC=O)]
+   Family BasicGroup
+   Weights 1.0
+EndFeature
+&quot;&quot;&quot;
+
+# Create factory with custom definitions
+custom_factory = create_feature_factory(
+    use_default=false,
+    fdef_string=custom_fdef
+)
+
+# Available families in custom factory
+families = get_feature_families(custom_factory)
+println(&quot;Custom feature families: $(families)&quot;)</code></pre><h3 id="Drug-like-Molecule-Analysis"><a class="docs-heading-anchor" href="#Drug-like-Molecule-Analysis">Drug-like Molecule Analysis</a><a id="Drug-like-Molecule-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Drug-like-Molecule-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Analyze pharmacophore features of drug molecules
+aspirin = mol_from_smiles(&quot;CC(=O)Oc1ccccc1C(=O)O&quot;)
+ibuprofen = mol_from_smiles(&quot;CC(C)Cc1ccc(cc1)C(C)C(=O)O&quot;)
+
+factory = create_feature_factory()
+
+# Compare pharmacophore fingerprints
+aspirin_fp = pharmacophore_fingerprint(aspirin)
+ibuprofen_fp = pharmacophore_fingerprint(ibuprofen)
+
+if aspirin_fp isa Vector{Bool} &amp;&amp; ibuprofen_fp isa Vector{Bool}
+    # Calculate Tanimoto similarity
+    similarity = tanimoto_similarity(aspirin_fp, ibuprofen_fp)
+    println(&quot;Pharmacophore similarity: $(similarity)&quot;)
+end
+
+# Analyze individual features (need coordinates for feature extraction)
+aspirin_2d = generate_2d_conformers(aspirin)
+ibuprofen_2d = generate_2d_conformers(ibuprofen)
+
+if !isempty(aspirin_2d) &amp;&amp; !isempty(ibuprofen_2d)
+    aspirin_features = get_mol_features(aspirin_2d[1].molecule, factory)
+    ibuprofen_features = get_mol_features(ibuprofen_2d[1].molecule, factory)
+
+    println(&quot;Aspirin features:&quot;)
+    for feature in aspirin_features
+        println(&quot;  $(feature.family)&quot;)
+    end
+
+    println(&quot;Ibuprofen features:&quot;)
+    for feature in ibuprofen_features
+        println(&quot;  $(feature.family)&quot;)
+    end
+end</code></pre><h2 id="Available-Feature-Families"><a class="docs-heading-anchor" href="#Available-Feature-Families">Available Feature Families</a><a id="Available-Feature-Families-1"></a><a class="docs-heading-anchor-permalink" href="#Available-Feature-Families" title="Permalink"></a></h2><p>The default feature factory includes the following pharmacophore feature families:</p><ul><li><strong>Donor</strong>: Hydrogen bond donors</li><li><strong>Acceptor</strong>: Hydrogen bond acceptors</li><li><strong>NegIonizable</strong>: Negatively ionizable groups</li><li><strong>PosIonizable</strong>: Positively ionizable groups</li><li><strong>ZnBinder</strong>: Zinc binding groups</li><li><strong>Aromatic</strong>: Aromatic ring systems</li><li><strong>Hydrophobe</strong>: Hydrophobic regions</li><li><strong>LumpedHydrophobe</strong>: Larger hydrophobic regions</li></ul><h2 id="Notes"><a class="docs-heading-anchor" href="#Notes">Notes</a><a id="Notes-1"></a><a class="docs-heading-anchor-permalink" href="#Notes" title="Permalink"></a></h2><ul><li><strong>Coordinate Requirements</strong>: Feature extraction (<code>get_mol_features</code>) requires molecules to have 2D or 3D coordinates. Use <code>generate_2d_conformers()</code> or <code>generate_3d_conformers()</code> before feature extraction.</li><li><strong>Pharmacophore Fingerprints</strong>: Work directly with molecules (no coordinates required) and use 2D topological distances by default</li><li><strong>3D Pharmacophore Analysis</strong>: Requires molecules with 3D coordinates for accurate spatial positioning</li><li><strong>Feature Identification</strong>: Uses SMARTS patterns defined in the feature factory</li><li><strong>Custom Definitions</strong>: Custom feature definitions can be created using the RDKit feature definition language</li><li><strong>Vectorized Operations</strong>: All functions support vectorized operations for processing multiple molecules efficiently</li></ul></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../fingerprints/">« Fingerprints</a><a class="docs-footer-nextpage" href="../substructure/">Substructure Search »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Friday 26 September 2025 05:14">Friday 26 September 2025</span>. Using Julia version 1.11.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
