@@ -8,8 +8,8 @@ MoleculeFlow.jl is a comprehensive Julia library for cheminformatics, providing 
 
 !!! info
     This library is based on the [rdkit](https://github.com/rdkit/rdkit) and [PythonCall](https://github.com/JuliaPy/PythonCall.jl). Author sees little sense in trying to implement things from scratch, as rdkit has been, is, and very likely will continue being the benchmark cheminformatics library in the future.
-    The point of the library is two-fold: 1) Provide a pleasant and user-friendly julian interface that is very easy to extend and/or build upon using a reliable source library. 2) Provide cheminformatics functionality that is not straightforward to implement in in rdkit.
-    
+    The point of the library is two-fold: 1) Provide a pleasant and user-friendly julian interface that is very easy to extend and/or build upon using a reliable source library. 2) Provide cheminformatics functionality that is not straightforward to implement in in rdkit.   
+
     
 ## Installation
 

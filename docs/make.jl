@@ -26,6 +26,7 @@ makedocs(;
             "Drawing & Visualization" => "api/drawing.md",
             "Molecular Descriptors" => "api/descriptors.md",
             "Fingerprints" => "api/fingerprints.md",
+            "Pharmacophore Features" => "api/pharmacophore.md",
             "Substructure Search" => "api/substructure.md",
             "Atom Operations" => "api/atoms.md",
             "Bond Operations" => "api/bonds.md",

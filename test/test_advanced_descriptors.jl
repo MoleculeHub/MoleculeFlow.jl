@@ -206,6 +206,26 @@ end
         @test radius_of_gyration(invalid_mol) === missing
     end
 
+    @testset "Principal Moments of Inertia" begin
+        # Test PMI descriptors (may fail without 3D coordinates)
+        ethanol = mol_from_smiles("CCO")
+
+        pmi1_result = pmi1(ethanol)
+        pmi2_result = pmi2(ethanol)
+        pmi3_result = pmi3(ethanol)
+
+        # Should either be Float64 or missing (if no 3D coords)
+        @test pmi1_result === missing || isa(pmi1_result, Float64)
+        @test pmi2_result === missing || isa(pmi2_result, Float64)
+        @test pmi3_result === missing || isa(pmi3_result, Float64)
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        @test pmi1(invalid_mol) === missing
+        @test pmi2(invalid_mol) === missing
+        @test pmi3(invalid_mol) === missing
+    end
+
     @testset "3D Descriptors with Generated Conformers" begin
         # Skip this test if conformer generation is not available
         try
@@ -227,6 +247,90 @@ end
             end
         catch e
             @warn "3D conformer generation not available for testing: $e"
+        end
+    end
+
+    @testset "Advanced 3D Descriptors" begin
+        # Test spherocity index
+        mol = mol_from_smiles("CCO")
+        spherocity_result = spherocity_index(mol)
+        @test spherocity_result === missing || isa(spherocity_result, Float64)
+
+        # Test GETAWAY descriptors
+        getaway_result = getaway_descriptors(mol)
+        @test getaway_result === missing || isa(getaway_result, Vector{Float64})
+
+        # Test WHIM descriptors
+        whim_result = whim_descriptors(mol)
+        @test whim_result === missing || isa(whim_result, Vector{Float64})
+
+        # Test RDF descriptors
+        rdf_result = rdf_descriptors(mol)
+        @test rdf_result === missing || isa(rdf_result, Vector{Float64})
+
+        # Test MORSE descriptors
+        morse_result = morse_descriptors(mol)
+        @test morse_result === missing || isa(morse_result, Vector{Float64})
+
+        # Test with missing molecule
+        @test spherocity_index(missing) === missing
+        @test getaway_descriptors(missing) === missing
+        @test whim_descriptors(missing) === missing
+        @test rdf_descriptors(missing) === missing
+        @test morse_descriptors(missing) === missing
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        @test spherocity_index(invalid_mol) === missing
+        @test getaway_descriptors(invalid_mol) === missing
+        @test whim_descriptors(invalid_mol) === missing
+        @test rdf_descriptors(invalid_mol) === missing
+        @test morse_descriptors(invalid_mol) === missing
+    end
+
+    @testset "Advanced 3D Descriptors with Generated Conformers" begin
+        # Skip this test if conformer generation is not available
+        try
+            mol = mol_from_smiles("CCO")
+            conformers = generate_3d_conformers(mol, 1)
+
+            if !isempty(conformers)
+                mol_3d = conformers[1].molecule
+
+                # Test spherocity index with 3D coordinates
+                spherocity = spherocity_index(mol_3d)
+                @test isa(spherocity, Float64)
+                @test 0.0 <= spherocity <= 1.0
+
+                # Test GETAWAY descriptors with 3D coordinates
+                getaway = getaway_descriptors(mol_3d)
+                @test isa(getaway, Vector{Float64})
+                @test length(getaway) > 0
+
+                # Test WHIM descriptors with 3D coordinates
+                whim = whim_descriptors(mol_3d)
+                @test isa(whim, Vector{Float64})
+                @test length(whim) > 0
+
+                # Test RDF descriptors with 3D coordinates
+                rdf = rdf_descriptors(mol_3d)
+                @test isa(rdf, Vector{Float64})
+                @test length(rdf) > 0
+
+                # Test MORSE descriptors with 3D coordinates
+                morse = morse_descriptors(mol_3d)
+                @test isa(morse, Vector{Float64})
+                @test length(morse) > 0
+
+                # Test custom parameters
+                getaway_custom = getaway_descriptors(mol_3d; precision = 3)
+                @test isa(getaway_custom, Vector{Float64})
+
+                whim_custom = whim_descriptors(mol_3d; thresh = 0.01)
+                @test isa(whim_custom, Vector{Float64})
+            end
+        catch e
+            @warn "3D conformer generation not available for advanced descriptor testing: $e"
         end
     end
 end
@@ -259,6 +363,27 @@ end
     amide_counts = num_amide_bonds.(mols)
     @test length(amide_counts) == 3
     @test all(isa(v, Int) for v in amide_counts)
+
+    # Test vectorized 3D descriptors (may be missing without 3D coordinates)
+    spherocity_values = spherocity_index.(mols)
+    @test length(spherocity_values) == 3
+    @test all(v === missing || isa(v, Float64) for v in spherocity_values)
+
+    getaway_values = getaway_descriptors.(mols)
+    @test length(getaway_values) == 3
+    @test all(v === missing || isa(v, Vector{Float64}) for v in getaway_values)
+
+    whim_values = whim_descriptors.(mols)
+    @test length(whim_values) == 3
+    @test all(v === missing || isa(v, Vector{Float64}) for v in whim_values)
+
+    rdf_values = rdf_descriptors.(mols)
+    @test length(rdf_values) == 3
+    @test all(v === missing || isa(v, Vector{Float64}) for v in rdf_values)
+
+    morse_values = morse_descriptors.(mols)
+    @test length(morse_values) == 3
+    @test all(v === missing || isa(v, Vector{Float64}) for v in morse_values)
 end
 
 @testset "Error Handling and Edge Cases" begin

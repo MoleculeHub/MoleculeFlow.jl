@@ -168,6 +168,62 @@ function _inertial_shape_factor(mol::Py; confId::Int = -1)
     @pyconst(pyimport("rdkit.Chem.Descriptors3D").InertialShapeFactor)(mol; confId = confId)
 end
 
+# Advanced 3D descriptors
+function _spherocity_index(mol::Py; confId::Int = -1)
+    @pyconst(pyimport("rdkit.Chem.Descriptors3D").SpherocityIndex)(mol; confId = confId)
+end
+
+function _calc_getaway(
+    mol::Py; confId::Int = -1, precision::Int = 2, custom_atom_property::String = ""
+)
+    if custom_atom_property == ""
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcGETAWAY)(
+            mol; confId = confId, precision = precision
+        )
+    else
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcGETAWAY)(
+            mol;
+            confId = confId,
+            precision = precision,
+            CustomAtomProperty = custom_atom_property,
+        )
+    end
+end
+
+function _calc_whim(
+    mol::Py; confId::Int = -1, thresh::Float64 = 0.001, custom_atom_property::String = ""
+)
+    if custom_atom_property == ""
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcWHIM)(
+            mol; confId = confId, thresh = thresh
+        )
+    else
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcWHIM)(
+            mol; confId = confId, thresh = thresh, CustomAtomProperty = custom_atom_property
+        )
+    end
+end
+
+function _calc_rdf(mol::Py; confId::Int = -1, custom_atom_property::String = "")
+    if custom_atom_property == ""
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcRDF)(mol; confId = confId)
+    else
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcRDF)(
+            mol; confId = confId, CustomAtomProperty = custom_atom_property
+        )
+    end
+end
+
+function _calc_morse(mol::Py; confId::Int = -1, custom_atom_property::String = "")
+    if custom_atom_property == ""
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcMORSE)(mol; confId = confId)
+    else
+        @pyconst(pyimport("rdkit.Chem.rdMolDescriptors").CalcMORSE)(
+            mol; confId = confId, CustomAtomProperty = custom_atom_property
+        )
+    end
+end
+
 # Synthetic Accessibility Score
 function _sascore(mol::Py)
     @pyconst(pyimport("rdkit.Contrib.SA_Score.sascorer").calculateScore)(mol)
@@ -346,7 +402,7 @@ function _find_ring_families(mol::Py)
     @pyconst(pyimport("rdkit.Chem").FindRingFamilies)(mol)
 end
 function _get_ring_info(mol::Py)
-    @pyconst(pyimport("rdkit.Chem").GetRingInfo)(mol)
+    mol.GetRingInfo()
 end
 function _canonical_rank_atoms(mol::Py)
     @pyconst(pyimport("rdkit.Chem").CanonicalRankAtoms)(mol)
@@ -635,10 +691,6 @@ function _min_absolute_e_state_index(mol::Py)
     @pyconst(pyimport("rdkit.Chem.Descriptors").MinAbsEStateIndex)(mol)
 end
 
-# Functional group counts - drug discovery relevant
-function _num_sp3_hbonds(mol::Py)
-    @pyconst(pyimport("rdkit.Chem.Descriptors").NumSP3Hbonds)(mol)
-end
 function _num_aliphatic_rings(mol::Py)
     @pyconst(pyimport("rdkit.Chem.Descriptors").NumAliphaticRings)(mol)
 end
@@ -750,33 +802,39 @@ function _reaction_get_reacting_atoms(rxn::Py)
     return rxn.GetReactingAtoms()
 end
 
-function _reaction_fingerprint(rxn::Py, fp_size::Int=2048)
+function _reaction_fingerprint(rxn::Py, fp_size::Int = 2048)
     rdkit_reactions = @pyconst(pyimport("rdkit.Chem.rdChemReactions"))
     params = rdkit_reactions.ReactionFingerprintParams()
     params.fpSize = fp_size
     return rdkit_reactions.CreateDifferenceFingerprintForReaction(rxn, params)
 end
 
-function _reaction_structural_fingerprint(rxn::Py, fp_size::Int=2048)
+function _reaction_structural_fingerprint(rxn::Py, fp_size::Int = 2048)
     rdkit_reactions = @pyconst(pyimport("rdkit.Chem.rdChemReactions"))
     params = rdkit_reactions.ReactionFingerprintParams()
     params.fpSize = fp_size
     return rdkit_reactions.CreateStructuralFingerprintForReaction(rxn, params)
 end
 
-function _compute_reaction_center_fingerprint(rxn::Py, fp_size::Int=2048)
+function _compute_reaction_center_fingerprint(rxn::Py, fp_size::Int = 2048)
     rdkit_reactions = @pyconst(pyimport("rdkit.Chem.rdChemReactions"))
     params = rdkit_reactions.ReactionFingerprintParams()
     params.fpSize = fp_size
     return rdkit_reactions.CreateDifferenceFingerprintForReaction(rxn, params)
 end
 
-function _reaction_run_reactants_inline_properties(rxn::Py, reactants::Vector{Py}, max_products::Int=1000)
+function _reaction_run_reactants_inline_properties(
+    rxn::Py, reactants::Vector{Py}, max_products::Int = 1000
+)
     rxn.RunReactants(pylist(reactants), max_products)
 end
 
-function _reaction_enumerate_library_from_reaction(rxn::Py, reactant_lists::Vector{Vector{Py}})
-    @pyconst(pyimport("rdkit.Chem.AllChem").EnumerateLibraryFromReaction)(rxn, pylist([pylist(r) for r in reactant_lists]))
+function _reaction_enumerate_library_from_reaction(
+    rxn::Py, reactant_lists::Vector{Vector{Py}}
+)
+    @pyconst(pyimport("rdkit.Chem.AllChem").EnumerateLibraryFromReaction)(
+        rxn, pylist([pylist(r) for r in reactant_lists])
+    )
 end
 
 function _reaction_to_smarts(rxn::Py)
@@ -787,16 +845,20 @@ function _reaction_compute_atom_mapping(rxn::Py)
     @pyconst(pyimport("rdkit.Chem.rdChemReactions").ReduceProductToSideChains)(rxn)
 end
 
-function _reaction_sanitize_reaction(rxn::Py, sanitize_ops::Int=15)
+function _reaction_sanitize_reaction(rxn::Py, sanitize_ops::Int = 15)
     @pyconst(pyimport("rdkit.Chem.rdChemReactions").SanitizeRxn)(rxn, sanitize_ops)
 end
 
-function _reaction_remove_unmapped_reactant_templates(rxn::Py, mode::Int=1)
-    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedReactantTemplates)(rxn, mode)
+function _reaction_remove_unmapped_reactant_templates(rxn::Py, mode::Int = 1)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedReactantTemplates)(
+        rxn, mode
+    )
 end
 
-function _reaction_remove_unmapped_product_templates(rxn::Py, mode::Int=1)
-    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedProductTemplates)(rxn, mode)
+function _reaction_remove_unmapped_product_templates(rxn::Py, mode::Int = 1)
+    @pyconst(pyimport("rdkit.Chem.rdChemReactions").RemoveUnmappedProductTemplates)(
+        rxn, mode
+    )
 end
 
 function _reaction_preprocess(rxn::Py)
@@ -810,7 +872,7 @@ end
 function _get_atom_mapping_numbers(mol::Py)
     atom_map_nums = []
     num_atoms = pyconvert(Int, mol.GetNumAtoms())
-    for i in 0:(num_atoms-1)
+    for i in 0:(num_atoms - 1)
         atom = mol.GetAtomWithIdx(i)
         map_num = pyconvert(Int, atom.GetAtomMapNum())
         push!(atom_map_nums, map_num)
@@ -823,4 +885,83 @@ function _set_atom_mapping_numbers(mol::Py, map_nums::Vector{Int})
         atom = mol.GetAtomWithIdx(i-1)
         atom.SetAtomMapNum(map_num)
     end
+end
+
+# Pharmacophore and Chemical Features
+function _build_feature_factory(filename::String)
+    @pyconst(pyimport("rdkit.Chem.ChemicalFeatures").BuildFeatureFactory)(filename)
+end
+
+function _build_feature_factory_from_string(fdef_string::String)
+    @pyconst(pyimport("rdkit.Chem.ChemicalFeatures").BuildFeatureFactoryFromString)(
+        fdef_string
+    )
+end
+
+function _get_features_for_mol(factory::Py, mol::Py; conf_id::Int = -1)
+    if conf_id == -1
+        factory.GetFeaturesForMol(mol)
+    else
+        factory.GetFeaturesForMol(mol; confId = conf_id)
+    end
+end
+
+function _get_feature_families(factory::Py)
+    factory.GetFeatureFamilies()
+end
+
+function _get_feature_defs(factory::Py)
+    factory.GetFeatureDefs()
+end
+
+function _get_num_feature_defs(factory::Py)
+    factory.GetNumFeatureDefs()
+end
+
+function _mol_from_ph4(pharmacophore::Py)
+    @pyconst(pyimport("rdkit.Chem.Pharm3D.EmbedLib").EmbedMol)(pharmacophore)
+end
+
+function _get_pharmacophore_fingerprint(mol::Py, factory::Py, sig_factory::Py)
+    @pyconst(pyimport("rdkit.Chem.Pharm2D.Generate").Gen2DFingerprint)(mol, sig_factory)
+end
+
+function _create_sig_factory(
+    factory::Py; min_point_count::Int = 2, max_point_count::Int = 3
+)
+    sig_factory = @pyconst(pyimport("rdkit.Chem.Pharm2D.SigFactory").SigFactory)(
+        factory, min_point_count, max_point_count
+    )
+    # Use non-overlapping distance bins that avoid boundary issues
+    sig_factory.SetBins([(0, 2), (2, 6), (6, 12)])
+    sig_factory.Init()
+    return sig_factory
+end
+
+function _get_rdconfig_data_dir()
+    @pyconst(pyimport("rdkit.RDConfig").RDDataDir)
+end
+
+# 3D Pharmacophore functions
+function _pharmacophore_from_mol(mol::Py, feature_factory::Py; conf_id::Int = -1)
+    @pyconst(pyimport("rdkit.Chem.Pharm3D.Pharmacophore").Pharmacophore)()
+end
+
+function _explicit_pharmacophore_from_mol(mol::Py, feature_factory::Py; conf_id::Int = -1)
+    features = _get_features_for_mol(feature_factory, mol; conf_id = conf_id)
+
+    # Extract feature information
+    feature_list = Tuple{String, Vector{Float64}}[]
+    for feature in features
+        family = pyconvert(String, feature.GetFamily())
+        pos_obj = feature.GetPos()
+        pos = [
+            pyconvert(Float64, pos_obj.x),
+            pyconvert(Float64, pos_obj.y),
+            pyconvert(Float64, pos_obj.z),
+        ]
+        push!(feature_list, (family, pos))
+    end
+
+    return feature_list
 end

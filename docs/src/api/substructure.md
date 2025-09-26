@@ -59,15 +59,3 @@ get_functional_groups
 ```@docs
 FUNCTIONAL_GROUPS
 ```
-
-## Get Ring Info
-
-```@docs
-get_ring_info
-```
-
-## Is Ring Aromatic
-
-```@docs
-is_ring_aromatic
-```

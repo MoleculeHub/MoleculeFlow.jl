@@ -386,3 +386,173 @@ function normalize_molecule(mol::Molecule)
         return mol
     end
 end
+
+"""
+    cleanup_molecule(mol::Molecule) -> Molecule
+
+Perform general cleanup operations on a molecule using RDKit's cleanup function.
+
+# Arguments
+
+  - `mol::Molecule`: Input molecule
+
+# Returns
+
+  - `Molecule`: Cleaned up molecule
+
+# Example
+
+```julia
+mol = mol_from_smiles("CCO")
+clean_mol = cleanup_molecule(mol)
+```
+"""
+function cleanup_molecule(mol::Molecule)
+    if !mol.valid
+        return mol
+    end
+
+    try
+        cleaned_mol = _cleanup(mol._rdkit_mol)
+
+        if pynot(cleaned_mol)
+            return Molecule(;
+                _rdkit_mol = cleaned_mol, valid = false, source = "cleanup_$(mol.source)"
+            )
+        end
+
+        return Molecule(;
+            _rdkit_mol = cleaned_mol,
+            valid = true,
+            source = "cleanup_$(mol.source)",
+            props = copy(mol.props),
+        )
+    catch e
+        @warn "Failed to cleanup molecule: $e"
+        return mol
+    end
+end
+
+"""
+    standardize_smiles(smiles::String) -> Union{String, Missing}
+
+Standardize a SMILES string using RDKit's standardization procedures.
+
+# Arguments
+
+  - `smiles::String`: Input SMILES string
+
+# Returns
+
+  - `Union{String, Missing}`: Standardized SMILES string or missing if standardization fails
+
+# Example
+
+```julia
+std_smiles = standardize_smiles("CC(O)=CC(=O)C.Na")
+```
+"""
+function standardize_smiles(smiles::String)
+    try
+        return pyconvert(String, _standardize_smiles(smiles))
+    catch e
+        @warn "Failed to standardize SMILES: $e"
+        return missing
+    end
+end
+
+"""
+    charge_parent(mol::Molecule) -> Molecule
+
+Get the charge parent (neutral form) of a molecule.
+
+# Arguments
+
+  - `mol::Molecule`: Input molecule
+
+# Returns
+
+  - `Molecule`: Charge parent molecule
+
+# Example
+
+```julia
+mol = mol_from_smiles("[NH3+]CCO")  # Protonated ethanolamine
+parent = charge_parent(mol)         # Returns neutral form
+```
+"""
+function charge_parent(mol::Molecule)
+    if !mol.valid
+        return mol
+    end
+
+    try
+        parent_mol = _charge_parent(mol._rdkit_mol)
+
+        if pynot(parent_mol)
+            return Molecule(;
+                _rdkit_mol = parent_mol,
+                valid = false,
+                source = "charge_parent_$(mol.source)",
+            )
+        end
+
+        return Molecule(;
+            _rdkit_mol = parent_mol,
+            valid = true,
+            source = "charge_parent_$(mol.source)",
+            props = copy(mol.props),
+        )
+    catch e
+        @warn "Failed to get charge parent: $e"
+        return mol
+    end
+end
+
+"""
+    fragment_parent(mol::Molecule) -> Molecule
+
+Get the fragment parent (largest fragment) of a molecule.
+
+# Arguments
+
+  - `mol::Molecule`: Input molecule
+
+# Returns
+
+  - `Molecule`: Fragment parent molecule
+
+# Example
+
+```julia
+mol = mol_from_smiles("CCO.Cl")     # Ethanol with chloride
+parent = fragment_parent(mol)       # Returns just ethanol
+```
+"""
+function fragment_parent(mol::Molecule)
+    if !mol.valid
+        return mol
+    end
+
+    try
+        parent_mol = _fragment_parent(mol._rdkit_mol)
+
+        if pynot(parent_mol)
+            return Molecule(;
+                _rdkit_mol = parent_mol,
+                valid = false,
+                source = "fragment_parent_$(mol.source)",
+            )
+        end
+
+        return Molecule(;
+            _rdkit_mol = parent_mol,
+            valid = true,
+            source = "fragment_parent_$(mol.source)",
+            props = copy(mol.props),
+        )
+    catch e
+        @warn "Failed to get fragment parent: $e"
+        return mol
+    end
+end

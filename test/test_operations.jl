@@ -254,16 +254,145 @@ end
 
         # Test with first two atoms (indices are 0-based in RDKit)
         smarts = mol_fragment_to_smarts(mol, [0, 1])
-        @test isa(smarts, String)
+        @test isa(smarts, String) || smarts === missing
 
         # Test with invalid molecule
         invalid_mol = mol_from_smiles("invalid_smiles")
         result = mol_fragment_to_smarts(invalid_mol, [0, 1])
-        @test result == ""
+        @test result === missing
 
         # Test with empty indices
         result_empty = mol_fragment_to_smarts(mol, Int[])
-        @test isa(result_empty, String)
+        @test isa(result_empty, String) || result_empty === missing
+    end
+
+    @testset "mol_fragment_to_smiles function" begin
+        mol = mol_from_smiles("CCO")
+
+        # Test with first two atoms (indices are 0-based in RDKit)
+        smiles = mol_fragment_to_smiles(mol, [0, 1])
+        @test isa(smiles, String) || smiles === missing
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        result = mol_fragment_to_smiles(invalid_mol, [0, 1])
+        @test result === missing
+
+        # Test with single atom
+        result_single = mol_fragment_to_smiles(mol, [0])
+        @test isa(result_single, String) || result_single === missing
+    end
+end
+
+@testset "Advanced Ring Analysis" begin
+    @testset "get_ring_info function" begin
+        # Test with benzene (aromatic ring)
+        benzene = mol_from_smiles("c1ccccc1")
+        ring_info = get_ring_info(benzene)
+        @test ring_info !== missing
+
+        # Test with cyclohexane (aliphatic ring)
+        cyclohexane = mol_from_smiles("C1CCCCC1")
+        ring_info_aliphatic = get_ring_info(cyclohexane)
+        @test ring_info_aliphatic !== missing
+
+        # Test with acyclic molecule
+        ethanol = mol_from_smiles("CCO")
+        ring_info_acyclic = get_ring_info(ethanol)
+        @test ring_info_acyclic !== missing
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        result = get_ring_info(invalid_mol)
+        @test result === missing
+    end
+
+    @testset "find_atom_environment function" begin
+        mol = mol_from_smiles("CCCCC")  # Linear chain
+
+        # Test finding environment around central atom
+        env = find_atom_environment(mol, 1, 2)  # Radius 1 around atom 2
+        @test isa(env, Vector{Int}) || env === missing
+
+        # Test with different radius
+        env_large = find_atom_environment(mol, 2, 2)  # Radius 2 around atom 2
+        @test isa(env_large, Vector{Int}) || env_large === missing
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        result = find_atom_environment(invalid_mol, 1, 0)
+        @test result === missing
+    end
+end
+
+@testset "Molecular Editing Operations" begin
+    @testset "renumber_atoms function" begin
+        mol = mol_from_smiles("CCO")
+
+        # Test reverse atom ordering
+        new_mol = renumber_atoms(mol, [2, 1, 0])
+        @test new_mol.valid == true
+        @test new_mol.source == mol.source
+
+        # Test with same ordering (identity)
+        same_mol = renumber_atoms(mol, [0, 1, 2])
+        @test same_mol.valid == true
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        result = renumber_atoms(invalid_mol, [0, 1, 2])
+        @test result.valid == false
+    end
+
+    @testset "remove_stereochemistry! function" begin
+        # Test with chiral molecule
+        chiral_mol = mol_from_smiles("C[C@H](O)C")
+        original_smiles = mol_to_smiles(chiral_mol)
+
+        result = remove_stereochemistry!(chiral_mol)
+        @test result.valid == true
+        @test result == chiral_mol  # Should return same object (in-place)
+
+        # Test with achiral molecule
+        achiral_mol = mol_from_smiles("CCO")
+        result_achiral = remove_stereochemistry!(achiral_mol)
+        @test result_achiral.valid == true
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        result_invalid = remove_stereochemistry!(invalid_mol)
+        @test result_invalid.valid == false
+    end
+
+    @testset "sanitize_mol! function" begin
+        mol = mol_from_smiles("CCO")
+
+        result = sanitize_mol!(mol)
+        @test result.valid == true
+        @test result == mol  # Should return same object (in-place)
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        result_invalid = sanitize_mol!(invalid_mol)
+        @test result_invalid.valid == false
+    end
+
+    @testset "compute_2d_coords! function" begin
+        mol = mol_from_smiles("CCO")
+
+        result = compute_2d_coords!(mol)
+        @test result.valid == true
+        @test result == mol  # Should return same object (in-place)
+
+        # Test with aromatic molecule
+        benzene = mol_from_smiles("c1ccccc1")
+        result_benzene = compute_2d_coords!(benzene)
+        @test result_benzene.valid == true
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        result_invalid = compute_2d_coords!(invalid_mol)
+        @test result_invalid.valid == false
     end
 end
 

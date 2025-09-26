@@ -627,52 +627,6 @@ function get_functional_groups(mol::Molecule)
 end
 
 """
-    get_ring_info(mol::Molecule) -> Union{Dict, Missing}
-
-Get detailed information about rings in a molecule.
-
-# Arguments
-
-  - `mol::Molecule`: The molecule to analyze
-
-# Returns
-
-  - `Dict`: Dictionary containing ring information with keys:
-
-      + `:num_rings`: Total number of rings
-      + `:atom_rings`: Vector of vectors containing 1-based atom indices for each ring
-      + `:bond_rings`: Vector of vectors containing 1-based bond indices for each ring
-
-  - `missing`: If molecule is invalid
-
-# Examples
-
-```julia
-mol = mol_from_smiles("c1ccccc1")  # Benzene
-ring_info = get_ring_info(mol)
-# Returns Dict(:num_rings => 1, :atom_rings => [[1,2,3,4,5,6]], :bond_rings => [[1,2,3,4,5,6]])
-```
-
-# Notes
-
-  - Provides comprehensive ring analysis
-  - Useful for understanding molecular topology
-"""
-function get_ring_info(mol::Molecule)
-    !mol.valid && return missing
-
-    ring_info = mol._rdkit_mol.GetRingInfo()
-
-    return Dict(
-        :num_rings => pyconvert(Int, ring_info.NumRings()),
-        :atom_rings =>
-            [pyconvert(Vector{Int}, ring) .+ 1 for ring in ring_info.AtomRings()],
-        :bond_rings =>
-            [pyconvert(Vector{Int}, ring) .+ 1 for ring in ring_info.BondRings()],
-    )
-end
-
-"""
     is_ring_aromatic(mol::Molecule, ring_atoms::Vector{Int}) -> Union{Bool, Missing}
 
 Check if a specific ring in a molecule is aromatic.

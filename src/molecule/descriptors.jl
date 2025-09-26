@@ -1385,6 +1385,347 @@ function ipc(mol::Union{Molecule, Missing})
     end
 end
 
+# Additional missing descriptors that need high-level wrappers
+
+"""
+    num_aliphatic_heterocycles(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of aliphatic heterocycles in the molecule.
+"""
+function num_aliphatic_heterocycles(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_aliphatic_heterocycles(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating aliphatic heterocycles: $e"
+        return missing
+    end
+end
+
+"""
+    num_saturated_heterocycles(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of saturated heterocycles in the molecule.
+"""
+function num_saturated_heterocycles(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_saturated_heterocycles(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating saturated heterocycles: $e"
+        return missing
+    end
+end
+
+"""
+    num_saturated_carbocycles(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of saturated carbocycles in the molecule.
+"""
+function num_saturated_carbocycles(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_saturated_carbocycles(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating saturated carbocycles: $e"
+        return missing
+    end
+end
+
+"""
+    num_unspecified_atom_stereo_centers(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of unspecified atom stereo centers.
+"""
+function num_unspecified_atom_stereo_centers(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_unspecified_atom_stereo_centers(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating unspecified stereo centers: $e"
+        return missing
+    end
+end
+
+"""
+    num_spiro_atoms(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of spiro atoms in the molecule.
+"""
+function num_spiro_atoms(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_spiro_atoms(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating spiro atoms: $e"
+        return missing
+    end
+end
+
+"""
+    num_bridgehead_atoms(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of bridgehead atoms in the molecule.
+"""
+function num_bridgehead_atoms(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_bridgehead_atoms(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating bridgehead atoms: $e"
+        return missing
+    end
+end
+
+"""
+    hall_kier_alpha(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the Hall-Kier alpha descriptor.
+"""
+function hall_kier_alpha(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _hall_kier_alpha(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating Hall-Kier alpha: $e"
+        return missing
+    end
+end
+
+"""
+    eccentricity(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the eccentricity of the molecule's 3D structure.
+"""
+function eccentricity(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _eccentricity(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating eccentricity: $e"
+        return missing
+    end
+end
+
+"""
+    inertial_shape_factor(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the inertial shape factor of the molecule.
+"""
+function inertial_shape_factor(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _inertial_shape_factor(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating inertial shape factor: $e"
+        return missing
+    end
+end
+
+# BCUT descriptors
+"""
+    bcut2d_mwlow(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_MWLOW descriptor.
+"""
+function bcut2d_mwlow(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_mwlow(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_MWLOW: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_mwhi(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_MWHI descriptor.
+"""
+function bcut2d_mwhi(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_mwhi(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_MWHI: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_chglow(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_CHGLO descriptor.
+"""
+function bcut2d_chglow(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_chglow(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_CHGLO: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_chghi(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_CHGHI descriptor.
+"""
+function bcut2d_chghi(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_chghi(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_CHGHI: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_logplow(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_LOGPLOW descriptor.
+"""
+function bcut2d_logplow(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_logplow(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_LOGPLOW: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_logphi(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_LOGPHI descriptor.
+"""
+function bcut2d_logphi(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_logphi(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_LOGPHI: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_mrlow(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_MRLOW descriptor.
+"""
+function bcut2d_mrlow(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_mrlow(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_MRLOW: $e"
+        return missing
+    end
+end
+
+"""
+    bcut2d_mrhi(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the BCUT2D_MRHI descriptor.
+"""
+function bcut2d_mrhi(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _bcut2d_mrhi(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating BCUT2D_MRHI: $e"
+        return missing
+    end
+end
+
+"""
+    max_absolute_e_state_index(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the maximum absolute E-state index.
+"""
+function max_absolute_e_state_index(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _max_absolute_e_state_index(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating max absolute E-state index: $e"
+        return missing
+    end
+end
+
+"""
+    min_absolute_e_state_index(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the minimum absolute E-state index.
+"""
+function min_absolute_e_state_index(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _min_absolute_e_state_index(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating min absolute E-state index: $e"
+        return missing
+    end
+end
+
+# Removed num_sp3_heavy_atoms as the underlying RDKit function doesn't exist
+
+"""
+    num_aliphatic_rings(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of aliphatic rings in the molecule.
+"""
+function num_aliphatic_rings(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_aliphatic_rings(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating aliphatic rings: $e"
+        return missing
+    end
+end
+
+"""
+    num_heterocycles(mol::Union{Molecule, Missing}) -> Union{Int, Missing}
+
+Count the number of heterocycles in the molecule.
+"""
+function num_heterocycles(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Int, _num_heterocycles(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating heterocycles: $e"
+        return missing
+    end
+end
+
 # Vectorized functions for new descriptors (moved to bottom for organization)
 const NEW_DESCRIPTOR_FUNCTIONS = [
     # Chi connectivity indices
@@ -1403,17 +1744,965 @@ const NEW_DESCRIPTOR_FUNCTIONS = [
     # E-state descriptors
     :max_e_state_index,
     :min_e_state_index,
+    :max_absolute_e_state_index,
+    :min_absolute_e_state_index,
     # Atom counts
     :num_carbons,
     :num_nitrogens,
     :num_oxygens,
     :num_sulfurs,
     :num_halogens,
+    # Additional ring counts
+    :num_aliphatic_heterocycles,
+    :num_saturated_heterocycles,
+    :num_saturated_carbocycles,
+    :num_aliphatic_rings,
+    :num_heterocycles,
+    # Stereo and structure counts
+    :num_unspecified_atom_stereo_centers,
+    :num_spiro_atoms,
+    :num_bridgehead_atoms,
+    # 3D descriptors
+    :eccentricity,
+    :inertial_shape_factor,
+    # BCUT descriptors
+    :bcut2d_mwlow,
+    :bcut2d_mwhi,
+    :bcut2d_chglow,
+    :bcut2d_chghi,
+    :bcut2d_logplow,
+    :bcut2d_logphi,
+    :bcut2d_mrlow,
+    :bcut2d_mrhi,
+    # Other descriptors
+    :hall_kier_alpha,
     # Complexity measures
     :ipc,
 ]
 
 for func in NEW_DESCRIPTOR_FUNCTIONS
+    @eval function $(func)(mols::Vector{Union{Molecule, Missing}})
+        return [mol === missing ? missing : $(func)(mol) for mol in mols]
+    end
+    @eval function $(func)(mols::Vector{Molecule})
+        return [$(func)(mol) for mol in mols]
+    end
+end
+
+# Additional 3D descriptors
+"""
+    pmi1(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the first principal moment of inertia (PMI1).
+"""
+function pmi1(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _pmi1(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating PMI1: $e"
+        return missing
+    end
+end
+
+"""
+    pmi2(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the second principal moment of inertia (PMI2).
+"""
+function pmi2(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _pmi2(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating PMI2: $e"
+        return missing
+    end
+end
+
+"""
+    pmi3(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the third principal moment of inertia (PMI3).
+"""
+function pmi3(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _pmi3(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating PMI3: $e"
+        return missing
+    end
+end
+
+"""
+    spherocity_index(mol::Union{Molecule, Missing}; conf_id::Int = -1) -> Union{Float64, Missing}
+
+Calculate the spherocity index, a measure of molecular shape.
+Lower values indicate more linear molecules, higher values indicate more spherical molecules.
+
+# Arguments
+
+  - `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+  - `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+
+# Returns
+
+  - `Union{Float64, Missing}`: Spherocity index value, or missing if molecule is invalid or lacks 3D coordinates
+
+# Example
+
+```julia
+mol = mol_from_smiles("CCCCCCC")  # Linear alkane
+result = generate_3d_conformers(mol; num_conformers = 1)
+if result.success
+    spherocity = spherocity_index(result.molecules[1])  # Should be low (linear)
+end
+```
+
+# Notes
+
+  - Requires 3D coordinates to be present
+  - Values range from 0 (linear) to 1 (spherical)
+"""
+function spherocity_index(mol::Union{Molecule, Missing}; conf_id::Int = -1)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _spherocity_index(mol._rdkit_mol; confId = conf_id))
+    catch e
+        @warn "Error calculating spherocity index: $e"
+        return missing
+    end
+end
+
+"""
+    getaway_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, precision::Int = 2, custom_atom_property::String = "") -> Union{Vector{Float64}, Missing}
+
+Calculate GETAWAY (GEometry, Topology, and Atom-Weights AssemblY) descriptors.
+These are 3D molecular descriptors that encode information about molecular geometry,
+topology, and atomic properties.
+
+# Arguments
+
+  - `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+  - `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+  - `precision::Int = 2`: Precision for floating point calculations
+  - `custom_atom_property::String = ""`: Custom atomic property to use (empty string for default)
+
+# Returns
+
+  - `Union{Vector{Float64}, Missing}`: Vector of GETAWAY descriptor values, or missing if molecule is invalid
+
+# Example
+
+```julia
+mol = mol_from_smiles("CCO")
+result = generate_3d_conformers(mol; num_conformers = 1)
+if result.success
+    getaway_desc = getaway_descriptors(result.molecules[1])
+    println("Number of GETAWAY descriptors: ", length(getaway_desc))
+end
+```
+
+# Notes
+
+  - Returns a vector of descriptors (typically 273 values)
+  - Requires 3D coordinates to be present
+  - GETAWAY descriptors combine geometric, topological, and chemical information
+"""
+function getaway_descriptors(
+    mol::Union{Molecule, Missing};
+    conf_id::Int = -1,
+    precision::Int = 2,
+    custom_atom_property::String = "",
+)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        result = _calc_getaway(
+            mol._rdkit_mol;
+            confId = conf_id,
+            precision = precision,
+            custom_atom_property = custom_atom_property,
+        )
+        return pyconvert(Vector{Float64}, result)
+    catch e
+        @warn "Error calculating GETAWAY descriptors: $e"
+        return missing
+    end
+end
+
+"""
+    whim_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, thresh::Float64 = 0.001, custom_atom_property::String = "") -> Union{Vector{Float64}, Missing}
+
+Calculate WHIM (Weighted Holistic Invariant Molecular) descriptors.
+These descriptors capture information about molecular shape and atomic distributions
+in 3D space using principal component analysis.
+
+# Arguments
+
+  - `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+  - `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+  - `thresh::Float64 = 0.001`: Threshold for eigenvalue calculation
+  - `custom_atom_property::String = ""`: Custom atomic property to use (empty string for default)
+
+# Returns
+
+  - `Union{Vector{Float64}, Missing}`: Vector of WHIM descriptor values, or missing if molecule is invalid
+
+# Example
+
+```julia
+mol = mol_from_smiles("c1ccccc1")  # Benzene
+result = generate_3d_conformers(mol; num_conformers = 1)
+if result.success
+    whim_desc = whim_descriptors(result.molecules[1])
+    println("Number of WHIM descriptors: ", length(whim_desc))
+end
+```
+
+# Notes
+
+  - Returns a vector of descriptors (typically 114 values)
+  - Requires 3D coordinates to be present
+  - WHIM descriptors are rotationally invariant
+"""
+function whim_descriptors(
+    mol::Union{Molecule, Missing};
+    conf_id::Int = -1,
+    thresh::Float64 = 0.001,
+    custom_atom_property::String = "",
+)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        result = _calc_whim(
+            mol._rdkit_mol;
+            confId = conf_id,
+            thresh = thresh,
+            custom_atom_property = custom_atom_property,
+        )
+        return pyconvert(Vector{Float64}, result)
+    catch e
+        @warn "Error calculating WHIM descriptors: $e"
+        return missing
+    end
+end
+
+"""
+    rdf_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, custom_atom_property::String = "") -> Union{Vector{Float64}, Missing}
+
+Calculate RDF (Radial Distribution Function) descriptors.
+These descriptors encode the distribution of atoms as a function of distance
+from a central point in the molecule.
+
+# Arguments
+
+  - `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+  - `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+  - `custom_atom_property::String = ""`: Custom atomic property to use (empty string for default)
+
+# Returns
+
+  - `Union{Vector{Float64}, Missing}`: Vector of RDF descriptor values, or missing if molecule is invalid
+
+# Example
+
+```julia
+mol = mol_from_smiles("CCCCCC")  # Hexane
+result = generate_3d_conformers(mol; num_conformers = 1)
+if result.success
+    rdf_desc = rdf_descriptors(result.molecules[1])
+    println("Number of RDF descriptors: ", length(rdf_desc))
+end
+```
+
+# Notes
+
+  - Returns a vector of descriptors (typically 210 values)
+  - Requires 3D coordinates to be present
+  - RDF descriptors capture radial atomic distribution patterns
+"""
+function rdf_descriptors(
+    mol::Union{Molecule, Missing}; conf_id::Int = -1, custom_atom_property::String = ""
+)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        result = _calc_rdf(
+            mol._rdkit_mol; confId = conf_id, custom_atom_property = custom_atom_property
+        )
+        return pyconvert(Vector{Float64}, result)
+    catch e
+        @warn "Error calculating RDF descriptors: $e"
+        return missing
+    end
+end
+
+"""
+    morse_descriptors(mol::Union{Molecule, Missing}; conf_id::Int = -1, custom_atom_property::String = "") -> Union{Vector{Float64}, Missing}
+
+Calculate MORSE (Molecule Representation of Structures based on Electron diffraction) descriptors.
+These 3D descriptors are based on the idea of electron diffraction and encode
+3D structural information as a function of scattering angle.
+
+# Arguments
+
+  - `mol::Union{Molecule, Missing}`: Input molecule (must have 3D coordinates)
+  - `conf_id::Int = -1`: Conformer ID (-1 for default conformer)
+  - `custom_atom_property::String = ""`: Custom atomic property to use (empty string for default)
+
+# Returns
+
+  - `Union{Vector{Float64}, Missing}`: Vector of MORSE descriptor values, or missing if molecule is invalid
+
+# Example
+
+```julia
+mol = mol_from_smiles("CC(C)C")  # Isobutane
+result = generate_3d_conformers(mol; num_conformers = 1)
+if result.success
+    morse_desc = morse_descriptors(result.molecules[1])
+    println("Number of MORSE descriptors: ", length(morse_desc))
+end
+```
+
+# Notes
+
+  - Returns a vector of descriptors (typically 224 values)
+  - Requires 3D coordinates to be present
+  - MORSE descriptors are based on electron diffraction theory
+"""
+function morse_descriptors(
+    mol::Union{Molecule, Missing}; conf_id::Int = -1, custom_atom_property::String = ""
+)
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        result = _calc_morse(
+            mol._rdkit_mol; confId = conf_id, custom_atom_property = custom_atom_property
+        )
+        return pyconvert(Vector{Float64}, result)
+    catch e
+        @warn "Error calculating MORSE descriptors: $e"
+        return missing
+    end
+end
+
+# VSA descriptors (SlogP_VSA series)
+"""
+    slogp_vsa2(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA2 descriptor.
+"""
+function slogp_vsa2(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa2(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA2: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa3(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA3 descriptor.
+"""
+function slogp_vsa3(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa3(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA3: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa4(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA4 descriptor.
+"""
+function slogp_vsa4(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa4(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA4: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa5(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA5 descriptor.
+"""
+function slogp_vsa5(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa5(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA5: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa6(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA6 descriptor.
+"""
+function slogp_vsa6(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa6(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA6: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa7(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA7 descriptor.
+"""
+function slogp_vsa7(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa7(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA7: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa8(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA8 descriptor.
+"""
+function slogp_vsa8(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa8(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA8: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa9(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA9 descriptor.
+"""
+function slogp_vsa9(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa9(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA9: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa10(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA10 descriptor.
+"""
+function slogp_vsa10(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa10(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA10: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa11(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA11 descriptor.
+"""
+function slogp_vsa11(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa11(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA11: $e"
+        return missing
+    end
+end
+
+"""
+    slogp_vsa12(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SlogP_VSA12 descriptor.
+"""
+function slogp_vsa12(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _slogp_vsa12(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SlogP_VSA12: $e"
+        return missing
+    end
+end
+
+# SMR_VSA descriptors
+"""
+    smr_vsa1(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA1 descriptor.
+"""
+function smr_vsa1(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa1(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA1: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa2(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA2 descriptor.
+"""
+function smr_vsa2(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa2(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA2: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa3(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA3 descriptor.
+"""
+function smr_vsa3(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa3(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA3: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa4(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA4 descriptor.
+"""
+function smr_vsa4(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa4(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA4: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa5(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA5 descriptor.
+"""
+function smr_vsa5(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa5(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA5: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa6(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA6 descriptor.
+"""
+function smr_vsa6(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa6(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA6: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa7(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA7 descriptor.
+"""
+function smr_vsa7(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa7(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA7: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa8(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA8 descriptor.
+"""
+function smr_vsa8(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa8(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA8: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa9(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA9 descriptor.
+"""
+function smr_vsa9(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa9(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA9: $e"
+        return missing
+    end
+end
+
+"""
+    smr_vsa10(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the SMR_VSA10 descriptor.
+"""
+function smr_vsa10(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _smr_vsa10(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating SMR_VSA10: $e"
+        return missing
+    end
+end
+
+# PEOE_VSA descriptors
+"""
+    peoe_vsa1(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA1 descriptor.
+"""
+function peoe_vsa1(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa1(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA1: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa2(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA2 descriptor.
+"""
+function peoe_vsa2(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa2(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA2: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa3(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA3 descriptor.
+"""
+function peoe_vsa3(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa3(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA3: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa4(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA4 descriptor.
+"""
+function peoe_vsa4(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa4(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA4: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa5(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA5 descriptor.
+"""
+function peoe_vsa5(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa5(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA5: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa6(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA6 descriptor.
+"""
+function peoe_vsa6(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa6(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA6: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa7(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA7 descriptor.
+"""
+function peoe_vsa7(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa7(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA7: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa8(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA8 descriptor.
+"""
+function peoe_vsa8(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa8(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA8: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa9(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA9 descriptor.
+"""
+function peoe_vsa9(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa9(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA9: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa10(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA10 descriptor.
+"""
+function peoe_vsa10(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa10(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA10: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa11(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA11 descriptor.
+"""
+function peoe_vsa11(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa11(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA11: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa12(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA12 descriptor.
+"""
+function peoe_vsa12(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa12(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA12: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa13(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA13 descriptor.
+"""
+function peoe_vsa13(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa13(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA13: $e"
+        return missing
+    end
+end
+
+"""
+    peoe_vsa14(mol::Union{Molecule, Missing}) -> Union{Float64, Missing}
+
+Calculate the PEOE_VSA14 descriptor.
+"""
+function peoe_vsa14(mol::Union{Molecule, Missing})
+    isa(mol, Missing) && return missing
+    !mol.valid && return missing
+    try
+        return pyconvert(Float64, _peoe_vsa14(mol._rdkit_mol))
+    catch e
+        @warn "Error calculating PEOE_VSA14: $e"
+        return missing
+    end
+end
+
+# Update vectorized function list with the new descriptors
+const ADDITIONAL_VSA_DESCRIPTOR_FUNCTIONS = [
+    # 3D descriptors
+    :pmi1,
+    :pmi2,
+    :pmi3,
+    # SlogP_VSA series (2-12)
+    :slogp_vsa2,
+    :slogp_vsa3,
+    :slogp_vsa4,
+    :slogp_vsa5,
+    :slogp_vsa6,
+    :slogp_vsa7,
+    :slogp_vsa8,
+    :slogp_vsa9,
+    :slogp_vsa10,
+    :slogp_vsa11,
+    :slogp_vsa12,
+    # SMR_VSA series (1-10)
+    :smr_vsa1,
+    :smr_vsa2,
+    :smr_vsa3,
+    :smr_vsa4,
+    :smr_vsa5,
+    :smr_vsa6,
+    :smr_vsa7,
+    :smr_vsa8,
+    :smr_vsa9,
+    :smr_vsa10,
+    # PEOE_VSA series (1-14)
+    :peoe_vsa1,
+    :peoe_vsa2,
+    :peoe_vsa3,
+    :peoe_vsa4,
+    :peoe_vsa5,
+    :peoe_vsa6,
+    :peoe_vsa7,
+    :peoe_vsa8,
+    :peoe_vsa9,
+    :peoe_vsa10,
+    :peoe_vsa11,
+    :peoe_vsa12,
+    :peoe_vsa13,
+    :peoe_vsa14,
+]
+
+for func in ADDITIONAL_VSA_DESCRIPTOR_FUNCTIONS
     @eval function $(func)(mols::Vector{Union{Molecule, Missing}})
         return [mol === missing ? missing : $(func)(mol) for mol in mols]
     end
