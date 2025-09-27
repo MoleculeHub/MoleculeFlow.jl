@@ -19,6 +19,7 @@ makedocs(;
         "Home" => "index.md",
         "Getting Started" => "getting-started.md",
         "Practical Examples" => "examples.md",
+        "For Developers" => "for-developers.md",
         "API Reference" => [
             "Basic I/O" => "api/io.md",
             "Molecular Operations" => "api/operations.md",
@@ -33,6 +34,7 @@ makedocs(;
             "Similarity" => "api/similarity.md",
             "Standardization" => "api/standardization.md",
             "Conformers" => "api/conformers.md",
+            "Alignment" => "api/alignment.md",
             "Fragmentation" => "api/fragmentation.md",
             "Graph Operations" => "api/graph.md",
             "Progress Tracking" => "api/progress.md",

@@ -4,6 +4,7 @@ using MoleculeFlow
 @testset "Extended Atom Properties" begin
     @testset "Basic Extended Properties" begin
         mol = mol_from_smiles("CCO")
+        @test mol.valid
         atom_o = get_atom(mol, 3)  # Oxygen
 
         # Test radical electrons
@@ -24,6 +25,7 @@ using MoleculeFlow
     @testset "Chirality Properties" begin
         # Test with a non-chiral molecule
         mol = mol_from_smiles("CCO")
+        @test mol.valid
         atom = get_atom(mol, 1)
         @test !is_chiral_center(atom)
         @test get_cip_code(atom) === missing
@@ -39,12 +41,14 @@ using MoleculeFlow
     @testset "Ring Properties" begin
         # Test with benzene
         mol = mol_from_smiles("c1ccccc1")
+        @test mol.valid
         atom = get_atom(mol, 1)
         @test is_in_ring(atom)
         @test get_ring_size(atom) == 6
 
         # Test with non-ring atom
         mol2 = mol_from_smiles("CCCC")
+        @test mol2.valid
         atom2 = get_atom(mol2, 1)
         @test !is_in_ring(atom2)
         @test get_ring_size(atom2) === missing
@@ -52,6 +56,7 @@ using MoleculeFlow
 
     @testset "Contribution Properties" begin
         mol = mol_from_smiles("CCO")
+        @test mol.valid
 
         logp_contrib = get_crippen_log_p_contribution(mol, 1)
         @test isa(logp_contrib, Union{Float64, Missing})
@@ -71,6 +76,7 @@ using MoleculeFlow
 
     @testset "All Atom Properties" begin
         mol = mol_from_smiles("CCO")
+        @test mol.valid
         compute_gasteiger_charges!(mol)
 
         carbon_props = get_all_atom_properties(mol, 1)
@@ -121,6 +127,7 @@ using MoleculeFlow
 
     @testset "Hydrogen Bonding Logic" begin
         mol = mol_from_smiles("CCN")
+        @test mol.valid
         n_atom = get_atom(mol, 3)
         @test is_hydrogen_donor(n_atom)    # NH2 can donate
         @test is_hydrogen_acceptor(n_atom) # N can accept
@@ -147,6 +154,7 @@ using MoleculeFlow
 
     @testset "Edge Cases" begin
         mol = mol_from_smiles("c1ccccc1")
+        @test mol.valid
         for i in 1:6
             atom = get_atom(mol, i)
             @test is_aromatic(atom)

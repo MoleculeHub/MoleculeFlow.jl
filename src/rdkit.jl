@@ -488,7 +488,9 @@ function _get_hashed_atom_pair_fingerprint_as_bit_vect(mol::Py; nBits::Int)
 end
 function _get_hashed_topological_torsion_fingerprint_as_bit_vect(mol::Py; nBits::Int)
     @pyconst(
-        pyimport("rdkit.Chem.rdMolDescriptors").GetHashedTopologicalTorsionFingerprintAsBitVect
+        pyimport(
+            "rdkit.Chem.rdMolDescriptors"
+        ).GetHashedTopologicalTorsionFingerprintAsBitVect
     )(
         mol; nBits = nBits
     )
@@ -882,7 +884,7 @@ end
 
 function _set_atom_mapping_numbers(mol::Py, map_nums::Vector{Int})
     for (i, map_num) in enumerate(map_nums)
-        atom = mol.GetAtomWithIdx(i-1)
+        atom = mol.GetAtomWithIdx(i - 1)
         atom.SetAtomMapNum(map_num)
     end
 end
@@ -964,4 +966,232 @@ function _explicit_pharmacophore_from_mol(mol::Py, feature_factory::Py; conf_id:
     end
 
     return feature_list
+end
+
+# Molecular alignment functions (rdMolAlign module)
+function _align_mol(
+    probe_mol::Py,
+    ref_mol::Py;
+    prbCid::Int = -1,
+    refCid::Int = -1,
+    reflect::Bool = false,
+    maxIters::Int = 50,
+)
+    @pyconst(pyimport("rdkit.Chem.rdMolAlign").AlignMol)(
+        probe_mol,
+        ref_mol;
+        prbCid = prbCid,
+        refCid = refCid,
+        reflect = reflect,
+        maxIters = maxIters,
+    )
+end
+
+function _align_mol_with_map(
+    probe_mol::Py,
+    ref_mol::Py,
+    atom_map::Py,
+    weights::Py;
+    prbCid::Int = -1,
+    refCid::Int = -1,
+    reflect::Bool = false,
+    maxIters::Int = 50,
+)
+    @pyconst(pyimport("rdkit.Chem.rdMolAlign").AlignMol)(
+        probe_mol,
+        ref_mol;
+        prbCid = prbCid,
+        refCid = refCid,
+        atomMap = atom_map,
+        weights = weights,
+        reflect = reflect,
+        maxIters = maxIters,
+    )
+end
+
+function _calc_rms(
+    probe_mol::Py, ref_mol::Py; prbCid::Int = -1, refCid::Int = -1, transform::Bool = false
+)
+    if transform
+        # Use GetBestRMS when transformation is requested
+        @pyconst(pyimport("rdkit.Chem.rdMolAlign").GetBestRMS)(
+            probe_mol, ref_mol, prbCid, refCid, pylist([]), 1000000, true, pylist([])
+        )
+    else
+        # Use CalcRMS for static RMS calculation
+        @pyconst(pyimport("rdkit.Chem.rdMolAlign").CalcRMS)(
+            probe_mol, ref_mol, prbCid, refCid, pylist([]), 1000000, true, pylist([])
+        )
+    end
+end
+
+function _calc_rms_with_weights(
+    probe_mol::Py,
+    ref_mol::Py,
+    weights::Py;
+    prbCid::Int = -1,
+    refCid::Int = -1,
+    transform::Bool = false,
+)
+    if transform
+        # Use GetBestRMS when transformation is requested
+        @pyconst(pyimport("rdkit.Chem.rdMolAlign").GetBestRMS)(
+            probe_mol, ref_mol, prbCid, refCid, pylist([]), 1000000, true, weights
+        )
+    else
+        # Use CalcRMS for static RMS calculation
+        @pyconst(pyimport("rdkit.Chem.rdMolAlign").CalcRMS)(
+            probe_mol, ref_mol, prbCid, refCid, pylist([]), 1000000, true, weights
+        )
+    end
+end
+
+function _get_best_rms(
+    probe_mol::Py,
+    ref_mol::Py;
+    prbCid::Int = -1,
+    refCid::Int = -1,
+    maxMatches::Int = 1000000,
+)
+    @pyconst(pyimport("rdkit.Chem.rdMolAlign").GetBestRMS)(
+        probe_mol, ref_mol, prbCid, refCid, pylist([]), maxMatches, true, pylist([])
+    )
+end
+
+function _get_best_rms_with_weights(
+    probe_mol::Py,
+    ref_mol::Py,
+    weights::Py;
+    prbCid::Int = -1,
+    refCid::Int = -1,
+    maxMatches::Int = 1000000,
+)
+    @pyconst(pyimport("rdkit.Chem.rdMolAlign").GetBestRMS)(
+        probe_mol, ref_mol, prbCid, refCid, pylist([]), maxMatches, true, weights
+    )
+end
+
+function _get_alignment_transform(
+    probe_mol::Py, ref_mol::Py; prbCid::Int = -1, refCid::Int = -1, reflect::Bool = false
+)
+    @pyconst(pyimport("rdkit.Chem.rdMolAlign").GetAlignmentTransform)(
+        probe_mol, ref_mol; prbCid = prbCid, refCid = refCid, reflect = reflect
+    )
+end
+
+function _get_alignment_transform_with_weights(
+    probe_mol::Py,
+    ref_mol::Py,
+    weights::Py;
+    prbCid::Int = -1,
+    refCid::Int = -1,
+    reflect::Bool = false,
+)
+    @pyconst(pyimport("rdkit.Chem.rdMolAlign").GetAlignmentTransform)(
+        probe_mol,
+        ref_mol;
+        prbCid = prbCid,
+        refCid = refCid,
+        atomMap = pylist([]),
+        weights = weights,
+        reflect = reflect,
+    )
+end
+
+function _random_transform(mol::Py; confId::Int = -1, seed::Int = -1)
+    @pyconst(pyimport("rdkit.Chem.rdMolAlign").RandomTransform)(mol, confId, seed)
+end
+
+function _transform_conformer(mol::Py, transform::Vector; confId::Int = -1)
+    # Get the specific conformer
+    conf = mol.GetConformer(confId)
+
+    # Convert the transform to a numpy array (4x4 matrix)
+    numpy = pyimport("numpy")
+    transform_matrix = numpy.array(reshape(transform, 4, 4); dtype = numpy.float64)
+
+    # Apply the transformation
+    @pyconst(pyimport("rdkit.Chem.rdMolTransforms").TransformConformer)(
+        conf, transform_matrix
+    )
+end
+
+# Remove _set_random_seed function - not needed since RandomTransform accepts seed parameter directly
+
+# O3A (Open3DAlign) functions
+function _get_o3a(
+    probe_mol::Py,
+    ref_mol::Py;
+    prbCid::Int = -1,
+    refCid::Int = -1,
+    reflect::Bool = false,
+    accuracy::Float64 = 0.0001,
+    attemptGenericFeatures::Bool = true,
+    pruneConfs::Bool = true,
+)
+    # Get MMFF properties for both molecules (required parameters)
+    rdMolDescriptors = pyimport("rdkit.Chem.rdMolDescriptors")
+    pybuiltins = pyimport("builtins")
+
+    # Try to get MMFF properties, use None if they can't be generated
+    prb_props = pybuiltins.None
+    ref_props = pybuiltins.None
+    try
+        prb_props = rdMolDescriptors.MMFFGetMoleculeProperties(probe_mol)
+        ref_props = rdMolDescriptors.MMFFGetMoleculeProperties(ref_mol)
+    catch
+        # Keep the None values assigned above
+    end
+
+    @pyconst(pyimport("rdkit.Chem.rdMolAlign").GetO3A)(
+        probe_mol,
+        ref_mol,
+        prb_props,
+        ref_props,
+        prbCid,
+        refCid,
+        reflect,
+        50,
+        0,
+        pylist([]),
+        pylist([]),
+    )
+end
+
+function _get_crippen_o3a(
+    probe_mol::Py,
+    ref_mol::Py;
+    prbCid::Int = -1,
+    refCid::Int = -1,
+    reflect::Bool = false,
+    accuracy::Float64 = 0.0001,
+    attemptGenericFeatures::Bool = true,
+    pruneConfs::Bool = true,
+)
+    # Get Crippen contributions for both molecules (required parameters)
+    rdMolDescriptors = pyimport("rdkit.Chem.rdMolDescriptors")
+
+    # Try to get Crippen contributions, use empty lists if they can't be generated
+    prb_contribs = pylist([])
+    ref_contribs = pylist([])
+    try
+        prb_contribs = rdMolDescriptors.getCrippenAtomContribs(probe_mol)
+        ref_contribs = rdMolDescriptors.getCrippenAtomContribs(ref_mol)
+    catch
+        # Keep the empty lists assigned above
+    end
+
+    @pyconst(pyimport("rdkit.Chem.rdMolAlign").GetCrippenO3A)(
+        probe_mol,
+        ref_mol,
+        prb_contribs,
+        ref_contribs,
+        prbCid,
+        refCid,
+        reflect,
+        50,
+        0,
+        pylist([]),
+        pylist([]),
+    )
 end

@@ -49,6 +49,7 @@ using MoleculeFlow
 
         # Test with a molecule that has no reasonable tautomers
         methane = mol_from_smiles("C")
+        @test methane.valid
         tautomers_methane = enumerate_tautomers(methane)
         @test length(tautomers_methane) >= 1  # Should at least return the original
 
@@ -72,6 +73,7 @@ using MoleculeFlow
 
         # Test with simple molecule (should return same)
         ethanol = mol_from_smiles("CCO")
+        @test ethanol.valid
         canonical_ethanol = canonical_tautomer(ethanol)
         @test canonical_ethanol.valid == true
         @test mol_to_smiles(canonical_ethanol) == mol_to_smiles(ethanol)

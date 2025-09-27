@@ -5,6 +5,7 @@ using Test
     # Example: ester hydrolysis
     rxn_smarts = "[C:1](=O)[O:2][C:3]>>[C:1](=O)[O-].[C:3][O+]"
     rxn = reaction_from_smarts(rxn_smarts)
+    @test rxn.valid
     @test isa(rxn, Reaction)
     @test rxn.props[:SMARTS] == rxn_smarts
     @test reaction_to_smarts(rxn) isa String
@@ -42,6 +43,7 @@ end
     rxn = reaction_from_smarts(rxn_smarts)
     # Ethyl acetate: CC(=O)OCC
     reactant = mol_from_smiles("CC(=O)OCC")
+    @test reactant.valid
     products = run_reaction(rxn, [reactant])
     @test isa(products, Vector)
     @test length(products) > 0

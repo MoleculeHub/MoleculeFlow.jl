@@ -4,6 +4,7 @@ using MoleculeFlow
 @testset "All Descriptors" begin
     @testset "calc_all_descriptors" begin
         mol = mol_from_smiles("CCO")
+        @test mol.valid
         descriptors = calc_all_descriptors(mol)
 
         @test isa(descriptors, Dict{Symbol, Any})
