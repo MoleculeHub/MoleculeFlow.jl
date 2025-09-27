@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Practical Examples · MoleculeFlow.jl</title><meta name="title" content="Practical Examples · MoleculeFlow.jl"/><meta property="og:title" content="Practical Examples · MoleculeFlow.jl"/><meta property="twitter:title" content="Practical Examples · MoleculeFlow.jl"/><meta name="description" content="Documentation for MoleculeFlow.jl."/><meta property="og:description" content="Documentation for MoleculeFlow.jl."/><meta property="twitter:description" content="Documentation for MoleculeFlow.jl."/><meta property="og:url" content="https://moleculehub.github.io/MoleculeFlow.jl/examples/"/><meta property="twitter:url" content="https://moleculehub.github.io/MoleculeFlow.jl/examples/"/><link rel="canonical" href="https://moleculehub.github.io/MoleculeFlow.jl/examples/"/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.png" alt="MoleculeFlow.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../">MoleculeFlow.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><a class="tocitem" href="../getting-started/">Getting Started</a></li><li class="is-active"><a class="tocitem" href>Practical Examples</a><ul class="internal"><li><a class="tocitem" href="#Basic-Molecule-Management"><span>Basic Molecule Management</span></a></li><li><a class="tocitem" href="#Working-with-Atoms"><span>Working with Atoms</span></a></li><li><a class="tocitem" href="#Working-with-Bonds"><span>Working with Bonds</span></a></li><li><a class="tocitem" href="#Molecular-Properties-and-Descriptors"><span>Molecular Properties and Descriptors</span></a></li><li><a class="tocitem" href="#Substructure-Analysis"><span>Substructure Analysis</span></a></li><li><a class="tocitem" href="#Similarity-and-Fingerprints"><span>Similarity and Fingerprints</span></a></li><li><a class="tocitem" href="#Molecular-Visualization"><span>Molecular Visualization</span></a></li><li><a class="tocitem" href="#Dataset-Analysis"><span>Dataset Analysis</span></a></li><li><a class="tocitem" href="#Molecular-Standardization"><span>Molecular Standardization</span></a></li><li><a class="tocitem" href="#3D-Conformer-Generation"><span>3D Conformer Generation</span></a></li><li><a class="tocitem" href="#Chemical-Reaction-Processing"><span>Chemical Reaction Processing</span></a></li></ul></li><li><a class="tocitem" href="../for-developers/">For Developers</a></li><li><span class="tocitem">API Reference</span><ul><li><a class="tocitem" href="../api/io/">Basic I/O</a></li><li><a class="tocitem" href="../api/operations/">Molecular Operations</a></li><li><a class="tocitem" href="../api/reactions/">Chemical Reactions</a></li><li><a class="tocitem" href="../api/drawing/">Drawing &amp; Visualization</a></li><li><a class="tocitem" href="../api/descriptors/">Molecular Descriptors</a></li><li><a class="tocitem" href="../api/fingerprints/">Fingerprints</a></li><li><a class="tocitem" href="../api/pharmacophore/">Pharmacophore Features</a></li><li><a class="tocitem" href="../api/substructure/">Substructure Search</a></li><li><a class="tocitem" href="../api/atoms/">Atom Operations</a></li><li><a class="tocitem" href="../api/bonds/">Bond Operations</a></li><li><a class="tocitem" href="../api/similarity/">Similarity</a></li><li><a class="tocitem" href="../api/standardization/">Standardization</a></li><li><a class="tocitem" href="../api/conformers/">Conformers</a></li><li><a class="tocitem" href="../api/alignment/">Alignment</a></li><li><a class="tocitem" href="../api/fragmentation/">Fragmentation</a></li><li><a class="tocitem" href="../api/graph/">Graph Operations</a></li><li><a class="tocitem" href="../api/progress/">Progress Tracking</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Practical Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Practical Examples</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/MoleculeHub/MoleculeFlow.jl/blob/main/docs/src/examples.md#" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Practical-Examples"><a class="docs-heading-anchor" href="#Practical-Examples">Practical Examples</a><a id="Practical-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Practical-Examples" title="Permalink"></a></h1><p>Here are comprehensive practical examples of using MoleculeFlow.jl for molecular analysis, manipulation, visualization, and chemical reaction processing.</p><h2 id="Basic-Molecule-Management"><a class="docs-heading-anchor" href="#Basic-Molecule-Management">Basic Molecule Management</a><a id="Basic-Molecule-Management-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Molecule-Management" title="Permalink"></a></h2><h3 id="Creating-and-Validating-Molecules"><a class="docs-heading-anchor" href="#Creating-and-Validating-Molecules">Creating and Validating Molecules</a><a id="Creating-and-Validating-Molecules-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-and-Validating-Molecules" title="Permalink"></a></h3><pre><code class="language-julia hljs">using MoleculeFlow
+
+# Create molecules from SMILES
+ethanol = mol_from_smiles(&quot;CCO&quot;)
+benzene = mol_from_smiles(&quot;c1ccccc1&quot;)
+invalid_mol = mol_from_smiles(&quot;invalid_smiles&quot;)
+
+# Check validity
+println(&quot;Ethanol valid: $(ethanol.valid)&quot;)
+println(&quot;Benzene valid: $(benzene.valid)&quot;)
+println(&quot;Invalid mol valid: $(invalid_mol.valid)&quot;)
+
+# Access molecule source (original SMILES)
+println(&quot;Ethanol source: $(ethanol.source)&quot;)
+
+# Batch creation from SMILES list
+smiles_list = [&quot;CCO&quot;, &quot;CCC&quot;, &quot;c1ccccc1&quot;, &quot;CC(=O)O&quot;]
+molecules = mol_from_smiles(smiles_list)
+valid_molecules = filter(mol -&gt; mol.valid, molecules)</code></pre><h3 id="Converting-Molecules-Back-to-SMILES"><a class="docs-heading-anchor" href="#Converting-Molecules-Back-to-SMILES">Converting Molecules Back to SMILES</a><a id="Converting-Molecules-Back-to-SMILES-1"></a><a class="docs-heading-anchor-permalink" href="#Converting-Molecules-Back-to-SMILES" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Convert single molecule
+ethanol_smiles = mol_to_smiles(ethanol)
+println(&quot;Ethanol SMILES: $ethanol_smiles&quot;)
+
+# Convert multiple molecules
+output_smiles = mol_to_smiles(molecules)
+println(&quot;Output SMILES: $output_smiles&quot;)
+
+# Generate InChI representation
+ethanol_inchi = mol_to_inchi(ethanol)
+println(&quot;Ethanol InChI: $ethanol_inchi&quot;)</code></pre><h3 id="Reading-from-SDF-Files"><a class="docs-heading-anchor" href="#Reading-from-SDF-Files">Reading from SDF Files</a><a id="Reading-from-SDF-Files-1"></a><a class="docs-heading-anchor-permalink" href="#Reading-from-SDF-Files" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Read all molecules from an SDF file
+# Note: This example assumes you have an SDF file
+try
+    molecules = read_sdf(&quot;compounds.sdf&quot;)
+    println(&quot;Read $(length(molecules)) molecules from SDF&quot;)
+
+    # Filter valid molecules
+    valid_molecules = filter(mol -&gt; mol.valid, molecules)
+    println(&quot;$(length(valid_molecules)) valid molecules&quot;)
+
+    # Access SDF properties
+    for mol in valid_molecules[1:min(3, length(valid_molecules))]
+        println(&quot;Molecule: $(mol_to_smiles(mol))&quot;)
+        println(&quot;  SDF Index: $(mol.props[:sdf_index])&quot;)
+        println(&quot;  Source File: $(mol.props[:source_file])&quot;)
+
+        # Display other SDF properties
+        for (key, value) in mol.props
+            if key ∉ [:sdf_index, :source_file]
+                println(&quot;  $key: $value&quot;)
+            end
+        end
+        println()
+    end
+
+catch e
+    println(&quot;SDF file not found or error reading: $e&quot;)
+end
+
+# Read only first 100 molecules for large files
+try
+    molecules = read_sdf(&quot;large_database.sdf&quot;, max_mols=100)
+    println(&quot;Read first 100 molecules from large SDF&quot;)
+catch e
+    println(&quot;Large SDF file not found: $e&quot;)
+end
+
+# Memory-efficient reading for huge files
+try
+    next_mol = read_sdf_lazy(&quot;huge_database.sdf&quot;)
+    mol_count = 0
+
+    while mol_count &lt; 10  # Process first 10 molecules
+        mol = next_mol()
+        if mol === nothing
+            break  # End of file
+        end
+
+        mol_count += 1
+        if mol.valid
+            smiles = mol_to_smiles(mol)
+            println(&quot;Molecule $mol_count: $smiles&quot;)
+        end
+    end
+catch e
+    println(&quot;Huge SDF file not found: $e&quot;)
+end</code></pre><h3 id="Reading-MOL-Blocks"><a class="docs-heading-anchor" href="#Reading-MOL-Blocks">Reading MOL Blocks</a><a id="Reading-MOL-Blocks-1"></a><a class="docs-heading-anchor-permalink" href="#Reading-MOL-Blocks" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Example MOL block (ethane)
+molblock = &quot;&quot;&quot;
+
+  RDKit          2D
+
+  2  1  0  0  0  0  0  0  0  0999 V2000
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  1  0
+M  END
+&quot;&quot;&quot;
+
+mol = mol_from_molblock(molblock)
+if mol.valid
+    println(&quot;Successfully parsed MOL block&quot;)
+    println(&quot;SMILES: $(mol_to_smiles(mol))&quot;)
+else
+    println(&quot;Failed to parse MOL block&quot;)
+end</code></pre><h2 id="Working-with-Atoms"><a class="docs-heading-anchor" href="#Working-with-Atoms">Working with Atoms</a><a id="Working-with-Atoms-1"></a><a class="docs-heading-anchor-permalink" href="#Working-with-Atoms" title="Permalink"></a></h2><h3 id="Basic-Atom-Access-and-Properties"><a class="docs-heading-anchor" href="#Basic-Atom-Access-and-Properties">Basic Atom Access and Properties</a><a id="Basic-Atom-Access-and-Properties-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Atom-Access-and-Properties" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Get all atoms from a molecule
+caffeine = mol_from_smiles(&quot;CN1C=NC2=C1C(=O)N(C(=O)N2C)C&quot;)
+atoms = get_atoms(caffeine)
+println(&quot;Caffeine has $(length(atoms)) atoms&quot;)
+
+# Get specific atom by index (1-based)
+first_atom = get_atom(caffeine, 1)
+println(&quot;First atom symbol: $(get_symbol(first_atom))&quot;)
+println(&quot;First atom atomic number: $(get_atomic_number(first_atom))&quot;)
+
+# Iterate over all atoms
+println(&quot;\nAll atoms in caffeine:&quot;)
+for (i, atom) in enumerate(atoms)
+    symbol = get_symbol(atom)
+    atomic_num = get_atomic_number(atom)
+    degree = get_degree(atom)
+    println(&quot;Atom $i: $symbol (Z=$atomic_num, degree=$degree)&quot;)
+end</code></pre><h3 id="Advanced-Atom-Properties"><a class="docs-heading-anchor" href="#Advanced-Atom-Properties">Advanced Atom Properties</a><a id="Advanced-Atom-Properties-1"></a><a class="docs-heading-anchor-permalink" href="#Advanced-Atom-Properties" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Get detailed atom properties
+for (i, atom) in enumerate(atoms[1:5])  # First 5 atoms
+    symbol = get_symbol(atom)
+    degree = get_degree(atom)
+    valence = get_valence(atom)
+    formal_charge = get_formal_charge(atom)
+    hybridization = get_hybridization(atom)
+    is_aromatic_atom = is_aromatic(atom)
+    is_in_ring_atom = is_in_ring(atom)
+
+    println(&quot;Atom $i ($symbol):&quot;)
+    println(&quot;Degree: $degree, Valence: $valence&quot;)
+    println(&quot;Formal charge: $formal_charge&quot;)
+    println(&quot;Hybridization: $hybridization&quot;)
+    println(&quot;Aromatic: $is_aromatic_atom, In ring: $is_in_ring_atom&quot;)
+    println()
+end</code></pre><h3 id="Atom-Neighbors-and-Connectivity"><a class="docs-heading-anchor" href="#Atom-Neighbors-and-Connectivity">Atom Neighbors and Connectivity</a><a id="Atom-Neighbors-and-Connectivity-1"></a><a class="docs-heading-anchor-permalink" href="#Atom-Neighbors-and-Connectivity" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Get neighbors of specific atoms
+println(&quot;Analyzing atom connectivity:&quot;)
+for i in 1:min(5, length(atoms))
+    neighbors = get_neighbors(caffeine, i)
+    neighbor_symbols = [get_symbol(get_atom(caffeine, j)) for j in neighbors]
+
+    atom_symbol = get_symbol(get_atom(caffeine, i))
+    println(&quot;Atom $i ($atom_symbol) connected to: $(join(neighbor_symbols, &quot;, &quot;))&quot;)
+end
+
+# Get bonds involving specific atoms
+println(&quot;\nBonds from first atom:&quot;)
+bonds_from_atom1 = get_bonds_from_atom(caffeine, 1)
+for (i, bond) in enumerate(bonds_from_atom1)
+    bond_type = get_bond_type(bond)
+    begin_atom = get_begin_atom_idx(bond)
+    end_atom = get_end_atom_idx(bond)
+    println(&quot;Bond $i: Atom $begin_atom - Atom $end_atom ($bond_type)&quot;)
+end</code></pre><h3 id="Gasteiger-Partial-Charges"><a class="docs-heading-anchor" href="#Gasteiger-Partial-Charges">Gasteiger Partial Charges</a><a id="Gasteiger-Partial-Charges-1"></a><a class="docs-heading-anchor-permalink" href="#Gasteiger-Partial-Charges" title="Permalink"></a></h3><pre><code class="language-julia hljs">charged_mol = mol_from_smiles(&quot;[NH3+]CCO&quot;)  # Protonated ethylamine
+compute_gasteiger_charges!(charged_mol)
+
+atoms = get_atoms(charged_mol)
+println(&quot;Gasteiger partial charges:&quot;)
+for (i, atom) in enumerate(atoms)
+    symbol = get_symbol(atom)
+    charge = get_gasteiger_charge(atom)
+    println(&quot;Atom $i ($symbol): $charge&quot;)
+end</code></pre><h2 id="Working-with-Bonds"><a class="docs-heading-anchor" href="#Working-with-Bonds">Working with Bonds</a><a id="Working-with-Bonds-1"></a><a class="docs-heading-anchor-permalink" href="#Working-with-Bonds" title="Permalink"></a></h2><h3 id="Basic-Bond-Analysis"><a class="docs-heading-anchor" href="#Basic-Bond-Analysis">Basic Bond Analysis</a><a id="Basic-Bond-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Bond-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs">molecule = mol_from_smiles(&quot;CC=C(C)C#N&quot;)
+
+println(&quot;Bond analysis for CC=C(C)C#N:&quot;)
+atoms = get_atoms(molecule)
+for i in eachindex(atoms)
+    bonds = get_bonds_from_atom(molecule, i)
+    if !isempty(bonds)
+        atom_symbol = get_symbol(get_atom(molecule, i))
+        println(&quot;\nAtom $i ($atom_symbol) bonds:&quot;)
+
+        for bond in bonds
+            bond_type = get_bond_type(bond)
+            begin_idx = get_begin_atom_idx(bond)
+            end_idx = get_end_atom_idx(bond)
+            is_aromatic_bond = is_aromatic(bond)
+            is_in_ring_bond = is_in_ring(bond)
+
+            other_atom_idx = begin_idx == i ? end_idx : begin_idx
+            other_symbol = get_symbol(get_atom(molecule, other_atom_idx))
+
+            println(&quot;to Atom $other_atom_idx ($other_symbol): $bond_type&quot; *
+                   (is_aromatic_bond ? &quot; (aromatic)&quot; : &quot;&quot;) *
+                   (is_in_ring_bond ? &quot; (in ring)&quot; : &quot;&quot;))
+        end
+    end
+end</code></pre><h3 id="Bond-Type-Classification"><a class="docs-heading-anchor" href="#Bond-Type-Classification">Bond Type Classification</a><a id="Bond-Type-Classification-1"></a><a class="docs-heading-anchor-permalink" href="#Bond-Type-Classification" title="Permalink"></a></h3><pre><code class="language-julia hljs">complex_mol = mol_from_smiles(&quot;c1ccc2c(c1)ccc(=O)c2=O&quot;)  # Naphthoquinone
+
+single_bonds = 0
+double_bonds = 0
+aromatic_bonds = 0
+ring_bonds = 0
+
+atoms = get_atoms(complex_mol)
+processed_bonds = Set()  # To avoid counting bonds twice
+
+for i in eachindex(atoms)
+    bonds = get_bonds_from_atom(complex_mol, i)
+    for bond in bonds
+        begin_idx = get_begin_atom_idx(bond)
+        end_idx = get_end_atom_idx(bond)
+        bond_key = (min(begin_idx, end_idx), max(begin_idx, end_idx))
+
+        if bond_key ∉ processed_bonds
+            push!(processed_bonds, bond_key)
+
+            bond_type = get_bond_type(bond)
+            if bond_type == &quot;SINGLE&quot;
+                single_bonds += 1
+            elseif bond_type == &quot;DOUBLE&quot;
+                double_bonds += 1
+            elseif bond_type == &quot;AROMATIC&quot;
+                aromatic_bonds += 1
+            end
+
+            if is_in_ring(bond)
+                ring_bonds += 1
+            end
+        end
+    end
+end
+
+println(&quot;Bond analysis for naphthoquinone:&quot;)
+println(&quot;Single bonds: $single_bonds&quot;)
+println(&quot;Double bonds: $double_bonds&quot;)
+println(&quot;Aromatic bonds: $aromatic_bonds&quot;)
+println(&quot;Ring bonds: $ring_bonds&quot;)</code></pre><h2 id="Molecular-Properties-and-Descriptors"><a class="docs-heading-anchor" href="#Molecular-Properties-and-Descriptors">Molecular Properties and Descriptors</a><a id="Molecular-Properties-and-Descriptors-1"></a><a class="docs-heading-anchor-permalink" href="#Molecular-Properties-and-Descriptors" title="Permalink"></a></h2><h3 id="Comprehensive-Property-Analysis"><a class="docs-heading-anchor" href="#Comprehensive-Property-Analysis">Comprehensive Property Analysis</a><a id="Comprehensive-Property-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Comprehensive-Property-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs">mol = mol_from_smiles(&quot;CCO&quot;)
+
+println(&quot;Molecular Properties Analysis:&quot;)
+mw = molecular_weight(mol)
+logp_val = logp(mol)
+tpsa_val = tpsa(mol)
+hbd = num_hbd(mol)
+hba = num_hba(mol)
+rot_bonds = num_rotatable_bonds(mol)
+rings = num_rings(mol)
+heavy_atoms = heavy_atom_count(mol)</code></pre><h3 id="Lipinski&#39;s-Rule-of-Five-Analysis"><a class="docs-heading-anchor" href="#Lipinski&#39;s-Rule-of-Five-Analysis">Lipinski&#39;s Rule of Five Analysis</a><a id="Lipinski&#39;s-Rule-of-Five-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Lipinski&#39;s-Rule-of-Five-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs">function check_lipinski(mol::Molecule)
+    &quot;&quot;&quot;Check if molecule passes Lipinski&#39;s Rule of Five&quot;&quot;&quot;
+    if !mol.valid
+        return false, &quot;Invalid molecule&quot;
+    end
+
+    mw = molecular_weight(mol)
+    logp_val = logp(mol)
+    hbd = num_hbd(mol)
+    hba = num_hba(mol)
+
+    violations = []
+
+    if mw &gt; 500
+        push!(violations, &quot;MW &gt; 500 ($(round(mw, digits=1)))&quot;)
+    end
+    if logp_val &gt; 5
+        push!(violations, &quot;LogP &gt; 5 ($(round(logp_val, digits=1)))&quot;)
+    end
+    if hbd &gt; 5
+        push!(violations, &quot;HBD &gt; 5 ($hbd)&quot;)
+    end
+    if hba &gt; 10
+        push!(violations, &quot;HBA &gt; 10 ($hba)&quot;)
+    end
+
+    passes = isempty(violations)
+    message = passes ? &quot;Passes Lipinski&#39;s Rule of Five&quot; : &quot;Violations: &quot; * join(violations, &quot;, &quot;)
+
+    return passes, message
+end
+
+# Test Lipinski&#39;s rule on drug-like molecules
+drug_smiles = [
+    (&quot;Aspirin&quot;, &quot;CC(=O)Oc1ccccc1C(=O)O&quot;),
+    (&quot;Ibuprofen&quot;, &quot;CC(C)Cc1ccc(cc1)C(C)C(=O)O&quot;),
+    (&quot;Atorvastatin&quot;, &quot;CC(C)c1c(C(=O)Nc2ccccc2F)c(-c2ccccc2)c(-c2ccc(F)cc2)n1C[C@H](O)C[C@H](O)CC(=O)O&quot;),
+    (&quot;Caffeine&quot;, &quot;CN1C=NC2=C1C(=O)N(C(=O)N2C)C&quot;)
+]
+
+println(&quot;\nLipinski&#39;s Rule of Five Analysis:&quot;)
+for (name, smiles) in drug_smiles
+    mol = mol_from_smiles(smiles)
+    passes, message = check_lipinski(mol)
+    status = passes ? &quot;PASS&quot; : &quot;FAIL&quot;
+    println(&quot;$name: $status&quot;)
+    println(&quot;$message&quot;)
+    println()
+end</code></pre><h2 id="Substructure-Analysis"><a class="docs-heading-anchor" href="#Substructure-Analysis">Substructure Analysis</a><a id="Substructure-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Substructure-Analysis" title="Permalink"></a></h2><h3 id="Finding-Functional-Groups"><a class="docs-heading-anchor" href="#Finding-Functional-Groups">Finding Functional Groups</a><a id="Finding-Functional-Groups-1"></a><a class="docs-heading-anchor-permalink" href="#Finding-Functional-Groups" title="Permalink"></a></h3><pre><code class="language-julia hljs">mol = mol_from_smiles(&quot;C=CC(=O)N1CCC[C@H](C1)N2C3=NC=NC(=C3C(=N2)C4=CC=C(C=C4)OC5=CC=CC=C5)N&quot;) # Ibrutinib
+
+functional_groups_to_check = [
+    :alcohol, :carboxylic_acid, :amide, :amine_primary,
+    :benzene, :phenol, :ketone, :aldehyde
+]
+
+println(&quot;Functional Group Analysis:&quot;)
+for fg in functional_groups_to_check
+    has_fg = has_functional_group(mol, fg)
+    print(fg, &quot;: &quot; ,has_fg, &quot;\n&quot;)
+end</code></pre><h3 id="Custom-Substructure-Searches"><a class="docs-heading-anchor" href="#Custom-Substructure-Searches">Custom Substructure Searches</a><a id="Custom-Substructure-Searches-1"></a><a class="docs-heading-anchor-permalink" href="#Custom-Substructure-Searches" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Define custom SMARTS patterns
+custom_patterns = [
+    (&quot;Hydroxyl&quot;, &quot;[OH]&quot;),
+    (&quot;Carbonyl&quot;, &quot;C=O&quot;),
+    (&quot;Aromatic Ring&quot;, &quot;c1ccccc1&quot;),
+    (&quot;Primary Amine&quot;, &quot;[NH2]&quot;),
+    (&quot;Ester&quot;, &quot;[CX3](=O)[OX2H0]&quot;),
+    (&quot;Benzyl&quot;, &quot;c1ccccc1[CH2]&quot;),
+    (&quot;Trifluoromethyl&quot;, &quot;C(F)(F)F&quot;)
+]
+
+test_mol = mol_from_smiles(&quot;CC(=O)Oc1ccc(cc1)C(=O)O&quot;)  # Aspirin
+
+println(&quot;Custom substructure analysis for Aspirin:&quot;)
+for (name, pattern) in custom_patterns
+    matches = get_substructure_matches(test_mol, pattern)
+    if !isempty(matches)
+        println(&quot;$name: Found $(length(matches)) match(es)&quot;)
+        for (i, match) in enumerate(matches)
+            println(&quot;Match $i: atoms $(join(match, &quot;, &quot;))&quot;)
+        end
+    else
+        println(&quot;$name: Not found&quot;)
+    end
+end</code></pre><h2 id="Similarity-and-Fingerprints"><a class="docs-heading-anchor" href="#Similarity-and-Fingerprints">Similarity and Fingerprints</a><a id="Similarity-and-Fingerprints-1"></a><a class="docs-heading-anchor-permalink" href="#Similarity-and-Fingerprints" title="Permalink"></a></h2><h3 id="Comprehensive-Similarity-Analysis"><a class="docs-heading-anchor" href="#Comprehensive-Similarity-Analysis">Comprehensive Similarity Analysis</a><a id="Comprehensive-Similarity-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Comprehensive-Similarity-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Calculate multiple similarity metrics
+mol1 = mol_from_smiles(&quot;CCO&quot;)  # Ethanol
+mol2 = mol_from_smiles(&quot;CCC&quot;)  # Propane
+mol3 = mol_from_smiles(&quot;CCCO&quot;) # Propanol
+
+molecules = [(&quot;Ethanol&quot;, mol1), (&quot;Propane&quot;, mol2), (&quot;Propanol&quot;, mol3)]
+
+# Calculate different fingerprint types
+fingerprint_types = [:morgan, :rdk, :maccs]
+
+println(&quot;Similarity Analysis:&quot;)
+for fp_type in fingerprint_types
+    println(&quot;\n$fp_type Fingerprints:&quot;)
+
+    # Calculate pairwise similarities
+    for i in eachindex(molecules)
+        for j in (i+1):length(molecules)
+            name1, mol_i = molecules[i]
+            name2, mol_j = molecules[j]
+
+            # Calculate different similarity metrics
+            tanimoto = tanimoto_similarity(mol_i, mol_j, fingerprint_type=fp_type)
+            dice = dice_similarity(mol_i, mol_j, fingerprint_type=fp_type)
+            cosine = cosine_similarity(mol_i, mol_j, fingerprint_type=fp_type)
+
+            println(&quot;$name1 vs $name2:&quot;)
+            println(&quot;Tanimoto: $(round(tanimoto, digits=3))&quot;)
+            println(&quot;Dice: $(round(dice, digits=3))&quot;)
+            println(&quot;Cosine: $(round(cosine, digits=3))&quot;)
+        end
+    end
+end</code></pre><h3 id="Bulk-Similarity-and-Matrix-Calculations"><a class="docs-heading-anchor" href="#Bulk-Similarity-and-Matrix-Calculations">Bulk Similarity and Matrix Calculations</a><a id="Bulk-Similarity-and-Matrix-Calculations-1"></a><a class="docs-heading-anchor-permalink" href="#Bulk-Similarity-and-Matrix-Calculations" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Create a dataset of similar molecules
+alcohol_smiles = [&quot;CCO&quot;, &quot;CCCO&quot;, &quot;CC(C)O&quot;, &quot;CCCCO&quot;, &quot;CC(C)CO&quot;, &quot;c1ccc(O)cc1&quot;]
+alcohol_mols = mol_from_smiles(alcohol_smiles)
+valid_alcohols = filter(mol -&gt; mol.valid, alcohol_mols)
+
+# Query molecule
+query = mol_from_smiles(&quot;CCO&quot;)
+
+# Bulk similarity calculation
+similarities = bulk_similarity(query, valid_alcohols)
+println(&quot;Similarities to ethanol:&quot;)
+for (i, sim) in enumerate(similarities)
+    smiles = mol_to_smiles(valid_alcohols[i])
+    println(&quot;$smiles: $(round(sim, digits=3))&quot;)
+end
+
+# Similarity matrix
+sim_matrix = similarity_matrix(valid_alcohols[1:4])  # First 4 molecules
+println(&quot;\nSimilarity Matrix (4x4):&quot;)
+for i in 1:4
+    row = [round(sim_matrix[i, j], digits=3) for j in 1:4]
+    println(&quot;$(join(row, &quot;  &quot;))&quot;)
+end</code></pre><h2 id="Molecular-Visualization"><a class="docs-heading-anchor" href="#Molecular-Visualization">Molecular Visualization</a><a id="Molecular-Visualization-1"></a><a class="docs-heading-anchor-permalink" href="#Molecular-Visualization" title="Permalink"></a></h2><h3 id="Basic-Visualization-Examples"><a class="docs-heading-anchor" href="#Basic-Visualization-Examples">Basic Visualization Examples</a><a id="Basic-Visualization-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Visualization-Examples" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Create various molecular images
+molecules_to_draw = [
+    (&quot;Caffeine&quot;, &quot;CN1C=NC2=C1C(=O)N(C(=O)N2C)C&quot;),
+    (&quot;Aspirin&quot;, &quot;CC(=O)Oc1ccccc1C(=O)O&quot;),
+    (&quot;Morphine&quot;, &quot;CN1CC[C@]23c4c5ccc(O)c4O[C@H]2C(=O)CC[C@@]3([C@H]1C5)&quot;)
+]
+
+for (name, smiles) in molecules_to_draw
+    mol = mol_from_smiles(smiles)
+    if mol.valid
+        # Generate basic image
+        img = mol_to_image(mol, size=(400, 400))
+
+        # Generate SVG
+        svg = mol_to_svg(mol, size=(400, 400))
+
+        # Save images (if desired)
+        # save_molecule_image(mol, &quot;$name.svg&quot;)
+
+        println(&quot;Generated images for $name&quot;)
+    end
+end</code></pre><h3 id="Advanced-Visualization-with-Highlighting"><a class="docs-heading-anchor" href="#Advanced-Visualization-with-Highlighting">Advanced Visualization with Highlighting</a><a id="Advanced-Visualization-with-Highlighting-1"></a><a class="docs-heading-anchor-permalink" href="#Advanced-Visualization-with-Highlighting" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Highlight functional groups
+aspirin = mol_from_smiles(&quot;CC(=O)Oc1ccccc1C(=O)O&quot;)
+
+# Find and highlight ester group
+ester_matches = get_substructure_matches(aspirin, &quot;[CX3](=O)[OX2H0]&quot;)
+if !isempty(ester_matches)
+    highlighted_img = mol_to_image(aspirin,
+                                  highlight_atoms=ester_matches[1],
+                                  size=(500, 500))
+    println(&quot;Highlighted ester group in aspirin&quot;)
+end
+
+# Create grid of molecules with legends
+molecules = [mol_from_smiles(smiles) for (_, smiles) in molecules_to_draw]
+names = [name for (name, _) in molecules_to_draw]
+
+grid_img = mols_to_grid_image(molecules,
+                             legends=names,
+                             mols_per_row=2,
+                             sub_img_size=(300, 300))
+println(&quot;Created molecular grid&quot;)
+
+# Functional group highlighting
+acetaminophen = mol_from_smiles(&quot;CC(=O)Nc1ccc(O)cc1&quot;)
+fg_img = draw_functional_groups(acetaminophen,
+                               functional_groups=[&quot;[OH]&quot;, &quot;C=O&quot;, &quot;[NH]&quot;],
+                               colors=[&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;])
+println(&quot;Highlighted functional groups in acetaminophen&quot;)</code></pre><h2 id="Dataset-Analysis"><a class="docs-heading-anchor" href="#Dataset-Analysis">Dataset Analysis</a><a id="Dataset-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Dataset-Analysis" title="Permalink"></a></h2><h3 id="Processing-Molecular-Datasets"><a class="docs-heading-anchor" href="#Processing-Molecular-Datasets">Processing Molecular Datasets</a><a id="Processing-Molecular-Datasets-1"></a><a class="docs-heading-anchor-permalink" href="#Processing-Molecular-Datasets" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Simulate a small molecular dataset
+dataset_smiles = [
+    &quot;CCO&quot;, &quot;CCC&quot;, &quot;CCCO&quot;, &quot;CC(C)O&quot;, &quot;CCCCO&quot;,
+    &quot;c1ccccc1&quot;, &quot;c1ccc(O)cc1&quot;, &quot;c1ccc(N)cc1&quot;,
+    &quot;CC(=O)O&quot;, &quot;CC(=O)N&quot;, &quot;CC(=O)c1ccccc1&quot;,
+    &quot;CN1C=NC2=C1C(=O)N(C(=O)N2C)C&quot;
+]
+
+# Create molecules and filter valid ones
+molecules = mol_from_smiles(dataset_smiles)
+valid_molecules = filter(mol -&gt; mol.valid, molecules)
+
+println(&quot;Dataset Analysis:&quot;)
+println(&quot;Total molecules: $(length(dataset_smiles))&quot;)
+println(&quot;Valid molecules: $(length(valid_molecules))&quot;)
+
+# Calculate properties for the dataset
+properties = []
+for mol in valid_molecules
+    props = (
+        mw = molecular_weight(mol),
+        logp = logp(mol),
+        tpsa = tpsa(mol),
+        hbd = num_hbd(mol),
+        hba = num_hba(mol),
+        rings = num_rings(mol),
+        smiles = mol_to_smiles(mol)
+    )
+    push!(properties, props)
+end
+
+mws = [p.mw for p in properties]
+logps = [p.logp for p in properties]</code></pre><h3 id="Clustering-by-Similarity"><a class="docs-heading-anchor" href="#Clustering-by-Similarity">Clustering by Similarity</a><a id="Clustering-by-Similarity-1"></a><a class="docs-heading-anchor-permalink" href="#Clustering-by-Similarity" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Simple clustering based on Tanimoto similarity
+function simple_clustering(molecules, threshold=0.7)
+    clusters = []
+    assigned = falses(length(molecules))
+
+    for i in eachindex(molecules)
+        if assigned[i]
+            continue
+        end
+
+        cluster = [i]
+        assigned[i] = true
+
+        for j in (i+1):length(molecules)
+            if assigned[j]
+                continue
+            end
+
+            sim = tanimoto_similarity(molecules[i], molecules[j])
+            if sim &gt;= threshold
+                push!(cluster, j)
+                assigned[j] = true
+            end
+        end
+
+        push!(clusters, cluster)
+    end
+
+    return clusters
+end
+
+# Apply clustering
+clusters = simple_clustering(valid_molecules, 0.5)
+println(&quot;\nClustering Results (threshold=0.5):&quot;)
+for (i, cluster) in enumerate(clusters)
+    println(&quot;Cluster $i ($(length(cluster)) molecules):&quot;)
+    for idx in cluster
+        smiles = mol_to_smiles(valid_molecules[idx])
+        println(&quot;  $smiles&quot;)
+    end
+    println()
+end</code></pre><h2 id="Molecular-Standardization"><a class="docs-heading-anchor" href="#Molecular-Standardization">Molecular Standardization</a><a id="Molecular-Standardization-1"></a><a class="docs-heading-anchor-permalink" href="#Molecular-Standardization" title="Permalink"></a></h2><h3 id="Comprehensive-Standardization-Workflow"><a class="docs-heading-anchor" href="#Comprehensive-Standardization-Workflow">Comprehensive Standardization Workflow</a><a id="Comprehensive-Standardization-Workflow-1"></a><a class="docs-heading-anchor-permalink" href="#Comprehensive-Standardization-Workflow" title="Permalink"></a></h3><pre><code class="language-julia hljs">messy_molecules = [
+    (&quot;Salt mixture&quot;, &quot;CCO.Cl&quot;),
+    (&quot;Charged molecule&quot;, &quot;CC(=O)[O-].[Na+]&quot;),
+    (&quot;Tautomer&quot;, &quot;CC(O)=CC(=O)C&quot;),
+    (&quot;Stereochemistry&quot;, &quot;C[C@H](O)C&quot;)
+]
+
+println(&quot;Molecular Standardization Examples:&quot;)
+for (name, smiles) in messy_molecules
+    mol = mol_from_smiles(smiles)
+    if mol.valid
+        println(&quot;\n$name: $smiles&quot;)
+
+        # Apply different standardization steps
+        stripped = strip_salts(mol)
+        canonical = canonical_tautomer(mol)
+        neutralized = neutralize_charges(mol)
+        normalized = normalize_molecule(mol)
+
+        # Full standardization
+        standardized = standardize_molecule(mol)
+
+        println(&quot;Original:      $(mol_to_smiles(mol))&quot;)
+        println(&quot;Salt stripped: $(mol_to_smiles(stripped))&quot;)
+        println(&quot;Canonical:     $(mol_to_smiles(canonical))&quot;)
+        println(&quot;Neutralized:   $(mol_to_smiles(neutralized))&quot;)
+        println(&quot;Normalized:    $(mol_to_smiles(normalized))&quot;)
+        println(&quot;Standardized:  $(mol_to_smiles(standardized))&quot;)
+    end
+end
+
+# Batch standardization
+batch_smiles = [&quot;CCO.Cl&quot;, &quot;CC(=O)[O-].[Na+]&quot;, &quot;CC(O)=CC(=O)C&quot;]
+batch_mols = mol_from_smiles(batch_smiles)
+standardized_mols = [standardize_molecule(mol) for mol in batch_mols]
+
+println(&quot;\nBatch Standardization:&quot;)
+for (i, (orig, std)) in enumerate(zip(batch_mols, standardized_mols))
+    println(&quot;$i: $(mol_to_smiles(orig)) → $(mol_to_smiles(std))&quot;)
+end</code></pre><h2 id="3D-Conformer-Generation"><a class="docs-heading-anchor" href="#3D-Conformer-Generation">3D Conformer Generation</a><a id="3D-Conformer-Generation-1"></a><a class="docs-heading-anchor-permalink" href="#3D-Conformer-Generation" title="Permalink"></a></h2><h3 id="Generating-and-Analyzing-Conformers"><a class="docs-heading-anchor" href="#Generating-and-Analyzing-Conformers">Generating and Analyzing Conformers</a><a id="Generating-and-Analyzing-Conformers-1"></a><a class="docs-heading-anchor-permalink" href="#Generating-and-Analyzing-Conformers" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate conformers for a flexible molecule
+flexible_mol = mol_from_smiles(&quot;CCCCCCCC&quot;)  # Octane
+
+# Generate multiple conformers
+conformers = generate_3d_conformers(flexible_mol, 10, optimize=true)
+
+if !isempty(conformers)
+    println(&quot;Generated $(length(conformers)) conformers for octane:&quot;)
+
+    for (i, conf_mol) in enumerate(conformers[1:min(5, length(conformers))])  # Show first 5 or fewer
+        conf_result = conf_mol.conformer_result
+        energy = conf_result.energy
+        converged = conf_result.converged ? &quot;✓&quot; : &quot;✗&quot;
+
+        println(&quot;Conformer $i: $(round(energy, digits=2)) kcal/mol (converged: $converged)&quot;)
+
+        # Access 3D coordinates
+        coords = conf_mol.molecule.props[:coordinates_3d]
+        println(&quot;Coordinates shape: $(size(coords))&quot;)
+    end
+
+    # Find lowest energy conformer
+    best_conf = conformers[1]  # Already sorted by energy
+    println(&quot;\nBest conformer energy: $(round(best_conf.conformer_result.energy, digits=2)) kcal/mol&quot;)
+end
+
+# 2D coordinate generation
+mol_2d = mol_from_smiles(&quot;c1ccc2c(c1)ccc(=O)c2=O&quot;)  # Naphthoquinone
+conformers_2d = generate_2d_conformers(mol_2d)
+
+if !isempty(conformers_2d)
+    coords_2d = conformers_2d[1].molecule.props[:coordinates_2d]
+    println(&quot;\n2D coordinates for naphthoquinone: $(size(coords_2d))&quot;)
+end</code></pre><h3 id="Conformer-Energy-Analysis"><a class="docs-heading-anchor" href="#Conformer-Energy-Analysis">Conformer Energy Analysis</a><a id="Conformer-Energy-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Conformer-Energy-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Analyze conformer energies and geometry
+if !isempty(conformers)
+    energies = [conf.conformer_result.energy for conf in conformers]
+
+    println(&quot;\nConformer Energy Analysis:&quot;)
+    println(&quot;Number of conformers: $(length(energies))&quot;)
+    println(&quot;Energy range: $(round(minimum(energies), digits=2)) - $(round(maximum(energies), digits=2)) kcal/mol&quot;)
+    println(&quot;Energy span: $(round(maximum(energies) - minimum(energies), digits=2)) kcal/mol&quot;)
+
+    # Count converged conformers
+    converged_count = sum(conf.conformer_result.converged for conf in conformers)
+    println(&quot;Converged conformers: $converged_count/$(length(conformers))&quot;)
+
+    # Energy distribution
+    low_energy = sum(e &lt; (minimum(energies) + 2.0) for e in energies)
+    println(&quot;Low energy conformers (&lt; 2 kcal/mol above minimum): $low_energy&quot;)
+end</code></pre><h2 id="Chemical-Reaction-Processing"><a class="docs-heading-anchor" href="#Chemical-Reaction-Processing">Chemical Reaction Processing</a><a id="Chemical-Reaction-Processing-1"></a><a class="docs-heading-anchor-permalink" href="#Chemical-Reaction-Processing" title="Permalink"></a></h2><h3 id="Basic-Reaction-Creation-and-Application"><a class="docs-heading-anchor" href="#Basic-Reaction-Creation-and-Application">Basic Reaction Creation and Application</a><a id="Basic-Reaction-Creation-and-Application-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Reaction-Creation-and-Application" title="Permalink"></a></h3><pre><code class="language-julia hljs">using MoleculeFlow
+
+# Create reaction from SMARTS string
+# Example: ester hydrolysis
+rxn_smarts = &quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[O-].[C:3][O+]&quot;
+rxn = reaction_from_smarts(rxn_smarts)
+
+# Check reaction properties
+println(&quot;Reaction SMARTS: $(reaction_to_smarts(rxn))&quot;)
+println(&quot;Validated: $(rxn.validated)&quot;)
+println(&quot;Reactant templates: $(get_num_reactant_templates(rxn))&quot;)
+println(&quot;Product templates: $(get_num_product_templates(rxn))&quot;)
+
+# Apply reaction to molecules
+reactants = [
+    mol_from_smiles(&quot;CC(=O)OCC&quot;),    # Ethyl acetate
+    mol_from_smiles(&quot;CC(=O)OCCC&quot;),   # Propyl acetate
+    mol_from_smiles(&quot;CC(=O)OCCCC&quot;)   # Butyl acetate
+]
+
+println(&quot;\nApplying reaction to molecules:&quot;)
+for (i, reactant) in enumerate(reactants)
+    reactant_smiles = mol_to_smiles(reactant)
+
+    # Check if molecule matches reaction pattern
+    if has_reactant_substructure_match(rxn, reactant)
+        println(&quot;Reactant $i: $reactant_smiles - MATCHES&quot;)
+
+        # Run the reaction
+        products = run_reaction(rxn, [reactant])
+        println(&quot;Generated $(length(products)) product set(s)&quot;)
+
+        for (j, product_set) in enumerate(products)
+            println(&quot;  Product set $j:&quot;)
+            for product in product_set
+                product_smiles = mol_to_smiles(product)
+                println(&quot;    $product_smiles&quot;)
+            end
+        end
+    else
+        println(&quot;Reactant $i: $reactant_smiles - NO MATCH&quot;)
+    end
+    println()
+end</code></pre><h3 id="Reaction-Template-Analysis"><a class="docs-heading-anchor" href="#Reaction-Template-Analysis">Reaction Template Analysis</a><a id="Reaction-Template-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Reaction-Template-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Analyze reaction templates
+println(&quot;Reaction Template Analysis:&quot;)
+println(&quot;Number of reactant templates: $(get_num_reactant_templates(rxn))&quot;)
+println(&quot;Number of product templates: $(get_num_product_templates(rxn))&quot;)
+
+# Access individual templates
+for i in 0:(get_num_reactant_templates(rxn)-1)
+    template = get_reactant_template(rxn, i)
+    template_smiles = mol_to_smiles(template)
+    println(&quot;Reactant template $i: $template_smiles&quot;)
+end
+
+for i in 0:(get_num_product_templates(rxn)-1)
+    template = get_product_template(rxn, i)
+    template_smiles = mol_to_smiles(template)
+    println(&quot;Product template $i: $template_smiles&quot;)
+end
+
+# Get reacting atoms
+reacting_atoms = get_reacting_atoms(rxn)
+println(&quot;Reacting atoms: $reacting_atoms&quot;)</code></pre><h3 id="Advanced-Reaction-Analysis"><a class="docs-heading-anchor" href="#Advanced-Reaction-Analysis">Advanced Reaction Analysis</a><a id="Advanced-Reaction-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Advanced-Reaction-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Reaction classification and complexity
+classification = reaction_type_classification(rxn)
+complexity = reaction_complexity(rxn)
+balanced = is_balanced(rxn)
+
+println(&quot;Reaction Analysis:&quot;)
+println(&quot;Type: $classification&quot;)
+println(&quot;Complexity score: $(round(complexity, digits=2))&quot;)
+println(&quot;Atom balanced: $balanced&quot;)
+
+# Get comprehensive reaction information
+info = reaction_info(rxn)
+println(&quot;\nReaction Information:&quot;)
+for (key, value) in info
+    println(&quot;$key: $value&quot;)
+end</code></pre><h3 id="Reaction-Fingerprinting-and-Similarity"><a class="docs-heading-anchor" href="#Reaction-Fingerprinting-and-Similarity">Reaction Fingerprinting and Similarity</a><a id="Reaction-Fingerprinting-and-Similarity-1"></a><a class="docs-heading-anchor-permalink" href="#Reaction-Fingerprinting-and-Similarity" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Generate different types of reaction fingerprints
+diff_fp = reaction_fingerprint(rxn)
+struct_fp = reaction_structural_fingerprint(rxn)
+center_fp = reaction_center_fingerprint(rxn)
+
+println(&quot;Fingerprint Analysis:&quot;)
+println(&quot;Difference fingerprint bits set: $(sum(diff_fp))&quot;)
+println(&quot;Structural fingerprint bits set: $(sum(struct_fp))&quot;)
+println(&quot;Center fingerprint bits set: $(sum(center_fp))&quot;)
+
+# Compare with another reaction
+rxn2_smarts = &quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;
+rxn2 = reaction_from_smarts(rxn2_smarts)
+
+# Calculate similarities
+tanimoto_sim = reaction_similarity(rxn, rxn2, method=:tanimoto)
+dice_sim = reaction_similarity(rxn, rxn2, method=:dice)
+
+println(&quot;\nSimilarity Analysis:&quot;)
+println(&quot;Reaction 1: $(reaction_to_smarts(rxn))&quot;)
+println(&quot;Reaction 2: $(reaction_to_smarts(rxn2))&quot;)
+println(&quot;Tanimoto similarity: $(round(tanimoto_sim, digits=3))&quot;)
+println(&quot;Dice similarity: $(round(dice_sim, digits=3))&quot;)</code></pre><h3 id="Reaction-Database-Analysis"><a class="docs-heading-anchor" href="#Reaction-Database-Analysis">Reaction Database Analysis</a><a id="Reaction-Database-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Reaction-Database-Analysis" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Create a small reaction database
+reaction_smarts_db = [
+    &quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[O-].[C:3][O+]&quot;,     # Ester hydrolysis
+    &quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;,                            # Alcohol deprotonation
+    &quot;[N:1][C:2](=O)[C:3]&gt;&gt;[N:1].[C:2](=O)[C:3]&quot;,        # Amide cleavage
+    &quot;[C:1]=[C:2]&gt;&gt;[C:1][C:2]&quot;,                           # Alkene reduction
+    &quot;[C:1][Cl:2]&gt;&gt;[C:1][OH]&quot;,                            # Nucleophilic substitution
+]
+
+# Create reaction objects
+reaction_db = Reaction[]  # Use typed array to avoid method dispatch errors
+for smarts in reaction_smarts_db
+    try
+        local rxn = reaction_from_smarts(smarts)  # Use &#39;local&#39; to avoid scope warnings
+        push!(reaction_db, rxn)
+        println(&quot;Added reaction: $smarts&quot;)
+    catch e
+        println(&quot;Failed to parse: $smarts - $e&quot;)
+    end
+end
+
+# Find similar reactions
+target_rxn = reaction_from_smarts(&quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[OH].[C:3]&quot;)
+similar_reactions = find_similar_reactions(target_rxn, reaction_db, threshold=0.3)
+
+println(&quot;\nSimilar Reactions (threshold=0.3):&quot;)
+println(&quot;Target: $(reaction_to_smarts(target_rxn))&quot;)
+for (rxn, similarity) in similar_reactions
+    println(&quot;Similarity: $(round(similarity, digits=3)) - $(reaction_to_smarts(rxn))&quot;)
+end</code></pre><h3 id="Reaction-Library-Enumeration"><a class="docs-heading-anchor" href="#Reaction-Library-Enumeration">Reaction Library Enumeration</a><a id="Reaction-Library-Enumeration-1"></a><a class="docs-heading-anchor-permalink" href="#Reaction-Library-Enumeration" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Define combinatorial synthesis
+# Example: esterification reaction
+esterification = &quot;[C:1][OH:2].[C:3](=O)[OH:4]&gt;&gt;[C:1][O:2][C:3](=O)&quot;
+ester_rxn = reaction_from_smarts(esterification)
+
+# Define reactant libraries
+alcohols = [
+    mol_from_smiles(&quot;CO&quot;),      # Methanol
+    mol_from_smiles(&quot;CCO&quot;),     # Ethanol
+    mol_from_smiles(&quot;CCCO&quot;),    # Propanol
+]
+
+acids = [
+    mol_from_smiles(&quot;C(=O)O&quot;),     # Formic acid
+    mol_from_smiles(&quot;CC(=O)O&quot;),    # Acetic acid
+    mol_from_smiles(&quot;CCC(=O)O&quot;),   # Propionic acid
+]
+
+println(&quot;Reaction Library Enumeration:&quot;)
+println(&quot;Alcohols: $(length(alcohols))&quot;)
+println(&quot;Acids: $(length(acids))&quot;)
+
+# Enumerate all possible products
+try
+    product_library = enumerate_library(ester_rxn, [alcohols, acids])
+    println(&quot;Generated $(length(product_library)) product combinations&quot;)
+
+    # Show first few products
+    for (i, product_set) in enumerate(product_library[1:min(5, length(product_library))])
+        println(&quot;Product set $i:&quot;)
+        for product in product_set
+            println(&quot;  $(mol_to_smiles(product))&quot;)
+        end
+    end
+catch e
+    println(&quot;Library enumeration failed: $e&quot;)
+end</code></pre><h3 id="Atom-Mapping-and-Reaction-Mechanics"><a class="docs-heading-anchor" href="#Atom-Mapping-and-Reaction-Mechanics">Atom Mapping and Reaction Mechanics</a><a id="Atom-Mapping-and-Reaction-Mechanics-1"></a><a class="docs-heading-anchor-permalink" href="#Atom-Mapping-and-Reaction-Mechanics" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Work with atom-mapped molecules
+mapped_mol = mol_from_smiles(&quot;[CH3:1][C:2](=[O:3])[O:4][CH2:5][CH3:6]&quot;)
+println(&quot;Original mapping: $(mol_to_smiles(mapped_mol))&quot;)
+
+# Get current atom mapping
+current_mapping = get_atom_mapping_numbers(mapped_mol)
+println(&quot;Current mapping numbers: $current_mapping&quot;)
+
+# Set new mapping
+new_mapping = [10, 20, 30, 40, 50, 60]
+set_atom_mapping_numbers!(mapped_mol, new_mapping)
+updated_mapping = get_atom_mapping_numbers(mapped_mol)
+println(&quot;Updated mapping numbers: $updated_mapping&quot;)
+println(&quot;New SMILES: $(mol_to_smiles(mapped_mol))&quot;)
+
+# Reaction preprocessing
+println(&quot;\nReaction Preprocessing:&quot;)
+test_rxn = reaction_from_smarts(&quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;, validate=false)
+println(&quot;Before validation: $(test_rxn.validated)&quot;)
+
+# Preprocess and validate
+preprocess_reaction!(test_rxn)
+println(&quot;After preprocessing: $(test_rxn.validated)&quot;)
+
+if validate_reaction!(test_rxn)
+    println(&quot;Validation successful&quot;)
+else
+    println(&quot;Validation failed&quot;)
+end</code></pre><h3 id="Real-World-Reaction-Processing-Pipeline"><a class="docs-heading-anchor" href="#Real-World-Reaction-Processing-Pipeline">Real-World Reaction Processing Pipeline</a><a id="Real-World-Reaction-Processing-Pipeline-1"></a><a class="docs-heading-anchor-permalink" href="#Real-World-Reaction-Processing-Pipeline" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Complete reaction processing workflow
+function process_reaction_database(reaction_smarts_list)
+    results = []
+
+    println(&quot;Processing $(length(reaction_smarts_list)) reactions...&quot;)
+
+    for (i, smarts) in enumerate(reaction_smarts_list)
+        try
+            # Create and validate reaction
+            rxn = reaction_from_smarts(smarts)
+
+            # Analyze reaction properties
+            classification = reaction_type_classification(rxn)
+            complexity = reaction_complexity(rxn)
+            balanced = is_balanced(rxn)
+
+            # Generate fingerprint
+            fingerprint = reaction_fingerprint(rxn)
+            fp_density = sum(fingerprint) / length(fingerprint)
+
+            # Store results
+            push!(results, (
+                index = i,
+                smarts = smarts,
+                type = classification,
+                complexity = complexity,
+                balanced = balanced,
+                fp_density = fp_density,
+                valid = true
+            ))
+
+            println(&quot;✓ Reaction $i: $classification (complexity: $(round(complexity, digits=2)))&quot;)
+
+        catch e
+            println(&quot;✗ Reaction $i failed: $e&quot;)
+            push!(results, (
+                index = i,
+                smarts = smarts,
+                valid = false,
+                error = string(e)
+            ))
+        end
+    end
+
+    # Summary statistics
+    valid_results = filter(r -&gt; get(r, :valid, false), results)
+    println(&quot;\nProcessing Summary:&quot;)
+    println(&quot;Total reactions: $(length(reaction_smarts_list))&quot;)
+    println(&quot;Successfully processed: $(length(valid_results))&quot;)
+    println(&quot;Failed: $(length(results) - length(valid_results))&quot;)
+
+    if !isempty(valid_results)
+        types = [r.type for r in valid_results]
+        println(&quot;Reaction types: $(unique(types))&quot;)
+
+        complexities = [r.complexity for r in valid_results]
+        println(&quot;Complexity range: $(round(minimum(complexities), digits=2)) - $(round(maximum(complexities), digits=2))&quot;)
+
+        balanced_count = sum(r.balanced for r in valid_results)
+        println(&quot;Balanced reactions: $balanced_count/$(length(valid_results))&quot;)
+    end
+
+    return results
+end
+
+# Example usage
+example_reactions = [
+    &quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[O-].[C:3][O+]&quot;,
+    &quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;,
+    &quot;[N:1][C:2](=O)[C:3]&gt;&gt;[N:1].[C:2](=O)[C:3]&quot;,
+    &quot;[C:1]=[C:2]&gt;&gt;[C:1][C:2]&quot;,
+    &quot;invalid_reaction_smarts&quot;
+]
+
+results = process_reaction_database(example_reactions)</code></pre><h3 id="Best-Practices-and-Troubleshooting"><a class="docs-heading-anchor" href="#Best-Practices-and-Troubleshooting">Best Practices and Troubleshooting</a><a id="Best-Practices-and-Troubleshooting-1"></a><a class="docs-heading-anchor-permalink" href="#Best-Practices-and-Troubleshooting" title="Permalink"></a></h3><h4 id="Type-Safety-with-Reaction-Collections"><a class="docs-heading-anchor" href="#Type-Safety-with-Reaction-Collections">Type Safety with Reaction Collections</a><a id="Type-Safety-with-Reaction-Collections-1"></a><a class="docs-heading-anchor-permalink" href="#Type-Safety-with-Reaction-Collections" title="Permalink"></a></h4><p>When working with collections of reactions, use typed arrays to avoid method dispatch errors:</p><pre><code class="language-julia hljs"># Correct: Use typed array
+reaction_db = Reaction[]
+for smarts in reaction_smarts_list
+    try
+        local rxn = reaction_from_smarts(smarts)  # Use &#39;local&#39; to avoid scope warnings
+        push!(reaction_db, rxn)
+        println(&quot;Added: $smarts&quot;)
+    catch e
+        println(&quot;Failed: $smarts - $e&quot;)
+    end
+end
+
+# Incorrect: Untyped array causes method errors
+reaction_db = []  # This creates Vector{Any}, causing type issues later</code></pre><h4 id="Handling-RDKit-Warnings"><a class="docs-heading-anchor" href="#Handling-RDKit-Warnings">Handling RDKit Warnings</a><a id="Handling-RDKit-Warnings-1"></a><a class="docs-heading-anchor-permalink" href="#Handling-RDKit-Warnings" title="Permalink"></a></h4><p>RDKit may generate warnings about unmapped atoms, which are normal for many reactions:</p><pre><code class="language-julia hljs"># These warnings are informational and don&#39;t indicate errors:
+# [05:02:27] mapped atoms in the reactants were not mapped in the products.
+#   unmapped numbers are: 2
+
+# Example of a reaction that triggers this warning (still valid):
+rxn = reaction_from_smarts(&quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;)
+println(&quot;Reaction still valid: $(rxn.validated)&quot;)  # true</code></pre><h4 id="Error-Handling-for-Invalid-SMARTS"><a class="docs-heading-anchor" href="#Error-Handling-for-Invalid-SMARTS">Error Handling for Invalid SMARTS</a><a id="Error-Handling-for-Invalid-SMARTS-1"></a><a class="docs-heading-anchor-permalink" href="#Error-Handling-for-Invalid-SMARTS" title="Permalink"></a></h4><p>Always wrap reaction creation in try-catch blocks when processing external data:</p><pre><code class="language-julia hljs">function safe_reaction_creation(smarts_list)
+    reactions = Reaction[]
+    errors = String[]
+
+    for smarts in smarts_list
+        try
+            rxn = reaction_from_smarts(smarts)
+            push!(reactions, rxn)
+        catch e
+            push!(errors, &quot;$smarts: $e&quot;)
+        end
+    end
+
+    return reactions, errors
+end
+
+# Example with mixed valid/invalid SMARTS
+test_smarts = [
+    &quot;[C:1](=O)[O:2][C:3]&gt;&gt;[C:1](=O)[O-].[C:3][O+]&quot;,  # Valid
+    &quot;invalid_reaction_smarts&quot;,                          # Invalid
+    &quot;[C:1][OH:2]&gt;&gt;[C:1][O-]&quot;                          # Valid
+]
+
+reactions, errors = safe_reaction_creation(test_smarts)
+println(&quot;Successfully created: $(length(reactions)) reactions&quot;)
+println(&quot;Errors: $(length(errors))&quot;)</code></pre><h4 id="Performance-Optimization"><a class="docs-heading-anchor" href="#Performance-Optimization">Performance Optimization</a><a id="Performance-Optimization-1"></a><a class="docs-heading-anchor-permalink" href="#Performance-Optimization" title="Permalink"></a></h4><p>For large-scale reaction processing, consider these optimizations:</p><pre><code class="language-julia hljs"># Pre-validate reactions when building databases
+function build_validated_reaction_db(smarts_list)
+    db = Reaction[]
+
+    for smarts in smarts_list
+        try
+            rxn = reaction_from_smarts(smarts, validate=true)  # Validate immediately
+            if rxn.validated
+                push!(db, rxn)
+            end
+        catch
+            continue  # Skip invalid reactions
+        end
+    end
+
+    return db
+end
+
+# Cache fingerprints for similarity searches
+function cache_reaction_fingerprints!(reactions)
+    for rxn in reactions
+        if isnothing(rxn.fingerprint)
+            rxn.fingerprint = reaction_fingerprint(rxn)
+        end
+    end
+end</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../getting-started/">« Getting Started</a><a class="docs-footer-nextpage" href="../for-developers/">For Developers »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Saturday 27 September 2025 05:23">Saturday 27 September 2025</span>. Using Julia version 1.11.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
