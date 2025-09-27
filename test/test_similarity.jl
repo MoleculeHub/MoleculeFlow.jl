@@ -36,5 +36,5 @@ using MoleculeFlow
     @test tanimoto_similarity(mol1, invalid_mol) === missing
     @test dice_similarity(mol1, invalid_mol) === missing
     @test cosine_similarity(mol1, invalid_mol) === missing
-    @test bulk_similarity(invalid_mol, [mol1, mol2]) === missing
+    @test all(ismissing, bulk_similarity(invalid_mol, [mol1, mol2]))
 end

@@ -5,7 +5,7 @@ using Test
     # Example: ester hydrolysis
     rxn_smarts = "[C:1](=O)[O:2][C:3]>>[C:1](=O)[O-].[C:3][O+]"
     rxn = reaction_from_smarts(rxn_smarts)
-    @test rxn.valid
+    @test is_reaction_valid(rxn)
     @test isa(rxn, Reaction)
     @test rxn.props[:SMARTS] == rxn_smarts
     @test reaction_to_smarts(rxn) isa String
