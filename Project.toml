@@ -1,7 +1,7 @@
 name = "MoleculeFlow"
 uuid = "0907176b-47b3-4e96-be91-0e9bb91fb14f"
 authors = ["Renee Gil"]
-version = "0.5.0"
+version = "0.6.0"
 
 [deps]
 CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
