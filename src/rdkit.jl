@@ -478,6 +478,10 @@ function _get_morgan_generator(; radius::Int, fpSize::Int)
         radius = radius, fpSize = fpSize
     )
 end
+
+function _get_bulk_morgan_fingerprints(rdkit_mols::Vector, generator)
+    generator.GetFingerprints(rdkit_mols)
+end
 function _get_morgan_feature_atom_inv_gen()
     @pyconst(pyimport("rdkit.Chem.rdFingerprintGenerator").GetMorganFeatureAtomInvGen)()
 end

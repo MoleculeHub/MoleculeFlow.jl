@@ -43,11 +43,75 @@ end
 function morgan_fingerprint(
     mols::Vector{Union{Molecule, Missing}}; radius::Int = 2, nbits::Int = 2048
 )
-    return [morgan_fingerprint(mol; radius = radius, nbits = nbits) for mol in mols]
+    # Bulk optimization: process all valid molecules at once
+    valid_indices = findall(mol -> mol !== missing && mol.valid, mols)
+    if isempty(valid_indices)
+        return [missing for _ in mols]
+    end
+
+    # Extract valid RDKit molecules
+    valid_rdkit_mols = [mols[i]._rdkit_mol for i in valid_indices]
+
+    # Create generator once
+    morgan_gen = _get_morgan_generator(; radius = radius, fpSize = nbits)
+
+    # Bulk fingerprint generation
+    bulk_fps = _get_bulk_morgan_fingerprints(valid_rdkit_mols, morgan_gen)
+
+    # Convert to Julia format
+    result = Vector{Union{Vector{Bool}, Missing}}(undef, length(mols))
+    for i in eachindex(mols)
+        if mols[i] !== missing && mols[i].valid
+            # Find position in valid_indices
+            valid_pos = findfirst(==(i), valid_indices)
+            if valid_pos !== nothing
+                fp = bulk_fps[valid_pos - 1]  # Python 0-indexed
+                result[i] = pyconvert(Vector{Bool}, [pyconvert(Bool, fp.GetBit(j)) for j in 0:(nbits - 1)])
+            else
+                result[i] = missing
+            end
+        else
+            result[i] = missing
+        end
+    end
+
+    return result
 end
 
 function morgan_fingerprint(mols::Vector{Molecule}; radius::Int = 2, nbits::Int = 2048)
-    return [morgan_fingerprint(mol; radius = radius, nbits = nbits) for mol in mols]
+    # Bulk optimization: process all molecules at once
+    valid_indices = findall(mol -> mol.valid, mols)
+    if isempty(valid_indices)
+        return [missing for _ in mols]
+    end
+
+    # Extract valid RDKit molecules
+    valid_rdkit_mols = [mols[i]._rdkit_mol for i in valid_indices]
+
+    # Create generator once
+    morgan_gen = _get_morgan_generator(; radius = radius, fpSize = nbits)
+
+    # Bulk fingerprint generation
+    bulk_fps = _get_bulk_morgan_fingerprints(valid_rdkit_mols, morgan_gen)
+
+    # Convert to Julia format
+    result = Vector{Union{Vector{Bool}, Missing}}(undef, length(mols))
+    for i in eachindex(mols)
+        if mols[i].valid
+            # Find position in valid_indices
+            valid_pos = findfirst(==(i), valid_indices)
+            if valid_pos !== nothing
+                fp = bulk_fps[valid_pos - 1]  # Python 0-indexed
+                result[i] = pyconvert(Vector{Bool}, [pyconvert(Bool, fp.GetBit(j)) for j in 0:(nbits - 1)])
+            else
+                result[i] = missing
+            end
+        else
+            result[i] = missing
+        end
+    end
+
+    return result
 end
 
 # RDK fingerprints
