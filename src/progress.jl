@@ -151,16 +151,21 @@ Execute a function on array items with progress tracking.
 function with_progress(func, items; show_progress = true, desc = "Processing")
     n = length(items)
     if n == 0
-        return []
+        return similar(items, 0)
     end
 
     tracker = ProgressTracker(n; show_progress = show_progress)
-    results = Vector{Any}(undef, n)
+
+    # Get the return type by calling func on the first item
+    first_result = func(first(items))
+    results = Vector{typeof(first_result)}(undef, n)
+    results[1] = first_result
 
     show_progress && println("$desc $(n) items...")
+    update_progress!(tracker, 1)
 
-    for (i, item) in enumerate(items)
-        results[i] = func(item)
+    for i in 2:n
+        results[i] = func(items[i])
         update_progress!(tracker, i)
     end
 
@@ -198,11 +203,17 @@ function map_with_progress(func, items...; show_progress = true, desc = "Process
     end
 
     tracker = ProgressTracker(n; show_progress = show_progress)
-    results = Vector{Any}(undef, n)
+
+    # Get the return type by calling func on the first elements
+    first_args = tuple((arr[1] for arr in items)...)
+    first_result = func(first_args...)
+    results = Vector{typeof(first_result)}(undef, n)
+    results[1] = first_result
 
     show_progress && println("$desc $(n) items...")
+    update_progress!(tracker, 1)
 
-    for i in 1:n
+    for i in 2:n
         args = tuple((arr[i] for arr in items)...)
         results[i] = func(args...)
         update_progress!(tracker, i)
