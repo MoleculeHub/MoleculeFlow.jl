@@ -415,11 +415,11 @@ function _find_atom_environment_of_radius_n(mol::Py, radius::Int, atomIdx::Int)
 end
 
 # Fragmentation
-function _brics_decompose(mol::Py)
-    @pyconst(pyimport("rdkit.Chem.BRICS").BRICSDecompose)(mol)
+function _brics_decompose(mol::Py; minFragmentSize::Int)
+    @pyconst(pyimport("rdkit.Chem.BRICS").BRICSDecompose)(mol; minFragmentSize = minFragmentSize)
 end
 function _recap_decompose(mol::Py)
-    @pyconst(pyimport("rdkit.Chem.Recap").Decompose)(mol)
+    @pyconst(pyimport("rdkit.Chem.Recap").RecapDecompose)(mol)
 end
 function _get_scaffold_for_mol(mol::Py)
     @pyconst(pyimport("rdkit.Chem.Scaffolds.MurckoScaffold").GetScaffoldForMol)(mol)
