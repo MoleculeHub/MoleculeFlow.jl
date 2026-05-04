@@ -107,8 +107,14 @@ remove_stereochemistry!
 sanitize_mol!
 ```
 
-## Computer 2D coordinates
+## Compute 2D coordinates
 
 ```@docs
 compute_2d_coords!
+```
+
+## Kekulize molecule
+
+```@docs
+kekulize!
 ```
