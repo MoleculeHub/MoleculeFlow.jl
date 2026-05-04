@@ -356,6 +356,9 @@ end
 function _split_mol_by_pdb_residues(mol::Py)
     @pyconst(pyimport("rdkit.Chem").SplitMolByPDBResidues)(mol)
 end
+function _kekulize(mol::Py; clearAromaticFlags::Bool=false)
+    @pyconst(pyimport("rdkit.Chem").Kekulize)(mol; clearAromaticFlags=clearAromaticFlags)
+end
 
 # Stereochemistry and 3D operations
 function _assign_stereochemistry(mol::Py; cleanIt::Bool = true, force::Bool = false)

@@ -919,3 +919,36 @@ function get_most_substituted_core_match(mol::Molecule, core::Molecule)
         return missing
     end
 end
+
+"""
+    kekulize!(mol::Molecule; clear_aromatic_flags::Bool=false)
+
+Kekulizes the molecule in place.
+
+# Arguments
+
+  - `mol::Molecule`: Input molecule (modified in place)
+  - `clear_aromatic_flags::Bool`: If true, all atoms and bonds will be marked non-aromatic following the kekulization.
+
+# Returns
+
+  - `Bool`: true if successful, false otherwise
+
+# Example
+
+```julia
+benzene = mol_from_smiles("c1ccccc1")
+kekulize!(benzene; clear_aromatic_flags = true)
+println(mol_to_smiles(benzene))
+```
+"""
+function kekulize!(mol::Molecule; clear_aromatic_flags::Bool = false)
+    !mol.valid && return false
+    try
+        _kekulize(mol._rdkit_mol; clearAromaticFlags = clear_aromatic_flags)
+        return true
+    catch e
+        @warn "Error kekulizing molecule: $e"
+        return false
+    end
+end
