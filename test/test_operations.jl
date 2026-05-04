@@ -394,6 +394,34 @@ end
         result_invalid = compute_2d_coords!(invalid_mol)
         @test result_invalid.valid == false
     end
+
+    @testset "kekulize! function" begin
+        # Test with aromatic molecule
+        benzene = mol_from_smiles("c1ccccc1")
+
+        # Should be unchanged without explicit clear_aromatic_flags set to true
+        result_benzene = kekulize!(benzene)
+        @test result_benzene == true
+        @test benzene.valid == true
+        @test mol_to_smiles(benzene) == "c1ccccc1"
+
+        # Should kekulize aromatic rings with clear_aromatic_flags set to true
+        result_benzene = kekulize!(benzene; clear_aromatic_flags = true)
+        @test result_benzene == true
+        @test benzene.valid == true
+        @test mol_to_smiles(benzene) == "C1=CC=CC=C1"
+
+        # Test with already non-aromatic molecule
+        ethanol = mol_from_smiles("CCO")
+        @test kekulize!(ethanol) == true
+        @test ethanol.valid == true
+        @test mol_to_smiles(ethanol) == "CCO"
+
+        # Test with invalid molecule
+        invalid_mol = mol_from_smiles("invalid_smiles")
+        result_invalid = kekulize!(invalid_mol)
+        @test result_invalid == false
+    end
 end
 
 @testset "Error Handling and Edge Cases" begin
