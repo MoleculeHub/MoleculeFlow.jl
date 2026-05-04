@@ -29,6 +29,7 @@ export assign_stereochemistry!, find_chiral_centers
 export fast_find_rings!, canonical_atom_ranks, get_ring_info, find_atom_environment
 export mol_fragment_to_smarts, mol_fragment_to_smiles, renumber_atoms
 export remove_stereochemistry!, sanitize_mol!, compute_2d_coords!
+export kekulize!
 
 # Pattern matching
 export quick_smarts_match, mol_fragment_to_smarts
