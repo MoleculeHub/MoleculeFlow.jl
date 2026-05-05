@@ -16,6 +16,15 @@ using MoleculeFlow
     @test isa(smiles, String)
     @test length(smiles) > 0
 
+    # Test kekule_smiles
+    benzene = mol_from_smiles("c1ccccc1")
+    @test mol_to_smiles(benzene; kekule_smiles = true) == "C1=CC=CC=C1"
+    @test mol_to_smiles(benzene; kekule_smiles = false) == "c1ccccc1"
+
+    # Test all_bonds_explicit
+    @test mol_to_smiles(benzene; kekule_smiles = true, all_bonds_explicit = true) ==
+        "C1=C-C=C-C=C-1"
+
     # Test InChI conversion  
     inchi = mol_to_inchi(mol)
     @test isa(inchi, String)

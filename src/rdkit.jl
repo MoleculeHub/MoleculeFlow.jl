@@ -12,7 +12,10 @@ end
 function _sdf_supplier(filename::String)
     @pyconst(pyimport("rdkit.Chem").SDMolSupplier)(filename)
 end
-_mol_to_smiles(mol::Py) = @pyconst(pyimport("rdkit.Chem").MolToSmiles)(mol)
+_mol_to_smiles(mol::Py; kekuleSmiles::Bool = false, allBondsExplicit::Bool = false) =
+    @pyconst(pyimport("rdkit.Chem").MolToSmiles)(
+        mol; kekuleSmiles = kekuleSmiles, allBondsExplicit = allBondsExplicit
+    )
 _mol_to_inchi(mol::Py) = @pyconst(pyimport("rdkit.Chem").MolToInchi)(mol)
 _mol_from_smarts(smarts::String) = @pyconst(pyimport("rdkit.Chem").MolFromSmarts)(smarts)
 _mol_copy(mol::Py) = @pyconst(pyimport("rdkit.Chem").Mol)(mol)
@@ -356,8 +359,8 @@ end
 function _split_mol_by_pdb_residues(mol::Py)
     @pyconst(pyimport("rdkit.Chem").SplitMolByPDBResidues)(mol)
 end
-function _kekulize(mol::Py; clearAromaticFlags::Bool=false)
-    @pyconst(pyimport("rdkit.Chem").Kekulize)(mol; clearAromaticFlags=clearAromaticFlags)
+function _kekulize(mol::Py; clearAromaticFlags::Bool = false)
+    @pyconst(pyimport("rdkit.Chem").Kekulize)(mol; clearAromaticFlags = clearAromaticFlags)
 end
 
 # Stereochemistry and 3D operations
@@ -419,7 +422,9 @@ end
 
 # Fragmentation
 function _brics_decompose(mol::Py; minFragmentSize::Int)
-    @pyconst(pyimport("rdkit.Chem.BRICS").BRICSDecompose)(mol; minFragmentSize = minFragmentSize)
+    @pyconst(pyimport("rdkit.Chem.BRICS").BRICSDecompose)(
+        mol; minFragmentSize = minFragmentSize
+    )
 end
 function _recap_decompose(mol::Py)
     @pyconst(pyimport("rdkit.Chem.Recap").RecapDecompose)(mol)
