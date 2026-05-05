@@ -921,6 +921,43 @@ function get_most_substituted_core_match(mol::Molecule, core::Molecule)
 end
 
 """
+    assign_bond_orders_from_template(mol::Molecule, template::Molecule) -> Molecule
+
+Assign bond orders to `mol` using `template` as a reference. Useful for restoring
+correct bond orders to a molecule loaded from a format that loses them (e.g. PDB),
+when the original SMILES/template is available.
+
+# Arguments
+
+  - `mol::Molecule`: Molecule with correct 3D coordinates but approximate bond orders
+  - `template::Molecule`: Reference molecule with correct bond orders (e.g. from SMILES)
+
+# Returns
+
+  - `Molecule`: New molecule with bond orders from `template` and coordinates from `mol`
+
+# Example
+
+```julia
+template = mol_from_smiles("c1ccccc1")
+pdb_mol = mol_from_pdb_block(pdb_string)
+fixed = assign_bond_orders_from_template(pdb_mol, template)
+```
+"""
+function assign_bond_orders_from_template(mol::Molecule, template::Molecule)
+    (!mol.valid || !template.valid) && return Molecule(;
+        _rdkit_mol = pybuiltins.None, valid = false, source = mol.source
+    )
+    try
+        result = _assign_bond_orders_from_template(template._rdkit_mol, mol._rdkit_mol)
+        return Molecule(; _rdkit_mol = result, valid = true, source = mol.source)
+    catch e
+        @warn "Error assigning bond orders from template: $e"
+        return Molecule(; _rdkit_mol = pybuiltins.None, valid = false, source = mol.source)
+    end
+end
+
+"""
     kekulize!(mol::Molecule; clear_aromatic_flags::Bool=false)
 
 Kekulizes the molecule in place.

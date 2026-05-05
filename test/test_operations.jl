@@ -424,6 +424,41 @@ end
     end
 end
 
+@testset "assign_bond_orders_from_template" begin
+    @testset "restores bond orders from SMILES template" begin
+        # Simulate the docking use-case: template has correct bond orders,
+        # mol_no_bo has only single bonds (as if loaded from PDB/PDBQT).
+        template = mol_from_smiles("c1ccccc1")
+        mol_no_bo = mol_from_smiles("C1CCCCC1")  # all single bonds, same connectivity
+
+        fixed = assign_bond_orders_from_template(mol_no_bo, template)
+        @test fixed.valid == true
+        # Canonical SMILES should match the aromatic template
+        @test mol_to_smiles(fixed) == mol_to_smiles(template)
+    end
+
+    @testset "preserves source from input mol" begin
+        template = mol_from_smiles("CCO")
+        mol = mol_from_smiles("CCO")
+        fixed = assign_bond_orders_from_template(mol, template)
+        @test fixed.source == mol.source
+    end
+
+    @testset "invalid mol returns invalid Molecule" begin
+        template = mol_from_smiles("CCO")
+        invalid = mol_from_smiles("invalid_smiles")
+        result = assign_bond_orders_from_template(invalid, template)
+        @test result.valid == false
+    end
+
+    @testset "invalid template returns invalid Molecule" begin
+        mol = mol_from_smiles("CCO")
+        invalid = mol_from_smiles("invalid_smiles")
+        result = assign_bond_orders_from_template(mol, invalid)
+        @test result.valid == false
+    end
+end
+
 @testset "Error Handling and Edge Cases" begin
     @testset "Invalid inputs handling" begin
         # Most error handling is tested above, but let's add a few more edge cases

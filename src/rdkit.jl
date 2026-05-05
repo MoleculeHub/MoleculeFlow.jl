@@ -362,6 +362,9 @@ end
 function _kekulize(mol::Py; clearAromaticFlags::Bool = false)
     @pyconst(pyimport("rdkit.Chem").Kekulize)(mol; clearAromaticFlags = clearAromaticFlags)
 end
+function _assign_bond_orders_from_template(template::Py, mol::Py)
+    @pyconst(pyimport("rdkit.Chem.AllChem").AssignBondOrdersFromTemplate)(template, mol)
+end
 
 # Stereochemistry and 3D operations
 function _assign_stereochemistry(mol::Py; cleanIt::Bool = true, force::Bool = false)
