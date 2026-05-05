@@ -3,13 +3,15 @@
 #######################################################
 
 """
-    mol_to_smiles(mol::Union{Molecule,Missing}) -> Union{String,Missing}
+    mol_to_smiles(mol::Union{Molecule,Missing}; kekule_smiles::Bool = false, all_bonds_explicit::Bool = false) -> Union{String,Missing}
 
 Convert a Molecule object to a SMILES string.
 
 # Arguments
 
   - `mol::Union{Molecule,Missing}`: A Molecule object or missing
+  - `kekule_smiles::Bool`: (optional) use the Kekule form (no aromatic bonds) in the SMILES. Defaults to false
+  - `all_bonds_explicit::Bool`: (optional) if true, all bond orders will be explicitly indicated in the output SMILES. Defaults to false
 
 # Returns
 
@@ -23,30 +25,60 @@ smiles = mol_to_smiles(mol)  # "CCO"
 
 # Handles missing values gracefully
 smiles = mol_to_smiles(missing)  # missing
+
+benzene = mol_from_smiles("c1ccccc1")
+smiles = mol_to_smiles(benzene; kekule_smiles = true, all_bonds_explicit = true) # "C1=C-C=C-C=C-1"
 ```
 """
-function mol_to_smiles(mol::Union{Molecule, Missing})
+function mol_to_smiles(
+    mol::Union{Molecule, Missing};
+    kekule_smiles::Bool = false,
+    all_bonds_explicit::Bool = false,
+)
     isa(mol, Missing) && return missing
     !mol.valid && return missing
-    return pyconvert(String, _mol_to_smiles(mol._rdkit_mol))
+    return pyconvert(
+        String,
+        _mol_to_smiles(
+            mol._rdkit_mol;
+            kekuleSmiles = kekule_smiles,
+            allBondsExplicit = all_bonds_explicit,
+        ),
+    )
 end
 
-function mol_to_smiles(mol_list::Vector{Union{Molecule, Missing}})
+function mol_to_smiles(
+    mol_list::Vector{Union{Molecule, Missing}};
+    kekule_smiles::Bool = false,
+    all_bonds_explicit::Bool = false,
+)
     results = Vector{Union{String, Missing}}(undef, length(mol_list))
 
     @inbounds for i in eachindex(mol_list)
-        smiles = mol_to_smiles(mol_list[i])
+        smiles = mol_to_smiles(
+            mol_list[i];
+            kekule_smiles = kekule_smiles,
+            all_bonds_explicit = all_bonds_explicit,
+        )
         results[i] = smiles
     end
 
     return pyconvert(Vector{Union{String, Missing}}, results)
 end
 
-function mol_to_smiles(mol_list::Vector{Molecule})
+function mol_to_smiles(
+    mol_list::Vector{Molecule};
+    kekule_smiles::Bool = false,
+    all_bonds_explicit::Bool = false,
+)
     results = Vector{Union{String, Missing}}(undef, length(mol_list))
 
     @inbounds for i in eachindex(mol_list)
-        smiles = mol_to_smiles(mol_list[i])
+        smiles = mol_to_smiles(
+            mol_list[i];
+            kekule_smiles = kekule_smiles,
+            all_bonds_explicit = all_bonds_explicit,
+        )
         results[i] = smiles
     end
 
