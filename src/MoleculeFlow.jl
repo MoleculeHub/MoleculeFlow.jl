@@ -20,7 +20,7 @@ export mol_from_xyz_file, mol_from_xyz_block, mol_to_xyz_block
 export mol_from_mol2_file, mol_from_mol2_block
 
 # Molecular editing and manipulation
-export combine_mols, delete_substructs, replace_substructs
+export combine_mols, delete_substructs, replace_substructs, assign_bond_orders_from_template
 
 # Stereochemistry operations
 export assign_stereochemistry!, find_chiral_centers
